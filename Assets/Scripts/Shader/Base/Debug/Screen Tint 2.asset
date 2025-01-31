@@ -15,4 +15,4 @@ MonoBehaviour:
   shader: {fileID: 4800000, guid: 82dea2370a66b864189210dbdbf7e3b7, type: 3}
   input: 4
   toProfile: 0
-  color: {r: 0.23468915, g: 0.9245283, b: 0.082858644, a: 1}
+  color: {r: 0.24401972, g: 0.9716981, b: 0.0779192, a: 1}

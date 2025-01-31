@@ -19,4 +19,4 @@
 
 - The SRP will automatically be generated in the CustomPostProcessing class, you do not need to worry about that
 
-- If your code is correct, it should work
+- If your shader code is correct, it should work

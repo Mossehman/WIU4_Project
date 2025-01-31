@@ -1,4 +1,4 @@
- - WHY DO WE HAVE A CLASS FOR NOISE? - 
+= WHY DO WE HAVE A CLASS FOR NOISE? = 
 
 - The idea is to derive classes off of BaseNoise, each with their own unique algorithm for generating 1D, 2D and 3D noise
 
@@ -9,7 +9,7 @@
 
 
 
- - HOW TO AND WHAT TO NOTE WHEN IMPLEMENTING A NEW NOISE ALGORITHM - 
+= HOW TO AND WHAT TO NOTE WHEN IMPLEMENTING A NEW NOISE ALGORITHM =
 
 - When using noise for any algorithm, pass the BaseNoise class into the algorithm script as a variable
 

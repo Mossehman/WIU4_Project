@@ -40,7 +40,6 @@ public class CustomSRP : ScriptableRenderPass
         // check for material
         if (material == null)
         {
-            Debug.LogError("SRP material was null! Did you forget to put a shader in the CustomPostProcessing object?");
             return;
         }
 
