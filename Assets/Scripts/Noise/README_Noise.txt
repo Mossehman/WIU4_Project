@@ -16,3 +16,8 @@
 - To use a new noise algorithm, simply derive a class off of BaseNoise and throw the noise code into the abstract methods
 
 - The noise functions should ALL output a value between [0 - 1], if they do not, please modify the final output in the noise function to do so
+
+
+
+
+- Aaron

@@ -1,0 +1,89 @@
+// Reference: Sebastian Lague's video on Marching Cubes + GameDevGuide's Introduction to Compute Shaders
+// https://youtu.be/M3iI2l0ltbE?si=UTq5aCcdZusXAqTH
+// https://youtu.be/BrZ4pWwkpto?si=yMak0OrRdZztS-CZ
+
+#pragma kernel MarchingCubes
+#include "/Includes/MarchingTable.compute"
+
+// The number of threads per group we will use for this compute shader (example: threadGroupSize of 8 == 8 * 8 * 8 (512) threads being used)
+static const int threadGroupSize = 8;
+
+// Given that the data will be processed in a multi-threaded approach, we send all 3 vertices to the shader such that the triangles are created in the correct order
+struct Triangle {
+    float3 vertA;
+    float3 vertB;
+    float3 vertC;
+};
+
+float surfaceLevel;     // the defined value to determine our marching cubes configuration based on which 8 points in the cube are above or below the surface level
+int3 numPointsPerAxis;  // the number of marching cube sample points along each X Y and Z axis
+
+
+// AppendStructuredBuffer means only the shader can append to the end of it
+// RWStructuredBuffer means that this buffer can be externally written to and read from
+
+AppendStructuredBuffer<Triangle> triangles; // buffer of all the generated triangles
+RWStructuredBuffer<float4> cubePoints;         // buffer of the list of points in our marching cubes chunk
+
+///Helper function to calculate the position of our vertices based on the surface level and position (as opposed to placing each vertex at the midpoint)
+float3 vertexInterpolation(float4 v1, float4 v2) {
+    float t = (surfaceLevel - v1.w) / (v2.w - v1.w);
+    return v1.xyz + t * (v2.xyz - v1.xyz);
+}
+
+int indexFromCoord(int x, int y, int z) {
+    return z * numPointsPerAxis.z * numPointsPerAxis.y + y * numPointsPerAxis.x + x;
+}
+
+
+
+[numthreads(threadGroupSize, threadGroupSize, threadGroupSize)] //the defined dimensions of the thread groups for our code to run on (since compute shaders are multithreaded)
+void MarchingCubes (uint3 id : SV_DispatchThreadID)             //id represents the thread coordinate that is handling this specific dataset in the numthreads group
+{
+    if (id.x >= numPointsPerAxis.x - 1 || id.y >= numPointsPerAxis.y - 1 || id.z >= numPointsPerAxis.z - 1) { return; } //each cube includes it's neighbouring points, so we do not check those
+
+    float4 cubeCorners[8] = {
+        cubePoints[indexFromCoord(id.x, id.y, id.z)],
+        cubePoints[indexFromCoord(id.x + 1, id.y, id.z)],
+        cubePoints[indexFromCoord(id.x + 1, id.y, id.z + 1)],
+        cubePoints[indexFromCoord(id.x, id.y, id.z + 1)],
+        cubePoints[indexFromCoord(id.x, id.y + 1, id.z)],
+        cubePoints[indexFromCoord(id.x + 1, id.y + 1, id.z)],
+        cubePoints[indexFromCoord(id.x + 1, id.y + 1, id.z + 1)],
+        cubePoints[indexFromCoord(id.x, id.y + 1, id.z + 1)]
+    };
+
+    int cubeIndex = 0;
+    if (cubeCorners[0].w < surfaceLevel) cubeIndex |= 1;
+    if (cubeCorners[1].w < surfaceLevel) cubeIndex |= 2;
+    if (cubeCorners[2].w < surfaceLevel) cubeIndex |= 4;
+    if (cubeCorners[3].w < surfaceLevel) cubeIndex |= 8;
+    if (cubeCorners[4].w < surfaceLevel) cubeIndex |= 16;
+    if (cubeCorners[5].w < surfaceLevel) cubeIndex |= 32;
+    if (cubeCorners[6].w < surfaceLevel) cubeIndex |= 64;
+    if (cubeCorners[7].w < surfaceLevel) cubeIndex |= 128;
+    
+    //get the triangle points based on the cube configuration
+    for (int i = 0; triangulationTable[cubeIndex][i] != -1; i +=3) {         //for loop just checks if the end result of the triangulation results in -1
+
+        int a0 = cornerIndexAFromEdge[triangulationTable[cubeIndex][i]];
+        int b0 = cornerIndexBFromEdge[triangulationTable[cubeIndex][i]];
+
+        int a1 = cornerIndexAFromEdge[triangulationTable[cubeIndex][i+1]];
+        int b1 = cornerIndexBFromEdge[triangulationTable[cubeIndex][i+1]];
+
+        int a2 = cornerIndexAFromEdge[triangulationTable[cubeIndex][i+2]];
+        int b2 = cornerIndexBFromEdge[triangulationTable[cubeIndex][i+2]];
+
+        Triangle tri;
+        tri.vertA = vertexInterpolation(cubeCorners[a0], cubeCorners[b0]);
+        tri.vertB = vertexInterpolation(cubeCorners[a1], cubeCorners[b1]);
+        tri.vertC = vertexInterpolation(cubeCorners[a2], cubeCorners[b2]);
+        triangles.Append(tri);
+    }
+}
+
+
+
+
+// god why aren't compute shaders taught, this was such a pain to self-learn

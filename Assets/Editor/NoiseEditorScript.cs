@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
+
 
 [CustomEditor(typeof(BaseNoise), true)]
 public class NoiseEditorScript : Editor

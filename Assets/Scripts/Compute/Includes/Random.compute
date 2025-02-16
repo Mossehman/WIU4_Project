@@ -1,0 +1,9 @@
+// https://discussions.unity.com/t/generate-random-float-between-0-and-1-in-shader/728060/3
+
+
+// Note: This is apparently not the best random function for HLSL, but for the time being it will suit our needs
+float Random01(float2 uv)
+{
+    return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453123);
+}
+
