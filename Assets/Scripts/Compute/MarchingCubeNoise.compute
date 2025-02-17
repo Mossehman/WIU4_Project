@@ -1,5 +1,5 @@
 #pragma kernel GenerateNoise
-#include "/Includes/Noise.compute"
+#pragma include "/Includes/Noise.compute"
 
 static const int numThreads = 8;
 
@@ -48,7 +48,7 @@ void GenerateNoise (uint3 id : SV_DispatchThreadID)
 
 	for (int o = 0; o < octaves; o++)
 	{
-		float n = snoise((noiseSamplePoint + noiseOffset) * frequency + offsets[o] + offset);
+		float n = SimplexNoise3D((noiseSamplePoint + noiseOffset) * frequency + offsets[o] + offset);
 		float v = 1 - abs(n);
 
 		v = v * v;	
