@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc69bc22d7912834ba6d47ad3da74e91, type: 3}
-  m_Name: Screen Tint 2
+  m_Script: {fileID: 11500000, guid: b792251125483ef4999820bc8b6f613d, type: 3}
+  m_Name: Distance Fog effect
   m_EditorClassIdentifier: 
-  shader: {fileID: 4800000, guid: 82dea2370a66b864189210dbdbf7e3b7, type: 3}
+  shader: {fileID: 4800000, guid: 9fc443611fdaad243a68a93e333ca50b, type: 3}
   input: 4
   toProfile: 0
-  color: {r: 0.17864946, g: 0.96981126, b: 0, a: 1}
+  fogStartingDepth: 0.067
+  fogEndDepth: 0
+  fogColor: {r: 0.5641509, g: 0.9542189, b: 1, a: 1}

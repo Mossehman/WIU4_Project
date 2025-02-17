@@ -1,4 +1,4 @@
-Shader "Unlit/ScreenTintShader"
+Shader "Unlit/DistanceFog"
 {
     SubShader
     {
@@ -7,19 +7,27 @@ Shader "Unlit/ScreenTintShader"
         ZWrite Off Cull Off
         Pass
         {
-            Name "ColorBlitPass"
+            Name "DistanceFog"
 
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            // The Blit.hlsl file provides the vertex shader (Vert),
+            // input structure (Attributes) and output strucutre (Varyings)
 
             #pragma vertex vert
             #pragma fragment frag
 
 
 
-            float4 _Color;
-            TEXTURE2D_X(_CameraTexture);
+            float4 _fogColor;
+            TEXTURE2D(_CameraTexture);
             SAMPLER(sampler_CameraTexture);
+
+            TEXTURE2D(_CameraDepthTexture);
+            SAMPLER(sampler_CameraDepthTexture);
+
+            float _fogMinDepth;
+            float _fogMaxDepth;
 
             struct VertexData{
                 float4 position : POSITION;
@@ -43,8 +51,18 @@ Shader "Unlit/ScreenTintShader"
             half4 frag (VertToFrag input) : SV_Target
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
-                float4 color = SAMPLE_TEXTURE2D_X(_CameraTexture, sampler_CameraTexture, input.uv);
-                return color * _Color;
+                
+                float4 camColor = SAMPLE_TEXTURE2D(_CameraTexture, sampler_CameraTexture, input.uv);
+                float depth = SAMPLE_TEXTURE2D(_CameraDepthTexture, sampler_CameraDepthTexture, input.uv);
+
+                if (_fogMaxDepth >= _fogMinDepth || depth > _fogMinDepth)
+                {
+                    return camColor;
+                }
+
+                float t = (_fogMinDepth - depth) / (_fogMinDepth - _fogMaxDepth);
+
+                return lerp(camColor, _fogColor, t);
             }
             ENDHLSL
         }

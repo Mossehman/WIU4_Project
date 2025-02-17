@@ -1,3 +1,4 @@
+using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -90,15 +91,18 @@ public class CustomSRP : ScriptableRenderPass
     private void BlitTexture(CommandBuffer cmd)
     {
         post.SendDataToShader(material);
-        Blitter.BlitCameraTexture(cmd, inputHandle, outputHandle, 0, true);
 
-        if (outputHandle != null)
+        for (int i = 0; i < material.passCount; ++i)
         {
-            cmd.SetGlobalTexture("_CameraTexture", outputHandle.nameID);
+            cmd.Blit(inputHandle, outputHandle);
+            if (outputHandle != null)
+            {
+                cmd.SetGlobalTexture("_CameraTexture", outputHandle.nameID);
+            }
+
+            cmd.Blit(outputHandle, inputHandle, material, i);
         }
 
-        /// TODO: modify code such that the blitter will loop through all the material's passes and render them additively, rather than only the first pass
-        Blitter.BlitCameraTexture(cmd, outputHandle, inputHandle, material, 0);
     }
 
     public Material GetMaterial() { return this.material; }
