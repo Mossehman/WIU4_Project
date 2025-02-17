@@ -36,7 +36,8 @@ public sealed class FiniteStateMachine : MonoBehaviour
             finiteStates.TryAdd(state.stateID, stateInstance);
 
             if (nextState == null) {
-                SwapState(state.stateID);
+                currentState = stateInstance;
+                stateInstance.OnStateEnter(this);
             }
 
         }

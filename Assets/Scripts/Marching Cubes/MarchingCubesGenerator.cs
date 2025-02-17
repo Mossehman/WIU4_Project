@@ -18,7 +18,7 @@ public class MarchingCubesGenerator : MonoBehaviour
 
     public void GenerateNoise()
     {
-
+        
     }
 
     private ComputeBuffer GenerateNoise(ComputeBuffer points, Vector3 worldBounds, float spacing)
@@ -39,5 +39,28 @@ public class MarchingCubesGenerator : MonoBehaviour
     void Update()
     {
         
+    }
+}
+
+struct Triangle
+{
+    public Vector3 a;
+    public Vector3 b;
+    public Vector3 c;
+
+    public Vector3 this[int i]
+    {
+        get
+        {
+            switch (i)
+            {
+                case 0:
+                    return a;
+                case 1:
+                    return b;
+                default:
+                    return c;
+            }
+        }
     }
 }
