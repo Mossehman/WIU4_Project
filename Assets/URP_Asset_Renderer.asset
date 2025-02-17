@@ -71,4 +71,4 @@ MonoBehaviour:
   m_Active: 1
   postShaders:
   - {fileID: 11400000, guid: e5caa92efe2706940b5382bc97fb6872, type: 2}
-  - {fileID: 11400000, guid: 82866303021d2584e8e5429f7192d11b, type: 2}
+  - {fileID: 11400000, guid: 42afb020ccf221c4a8d107107039de37, type: 2}
