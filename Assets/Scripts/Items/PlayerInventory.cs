@@ -114,5 +114,10 @@ namespace Player.Inventory
         {
             //_items[itemID].isLocked = false;
         }
+
+        public void SwitchSort()
+        {
+
+        }
     }
 }
