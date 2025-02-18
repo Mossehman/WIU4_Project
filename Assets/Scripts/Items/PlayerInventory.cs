@@ -121,16 +121,25 @@ namespace Player.Inventory
         }
         public void LockItem()
         {
-            //_items[itemID].isLocked = true;
+            //if (_currentlySelected != null)
+            //{
+            //    int index = -1;
+            //    foreach (BaseItem item in _items)
+            //    {
+            //        // find item id
+            //        if (item.itemID == _currentlySelected.itemID) { break; }
+            //        else { index++; }
+            //    }
+            //    if (_items[index].isLocked == true) { _items[index].isLocked = false; }
+            //    else if (_items[index].isLocked == false) { _items[index].isLocked = true; }
+            //}
             if (_currentlySelected != null)
             {
-                foreach (BaseItem item in _items)
-                {
-                    // check
-                }
+                int index = -1;
+                Debug.Log("Locked");
             }
         }
-        
+
         public void SwitchSort()
         {
             int newSort = ((int) _currentSort + 1) % ((int) SortingType.TOTAL);
