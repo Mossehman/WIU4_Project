@@ -10,10 +10,14 @@ public class Chunk : MonoBehaviour
     [SerializeField] private MeshFilter meshFilter;
     [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private MeshCollider meshCollider;
+    public Vector3 meshOffset = Vector3.zero;
 
     private void Awake()
     {
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
     }
+
+    public MeshFilter GetMeshFilter() { return meshFilter; }
+    public MeshRenderer GetMeshRenderer() {  return meshRenderer; }
 }
