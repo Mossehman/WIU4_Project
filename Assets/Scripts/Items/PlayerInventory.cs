@@ -28,6 +28,7 @@ namespace Player.Inventory
         [Header("Inventory UI")]
         [SerializeField] private GameObject _inventoryPanel;
         [SerializeField] private GameObject _itemPrefab;
+        [SerializeField] private GameObject _itemDescPanel;
 
         void Start()
         {
