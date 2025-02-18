@@ -22,54 +22,77 @@ namespace Player.Inventory
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Inventory Logic")]
-        [SerializeField]    private List<BaseItem>      _items;
+        [SerializeField]    private List<BaseItem>      _inventoryItems;
         [SerializeField]    public float                _baseWeight = 0.0f;
         [SerializeField]    public float                _baseMaxWeight = 10.0f;
         [SerializeField]    private float               _currentWeight;
+        // SORTING
         [SerializeField]    private SortingType         _currentSort = SortingType.DATE_ADDED;
+        // LOCKING ITEMS
                             private BaseItem            _currentlySelected;
                             private List<bool>          _isLocked;
 
         [Header("Inventory UI")]
+        [SerializeField]    private GameObject          _inventory;
         [SerializeField]    private GameObject          _inventoryPanel;
         [SerializeField]    private GameObject          _itemPrefab;
         [SerializeField]    private GameObject          _itemDescPanel;
 
+        [Header("Hotbar Logic")]
+        [SerializeField]    private BaseItem[]          _hotbarItems;
+                            private int                 _maxHotbarItems = 5;
+
+        [Header("Hotbar UI")]
+        [SerializeField]    private GameObject          _hotBarPanel;
+        [SerializeField]    private GameObject          _hotbarItemPrefab;
+
         void Start()
         {
             //_items = new List<BaseItem>();
-            foreach (var item in _items) { _isLocked.Add(false); }
-            _currentWeight = _baseWeight;
+            _isLocked = new List<bool>();
 
-            RenderInventory();
+            _hotbarItems = new BaseItem[_maxHotbarItems];
+
+            if (_inventoryItems != null)
+            {
+                foreach (var item in _inventoryItems) { _isLocked.Add(false); }
+            }
+
+            for (int i = 0; i < _maxHotbarItems; i++)
+            {
+                GameObject hotbarItem =  Instantiate(_hotbarItemPrefab, _hotBarPanel.transform);
+                if (_hotbarItems[i] != null)
+                {
+                    hotbarItem.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = (_hotbarItems[i]._quantity.ToString());
+                }
+            }
+
+            _currentWeight = _baseWeight;
         }
 
         void Update()
         {
-            foreach (var item in _items)
-            {
-                _currentWeight += item.getWeight();
-            }
+            
         }
 
         public void AddItem(BaseItem newItem)
         {
-            foreach (var item in _items)
+            foreach (var item in _inventoryItems)
             {
-                //if (item.itemID == newItem.itemID)
-                //{
-                //    item.quantity += newItem.quantity;
-                //    _currentWeight += newItem.weight * newItem.quantity;
-                //    return;
-                //}
+                if (item.getID() == newItem.getID())
+                {
+                    item._quantity += newItem._quantity;
+                    _currentWeight += newItem.getWeight() * newItem._quantity;
+                    return;
+                }
             }
 
-            _items.Add(newItem);
+            _inventoryItems.Add(newItem);
+            _isLocked.Add(false);
             _currentWeight += newItem.getWeight() * newItem._quantity;
         }
 
-
-        public void RenderInventory()
+        private void RenderInventory()
         {
             foreach (Transform child in _inventoryPanel.transform)
             {
@@ -83,7 +106,7 @@ namespace Player.Inventory
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
                 itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
                 itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item) );
-                itemUI.transform.Find("Qauntity").GetComponentInChildren<TextMeshProUGUI>().text = item._quantity.ToString();
+                itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item._quantity.ToString();
             }
         }
 
@@ -91,11 +114,12 @@ namespace Player.Inventory
         {
             _currentlySelected = item;
             _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
+            _itemDescPanel.transform.Find("Desc_Scroll").GetComponentInChildren<TextMeshProUGUI>().text = item.getItemDescription();
         }
 
         private List<BaseItem> SortInventory(SortingType type)
         {
-            List <BaseItem> temp = _items;
+            List <BaseItem> temp = _inventoryItems;
 
             switch (type)
             {
@@ -123,22 +147,16 @@ namespace Player.Inventory
         }
         public void LockItem()
         {
-            //if (_currentlySelected != null)
-            //{
-            //    int index = -1;
-            //    foreach (BaseItem item in _items)
-            //    {
-            //        // find item id
-            //        if (item.itemID == _currentlySelected.itemID) { break; }
-            //        else { index++; }
-            //    }
-            //    if (_items[index].isLocked == true) { _items[index].isLocked = false; }
-            //    else if (_items[index].isLocked == false) { _items[index].isLocked = true; }
-            //}
             if (_currentlySelected != null)
             {
                 int index = -1;
-                Debug.Log("Locked");
+                foreach (BaseItem item in _inventoryItems)
+                {
+                    index++;
+                    if (item.getID() == _currentlySelected.getID()) { break; }
+                }
+                if (_isLocked[index] == true) { _isLocked[index] = false; }
+                else if (_isLocked[index] == false) { _isLocked[index] = true; }
             }
         }
 
@@ -146,6 +164,16 @@ namespace Player.Inventory
         {
             int newSort = ((int) _currentSort + 1) % ((int) SortingType.TOTAL);
             _currentSort = (SortingType) newSort;
+        }
+
+        public void ToggleInventory()
+        {
+            if (_inventory.active == false)
+            {
+                _inventory.SetActive(true);
+                RenderInventory();
+            }
+            else { _inventory.SetActive(false); }
         }
     }
 }

@@ -19,7 +19,7 @@ public class BaseItem : ScriptableObject
     private GameObject itemModel;
 
     [SerializeField, Tooltip("Weight of item")]
-    private int _weight;
+    private float _weight;
 
     [SerializeField]
     public int _quantity;
@@ -29,7 +29,7 @@ public class BaseItem : ScriptableObject
     public string getID() { return itemName; }
     public string getDisplayName() { return _displayName; }
     public string getItemDescription() { return _itemDescription; }
-    public int getWeight() { return _weight; }
+    public float getWeight() { return _weight; }
 }
 
 [System.Serializable]
