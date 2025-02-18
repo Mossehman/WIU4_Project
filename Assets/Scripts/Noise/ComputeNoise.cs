@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ComputeNoise : ScriptableObject
+[System.Serializable]
+public abstract class ComputeNoise
 {
     public const int numThreads = 8;
 
 
     public ComputeShader shader;
-    private List<ComputeBuffer> buffersToRelease = new List<ComputeBuffer>();
+    protected List<ComputeBuffer> buffersToRelease = new List<ComputeBuffer>();
 
     /// <summary>
     /// Generates a 3d noise grid of points via compute shader dispatch
@@ -24,17 +25,18 @@ public abstract class ComputeNoise : ScriptableObject
     /// <returns></returns>
     public virtual ComputeBuffer GenerateNoise(ComputeBuffer output, int numPointsPerAxis, float bounds, Vector3 worldBounds, Vector3 center, Vector3 offset, float spacing)
     {
-        int numThreadsPerAxis = Mathf.CeilToInt(numPointsPerAxis / numThreads);
+        int numThreadsPerAxis = Mathf.CeilToInt((float)numPointsPerAxis / (float)numThreads);
+
 
         shader.SetBuffer(0, "points", output);
         shader.SetInt("numPointsPerAxis", numPointsPerAxis);
         shader.SetFloat("bounds", bounds);
-        shader.SetVector("centre", new Vector3(center.x, center.y, center.z));
-        shader.SetVector("offset", new Vector3(offset.x, offset.y, offset.z));
+        shader.SetVector("center", new Vector4(center.x, center.y, center.z));
+        shader.SetVector("offset", new Vector4(offset.x, offset.y, offset.z));
         shader.SetFloat("spacing", spacing);
         shader.SetVector("worldSize", worldBounds);
 
-        shader.Dispatch(0, numThreadsPerAxis, numPointsPerAxis, numThreadsPerAxis);
+        shader.Dispatch(0, numThreadsPerAxis, numThreadsPerAxis, numThreadsPerAxis);
 
         foreach (var buffer in buffersToRelease) {
             if (buffer == null) continue;
