@@ -32,8 +32,10 @@ namespace Player.Inventory
 
         void Start()
         {
-            _items = new List<BaseItem>();
+            //_items = new List<BaseItem>();
             _currentWeight = _baseWeight;
+
+            RenderInventory();
         }
 
         void Update()
@@ -73,7 +75,7 @@ namespace Player.Inventory
             foreach (var item in temp)
             {
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
-                itemUI.transform.Find("Name").GetComponentInChildren<TextMeshProUGUI>().text = item.name;
+                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
                 //itemUI.transform.Find("Qauntity").GetComponentInChildren<TextMeshProUGUI>().text = item.qauntity;
             }
         }
@@ -81,7 +83,7 @@ namespace Player.Inventory
 
         private List<BaseItem> SortInventory(SortingType type)
         {
-            List <BaseItem> temp = new List <BaseItem>();
+            List <BaseItem> temp = _items;
 
             switch (type)
             {

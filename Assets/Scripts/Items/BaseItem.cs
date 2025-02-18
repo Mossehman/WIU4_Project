@@ -6,6 +6,9 @@ public class BaseItem : ScriptableObject
     [SerializeField, Tooltip("This item ID")]
     private string itemName;
 
+    [SerializeField, Tooltip("Item's Display name")]
+    private string _displayName;
+
     [SerializeField, Tooltip("The 2D sprite for our item, use this when displaying the item in UI")]
     private Sprite itemIcon;
 
@@ -13,6 +16,11 @@ public class BaseItem : ScriptableObject
     private GameObject itemModel;
 
     public CraftingRecipe[] recipes;
+
+    public string getDisplayName()
+    {
+        return _displayName;
+    }
 
 }
 

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: New Item
   m_EditorClassIdentifier: 
   itemName: ID1
+  _displayName: item1
   itemIcon: {fileID: 0}
   itemModel: {fileID: 0}
   recipes: []
