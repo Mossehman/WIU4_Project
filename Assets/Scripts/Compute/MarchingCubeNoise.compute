@@ -1,10 +1,10 @@
 #pragma kernel GenerateNoise
-#pragma include "/Includes/Noise.compute"
+#include "/Includes/Noise.compute"
 
 static const int numThreads = 8;
 
 RWStructuredBuffer<float4> points;  // The points data to be read by our marching cubes script, x y and z represent the position, w represents the noise value
-uint numPointsPerAxis;              // Number of points on each axis to sample
+int numPointsPerAxis;              // Number of points on each axis to sample
 float bounds;                       // Total size of the bounding box in which the points are generated in (maybe change to float3?)
 float3 center;						// Center at which our noise is generated from
 float3 offset;						// Offset on the noise sampling
@@ -25,30 +25,30 @@ float hardFloorWeight; //TODO: Modify this code for the cave gen concept
 
 float4 params;
 
-int indexFromCoord(uint x, uint y, uint z) {
+int indexFromCoord(uint x, uint y, uint z) { 
     return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
 }
 
 
 [numthreads(numThreads, numThreads, numThreads)]
-void GenerateNoise (uint3 id : SV_DispatchThreadID)
+void GenerateNoise (int3 id : SV_DispatchThreadID)
 {
 	if (id.x >= numPointsPerAxis || id.y >= numPointsPerAxis || id.z >= numPointsPerAxis) {
 		return;
 	}
 
-	float3 noiseSamplePoint = center + (id * spacing) - (bounds * 0.5);
+	float3 noiseSamplePoint = center + id * spacing - bounds / 2;
 	float noiseOffset = 0;
 	float noiseValue = 0;
 
 	// Initialise the variables for calculating the final noise value
-	float frequency = noiseScale * 0.01f;
+	float frequency = noiseScale / 100;
 	float amplitude = 1;
 	float weight = 1;
 
 	for (int o = 0; o < octaves; o++)
 	{
-		float n = SimplexNoise3D((noiseSamplePoint + noiseOffset) * frequency + offsets[o] + offset);
+		float n = snoise((noiseSamplePoint + noiseOffset) * frequency + offsets[o] + offset);
 		float v = 1 - abs(n);
 
 		v = v * v;	

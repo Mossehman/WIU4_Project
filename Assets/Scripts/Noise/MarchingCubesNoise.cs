@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Marching Cubes Noise Gen", menuName = "Noise/Compute/Marching Cubes")]
+[System.Serializable]
 public class MarchingCubesNoise : ComputeNoise
 {
     [Header("Noise")]
@@ -30,8 +30,10 @@ public class MarchingCubesNoise : ComputeNoise
             noiseOffsets[i] = new Vector3((float)randomVal.NextDouble() * 2 - 1, (float)randomVal.NextDouble() * 2 - 1, (float)randomVal.NextDouble() * 2 - 1) * offsetRange;
         }
         ComputeBuffer offsetsBuffer = new ComputeBuffer(noiseOffsets.Length, sizeof(float) * 3);
+        offsetsBuffer.SetData(noiseOffsets);
+        buffersToRelease.Add(offsetsBuffer);
 
-        shader.SetVector("center", new Vector3(center.x, center.y, center.z));
+        shader.SetVector("center", new Vector4(center.x, center.y, center.z));
         shader.SetInt("octaves", Mathf.Max(1, octaves));
         shader.SetFloat("lacunarity", lacunarity);
         shader.SetFloat("persistence", persistence);
