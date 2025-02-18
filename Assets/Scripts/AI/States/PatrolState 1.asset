@@ -9,6 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61613ff91668693409c7ea79757e909d, type: 3}
-  m_Name: New Test State
+  m_Script: {fileID: 11500000, guid: 18ad2548a540c8543bb449a3da0d2838, type: 3}
+  m_Name: PatrolState 1
   m_EditorClassIdentifier: 
+  statetime: 2
+  hungerdrain: 15
+  numOfWalkDirections: 8
