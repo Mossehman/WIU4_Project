@@ -9,10 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc69bc22d7912834ba6d47ad3da74e91, type: 3}
-  m_Name: Screen Tint 2
+  m_Script: {fileID: 11500000, guid: 61613ff91668693409c7ea79757e909d, type: 3}
+  m_Name: New Test State
   m_EditorClassIdentifier: 
-  shader: {fileID: 4800000, guid: 82dea2370a66b864189210dbdbf7e3b7, type: 3}
-  input: 4
-  toProfile: 0
-  color: {r: 0.17864946, g: 0.96981126, b: 0, a: 1}

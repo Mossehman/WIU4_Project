@@ -11,6 +11,11 @@ public sealed class FiniteStateMachine : MonoBehaviour
     private BaseState currentState = null;  // The currently active state that is defining the AI's behaviour
     private BaseState nextState = null;     // The queued state to swap to, this will allow the current state to finish it's code execution and only swap on the next frame
 
+
+    [Header("Debugging")]   // note: since the active state only actually switches on the start of the next frame, this will technically be 1 frame early
+    [SerializeField] private string currentStateName = string.Empty;
+
+
     private void Awake()
     {
         nextState = null;
@@ -29,6 +34,12 @@ public sealed class FiniteStateMachine : MonoBehaviour
             BaseState stateInstance = Instantiate(state.stateData);
             stateInstance.OnInit(this);
             finiteStates.TryAdd(state.stateID, stateInstance);
+
+            if (nextState == null) {
+                currentState = stateInstance;
+                stateInstance.OnStateEnter(this);
+            }
+
         }
     }
 
@@ -60,6 +71,7 @@ public sealed class FiniteStateMachine : MonoBehaviour
     {
         if (!finiteStates.ContainsKey(newStateID)) {  return false; }
         nextState = finiteStates[newStateID];
+        currentStateName = newStateID;
         return true;
     }
 
