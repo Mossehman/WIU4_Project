@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using TMPro;
+using UnityEngine.UI;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using static UnityEditor.Progress;
 
@@ -14,21 +16,23 @@ namespace Player.Inventory
         HEAVIEST,
         LIGHTEST,
         QUANTITY,
+        TOTAL
     }
 
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Inventory Logic")]
-        [SerializeField] private List<BaseItem> _items;
-        [SerializeField] public float _baseWeight = 0.0f;
-        [SerializeField] public float _baseMaxWeight = 10.0f;
-        [SerializeField] private float _currentWeight;
-        [SerializeField] private SortingType _currentSort = SortingType.DATE_ADDED;
+        [SerializeField]    private List<BaseItem>      _items;
+        [SerializeField]    public float                _baseWeight = 0.0f;
+        [SerializeField]    public float                _baseMaxWeight = 10.0f;
+        [SerializeField]    private float               _currentWeight;
+        [SerializeField]    private SortingType         _currentSort = SortingType.DATE_ADDED;
+                            private BaseItem            _currentlySelected;
 
         [Header("Inventory UI")]
-        [SerializeField] private GameObject _inventoryPanel;
-        [SerializeField] private GameObject _itemPrefab;
-        [SerializeField] private GameObject _itemDescPanel;
+        [SerializeField]    private GameObject          _inventoryPanel;
+        [SerializeField]    private GameObject          _itemPrefab;
+        [SerializeField]    private GameObject          _itemDescPanel;
 
         void Start()
         {
@@ -76,10 +80,16 @@ namespace Player.Inventory
             {
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
                 itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
+                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item) );
                 //itemUI.transform.Find("Qauntity").GetComponentInChildren<TextMeshProUGUI>().text = item.qauntity;
             }
         }
 
+        public void ShowItem(BaseItem item)
+        {
+            _currentlySelected = item;
+            _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
+        }
 
         private List<BaseItem> SortInventory(SortingType type)
         {
@@ -109,18 +119,22 @@ namespace Player.Inventory
 
             return temp;
         }
-        public void LockItem(int itemID)
+        public void LockItem()
         {
             //_items[itemID].isLocked = true;
+            if (_currentlySelected != null)
+            {
+                foreach (BaseItem item in _items)
+                {
+                    // check
+                }
+            }
         }
-        public void UnlockItem(int itemID)
-        {
-            //_items[itemID].isLocked = false;
-        }
-
+        
         public void SwitchSort()
         {
-
+            int newSort = ((int) _currentSort + 1) % ((int) SortingType.TOTAL);
+            _currentSort = (SortingType) newSort;
         }
     }
 }
