@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class PlacableSlot : MonoBehaviour
+public class PlacableSlot : MonoBehaviour, IDropHandler
 {
-    // Start is called before the first frame update
-    void Start()
+    public void OnDrop(PointerEventData eventData)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (transform.childCount == 0 && transform.tag == "Hotbar")
+        {
+            GameObject dropped = eventData.pointerDrag;
+            Draggable draggableItem = dropped.GetComponent<Draggable>();
+            draggableItem._parentAfterDrag = transform;
+        }
     }
 }

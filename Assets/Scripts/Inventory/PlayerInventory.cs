@@ -44,6 +44,7 @@ namespace Player.Inventory
 
         [Header("Hotbar UI")]
         [SerializeField]    private GameObject          _hotBarPanel;
+        [SerializeField]    private GameObject[]        _hotbarSlots;
         [SerializeField]    private GameObject          _hotbarItemPrefab;
 
         void Start()

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7604123741681939087}
   - component: {fileID: 8917586665980400742}
   - component: {fileID: 1505160607850265344}
+  - component: {fileID: -5445681906678960671}
   m_Layer: 5
   m_Name: hotbarItem
   m_TagString: Untagged
@@ -77,6 +78,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &-5445681906678960671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2232338951755541023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b265ebed0899cd043be8435aab91ae5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4361628351297018262
 GameObject:
   m_ObjectHideFlags: 0
