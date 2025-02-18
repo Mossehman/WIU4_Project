@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
-  m_Name: ExampleSoundLibrary
+  m_Script: {fileID: 11500000, guid: d8df90f2e698d674ab999c83ffcd7d62, type: 3}
+  m_Name: IdleState 1
   m_EditorClassIdentifier: 
-  sounds:
-  - soundName: NullAudioClip
-    clip: {fileID: 0}
-    priority: 64
-    volume: 1
+  statetime: 1
+  food:
+  - Passive
+  awaketime:
+    start: 3
+    end: 0
