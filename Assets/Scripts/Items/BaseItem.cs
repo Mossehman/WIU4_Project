@@ -9,19 +9,27 @@ public class BaseItem : ScriptableObject
     [SerializeField, Tooltip("Item's Display name")]
     private string _displayName;
 
+    [SerializeField, Tooltip("Item Description")]
+    private string _itemDescription;
+
     [SerializeField, Tooltip("The 2D sprite for our item, use this when displaying the item in UI")]
     private Sprite itemIcon;
 
     [SerializeField, Tooltip("The 3D model for our item that the player will hold/interact with")]
     private GameObject itemModel;
 
+    [SerializeField, Tooltip("Weight of item")]
+    private int _weight;
+
+    [SerializeField]
+    public int _quantity;
+
     public CraftingRecipe[] recipes;
 
-    public string getDisplayName()
-    {
-        return _displayName;
-    }
-
+    public string getID() { return itemName; }
+    public string getDisplayName() { return _displayName; }
+    public string getItemDescription() { return _itemDescription; }
+    public int getWeight() { return _weight; }
 }
 
 [System.Serializable]

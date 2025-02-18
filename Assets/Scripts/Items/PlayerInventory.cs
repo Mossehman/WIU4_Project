@@ -28,6 +28,7 @@ namespace Player.Inventory
         [SerializeField]    private float               _currentWeight;
         [SerializeField]    private SortingType         _currentSort = SortingType.DATE_ADDED;
                             private BaseItem            _currentlySelected;
+                            private List<bool>          _isLocked;
 
         [Header("Inventory UI")]
         [SerializeField]    private GameObject          _inventoryPanel;
@@ -37,6 +38,7 @@ namespace Player.Inventory
         void Start()
         {
             //_items = new List<BaseItem>();
+            foreach (var item in _items) { _isLocked.Add(false); }
             _currentWeight = _baseWeight;
 
             RenderInventory();
@@ -46,7 +48,7 @@ namespace Player.Inventory
         {
             foreach (var item in _items)
             {
-                //_currentWeight += item.weight;
+                _currentWeight += item.getWeight();
             }
         }
 
@@ -63,7 +65,7 @@ namespace Player.Inventory
             }
 
             _items.Add(newItem);
-            //_currentWeight += newItem.weight * newItem.quantity;
+            _currentWeight += newItem.getWeight() * newItem._quantity;
         }
 
 
@@ -81,7 +83,7 @@ namespace Player.Inventory
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
                 itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
                 itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item) );
-                //itemUI.transform.Find("Qauntity").GetComponentInChildren<TextMeshProUGUI>().text = item.qauntity;
+                itemUI.transform.Find("Qauntity").GetComponentInChildren<TextMeshProUGUI>().text = item._quantity.ToString();
             }
         }
 
@@ -105,15 +107,15 @@ namespace Player.Inventory
                     break;
 
                 case SortingType.HEAVIEST:
-                    //temp.Sort((a, b) => b.weight.CompareTo(a.weight));
+                    temp.Sort((a, b) => b.getWeight().CompareTo(a.getWeight()));
                     break;
 
                 case SortingType.LIGHTEST:
-                    //temp.Sort((a, b) => a.weight.CompareTo(b.weight));
+                    temp.Sort((a, b) => a.getWeight().CompareTo(b.getWeight()));
                     break;
 
                 case SortingType.QUANTITY:
-                    //temp.Sort((a, b) => b.quantity.CompareTo(a.quantity));
+                    temp.Sort((a, b) => b._quantity.CompareTo(a._quantity));
                     break;
             }
 
