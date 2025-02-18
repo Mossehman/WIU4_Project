@@ -25,7 +25,7 @@ public abstract class ComputeNoise
     /// <returns></returns>
     public virtual ComputeBuffer GenerateNoise(ComputeBuffer output, int numPointsPerAxis, float bounds, Vector3 worldBounds, Vector3 center, Vector3 offset, float spacing)
     {
-        int numThreadsPerAxis = Mathf.CeilToInt((float)numPointsPerAxis / (float)numThreads);
+        int numThreadsPerAxis = Mathf.CeilToInt(numPointsPerAxis / (float)numThreads);
 
 
         shader.SetBuffer(0, "points", output);

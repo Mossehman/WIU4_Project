@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer)), ExecuteInEditMode]
@@ -21,16 +23,24 @@ public class MarchingCubesGenerator : MonoBehaviour
     private ComputeBuffer trianglesBuffer;
     private ComputeBuffer triCountBuffer;
 
+    [Header("Chunks")]
+    [SerializeField] private Vector3Int chunkCount = new Vector3Int(1, 1, 1);
+    [SerializeField] private Transform chunkRenderPos;                                          // This is the position the chunks will use to see if they should be generated, unrendered or destroyed
+    [SerializeField] private Vector2Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
+    private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();         // Maintains a list of all active chunks to unrender and destroy them accordingly
+    private Dictionary<Vector2Int, Chunk> unloadedChunks = new Dictionary<Vector2Int, Chunk>(); // When player render distance is on the edge of an existing chunk, set it to inactive instead of destroying it
+
     bool updated = false;
 
-        
+
     public void GenerateMesh()
     {
+        // Get the number of voxels/cubes we will need to march through in the compute shader
         int numVoxelsPerAxis = numPointsPerAxis - 1;
         int numThreadsPerAxis = Mathf.CeilToInt(numVoxelsPerAxis / (float)numThreads);
         float spacing = bounds / (numPointsPerAxis - 1);
 
-        Vector3 worldBounds = new Vector3(2, 1, 2) * bounds;
+        Vector3 worldBounds = new Vector3(chunkCount.x, chunkCount.y, chunkCount.z) * bounds;
         marchingCubesNoise.GenerateNoise(pointsBuffer, numPointsPerAxis, bounds, worldBounds, center, offset, spacing);
 
         trianglesBuffer.SetCounterValue(0); //reset the index of the triangle buffer back to the start of the list
@@ -96,12 +106,14 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         mesh.RecalculateNormals();
         GetComponent<MeshFilter>().sharedMesh = mesh;
+        ReleaseBuffers();
     }
 
 
 
     void OnDestroy()
     {
+        // release buffers if we delete the generator (eg: when we change scenes)
         if (Application.isPlaying)
         {
             ReleaseBuffers();
@@ -132,7 +144,14 @@ public class MarchingCubesGenerator : MonoBehaviour
 
     private void OnValidate()
     {
+        // Do not update the mesh when inspector data changes if we in play mode
+        if (Application.isPlaying) return;
         updated = true;
+    }
+
+    private void OnApplicationQuit()
+    {
+        ReleaseBuffers();
     }
 
     void ReleaseBuffers()
@@ -145,18 +164,24 @@ public class MarchingCubesGenerator : MonoBehaviour
         }
     }
 
-    //private void OnValidate()
-    //{
-    //    CreateBuffers();
-    //    GenerateMesh();
-    //    ReleaseBuffers();
-    //}
-
     void Start()
     {
         CreateBuffers();
         GenerateMesh();
         ReleaseBuffers();
+    }
+
+    private void GenerateChunks()
+    {
+
+    }
+
+    private Vector2Int posToChunkIndex(Vector3 position)
+    {
+        int x = Mathf.RoundToInt(position.x / bounds);
+        int z = Mathf.RoundToInt(position.z / bounds);
+
+        return new Vector2Int(x, z);
     }
 
     // Update is called once per frame
