@@ -84,19 +84,33 @@ void GenerateNoise (int3 id : SV_DispatchThreadID)
 
 	// if the noise value is below the floor, we scale the value accordingly
 
-	if (noiseSamplePoint.y + offset.y < hardFloor) {
-		if (noiseSamplePoint.y + offset.y < hardFloor - spacing.y * 2) {
-			finalNoiseValue += min(-0.9, snoise(noiseSamplePoint + offset));
-		}	
-		else {
-			finalNoiseValue += hardFloorWeight + snoise(noiseSamplePoint + offset) * 4;
-		}
-	}
 
 	if (closeEdges) {
 		float yEdgeOffset = abs(noiseSamplePoint.y * 2) - worldSize.y + spacing.y * 0.5f;
 		float edgeWeight = saturate(sign(yEdgeOffset));
 		finalNoiseValue = finalNoiseValue * (1 - edgeWeight) - 100 * edgeWeight;
+	}
+
+	if (noiseSamplePoint.y + offset.y < hardFloor) {
+		float distanceFromHardFloorBottom = (hardFloor - spacing.y * 6) - (noiseSamplePoint.y + offset.y);
+
+		if (noiseSamplePoint.y + offset.y < hardFloor - spacing.y * 6) {
+
+			if (distanceFromHardFloorBottom <= spacing.y * 12) {
+				finalNoiseValue += max(10, snoise(noiseSamplePoint + offset) * 20);
+			}
+			else
+			{
+				finalNoiseValue += min(-10, snoise(noiseSamplePoint + offset));
+			}
+		}	
+		else {
+			finalNoiseValue += hardFloorWeight + snoise(noiseSamplePoint + offset) * 3;
+		}
+	}
+
+	if (noiseSamplePoint.y + offset.y < -20) {
+		finalNoiseValue += hardFloorWeight + snoise(noiseSamplePoint + offset) * 4;
 	}
 
 	int index = indexFromCoord(id.x,id.y,id.z);

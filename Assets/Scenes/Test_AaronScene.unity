@@ -362,7 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2375bc35afcc0b84f8e501d1df28fec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 11.7
+  radius: 0
   weightModifier: -71.7
 --- !u!4 &160751066
 Transform:
@@ -571,26 +571,26 @@ MonoBehaviour:
     shader: {fileID: 7200000, guid: 1bfe96eadcc62c848ba1f0dd187cbf34, type: 3}
     seed: 46
     octaves: 4
-    lacunarity: 5.4
-    persistence: 1.47
-    noiseScale: 1
-    noiseWeight: 6.99
+    lacunarity: 1.49
+    persistence: 2.06
+    noiseScale: 2.17
+    noiseWeight: 9.75
     closeEdges: 1
-    floorOffset: -1.4
-    weightMultiplier: 1
-    hardFloorHeight: 1.69
-    hardFloorWeight: 36.08
-    shaderParams: {x: 1.09, y: 0, z: 0, w: 0}
+    floorOffset: 27.7
+    weightMultiplier: 0.88
+    hardFloorHeight: 6.85
+    hardFloorWeight: 32.9
+    shaderParams: {x: 1, y: 0, z: 0, w: 0}
   marchingCubes: {fileID: 7200000, guid: 4ecfb4dfb5a23514e854485642bd77d2, type: 3}
   surfaceLevel: 5.67
-  numPointsPerAxis: 40
-  bounds: 20.2
+  numPointsPerAxis: {x: 30, y: 119, z: 30}
+  bounds: {x: 20, y: 49.9, z: 20}
   center: {x: 1, y: 1, z: 1}
   offset: {x: 0, y: 0, z: 0}
   mat: {fileID: 0}
   chunkPrefab: {fileID: 4771254396308166945, guid: 00fb46ff2a8c5584e888c0fda1ef4151, type: 3}
-  player: {fileID: 2076736077}
-  chunkRenderDistance: {x: 2, y: 2}
+  player: {fileID: 963194228}
+  chunkRenderDistance: {x: 5, y: 0, z: 5}
 --- !u!1 &675353707
 GameObject:
   m_ObjectHideFlags: 0
