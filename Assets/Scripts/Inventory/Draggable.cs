@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public RawImage image;
+    public Image image;
     public Transform _parentAfterDrag;
 
     public void OnBeginDrag(PointerEventData eventData)

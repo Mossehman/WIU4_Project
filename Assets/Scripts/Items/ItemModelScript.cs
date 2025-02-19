@@ -46,4 +46,9 @@ public class ItemModelScript : MonoBehaviour
         modelRB.isKinematic = false;
         modelCollider.isTrigger = false;
     }
+
+    public BaseItem getSO ()
+    {
+        return item;
+    }
 }
