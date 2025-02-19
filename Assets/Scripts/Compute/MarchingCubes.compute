@@ -16,7 +16,7 @@ struct Triangle {
 };
 
 float surfaceLevel;     // the defined value to determine our marching cubes configuration based on which 8 points in the cube are above or below the surface level
-int numPointsPerAxis;  // the number of marching cube sample points along each X Y and Z axis
+int3 numPointsPerAxis;  // the number of marching cube sample points along each X Y and Z axis
 
 
 // AppendStructuredBuffer means only the shader can append to the end of it
@@ -33,8 +33,8 @@ float3 vertexInterpolation(float4 v1, float4 v2) {
     //return lerp(v1.xyz, v2.xyz, 0.5f);
 }
 
-int indexFromCoord(int x, int y, int z) {
-    return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
+int indexFromCoord(uint x, uint y, uint z) { 
+    return z * numPointsPerAxis.z * numPointsPerAxis.y + y * numPointsPerAxis.x + x;
 }
 
 
@@ -42,7 +42,7 @@ int indexFromCoord(int x, int y, int z) {
 [numthreads(threadGroupSize, threadGroupSize, threadGroupSize)] //the defined dimensions of the thread groups for our code to run on (since compute shaders are multithreaded)
 void MarchingCubes (int3 id : SV_DispatchThreadID)             //id represents the thread coordinate that is handling this specific dataset in the numthreads group
 {
-    if (id.x >= numPointsPerAxis - 1 || id.y >= numPointsPerAxis - 1 || id.z >= numPointsPerAxis - 1) { return; } //each cube includes it's neighbouring points, so we do not check those
+    if (id.x >= numPointsPerAxis.x - 1 || id.y >= numPointsPerAxis.y - 1 || id.z >= numPointsPerAxis.z - 1) { return; } //each cube includes it's neighbouring points, so we do not check those
 
     float4 cubeCorners[8] = {
         cubePoints[indexFromCoord(id.x, id.y, id.z)],

@@ -23,20 +23,20 @@ public abstract class ComputeNoise
     /// <param name="offset"></param>
     /// <param name="spacing"></param>
     /// <returns></returns>
-    public virtual ComputeBuffer GenerateNoise(ComputeBuffer output, int numPointsPerAxis, float bounds, Vector3 worldBounds, Vector3 center, Vector3 offset, float spacing)
+    public virtual ComputeBuffer GenerateNoise(ComputeBuffer output, Vector3Int numPointsPerAxis, Vector3 bounds, Vector3 worldBounds, Vector3 center, Vector3 offset, Vector3 spacing)
     {
-        int numThreadsPerAxis = Mathf.CeilToInt(numPointsPerAxis / (float)numThreads);
+        Vector3Int numThreadsPerAxis = new Vector3Int(Mathf.CeilToInt(numPointsPerAxis.x / (float)numThreads), Mathf.CeilToInt(numPointsPerAxis.y / (float)numThreads), Mathf.CeilToInt(numPointsPerAxis.z / (float)numThreads));
 
 
         shader.SetBuffer(0, "points", output);
-        shader.SetInt("numPointsPerAxis", numPointsPerAxis);
-        shader.SetFloat("bounds", bounds);
+        shader.SetInts("numPointsPerAxis", numPointsPerAxis.x, numPointsPerAxis.y, numPointsPerAxis.z);
+        shader.SetVector("bounds", bounds);
         shader.SetVector("center", new Vector4(center.x, center.y, center.z));
         shader.SetVector("offset", new Vector4(offset.x, offset.y, offset.z));
-        shader.SetFloat("spacing", spacing);
+        shader.SetVector("spacing", spacing);
         shader.SetVector("worldSize", worldBounds);
 
-        shader.Dispatch(0, numThreadsPerAxis, numThreadsPerAxis, numThreadsPerAxis);
+        shader.Dispatch(0, numThreadsPerAxis.x, numThreadsPerAxis.y, numThreadsPerAxis.z);
 
         foreach (var buffer in buffersToRelease) {
             if (buffer == null) continue;

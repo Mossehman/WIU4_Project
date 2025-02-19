@@ -20,4 +20,6 @@ public class Chunk : MonoBehaviour
 
     public MeshFilter GetMeshFilter() { return meshFilter; }
     public MeshRenderer GetMeshRenderer() {  return meshRenderer; }
+
+    public MeshCollider GetMeshCollider() { return meshCollider; }
 }

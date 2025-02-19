@@ -1,15 +1,26 @@
 #pragma kernel GenerateNoise
+#include "/Includes/SimplexNoise.compute"
 #include "/Includes/Noise.compute"
 
 static const int numThreads = 8;
 
 RWStructuredBuffer<float4> points;  // The points data to be read by our marching cubes script, x y and z represent the position, w represents the noise value
-int numPointsPerAxis;              // Number of points on each axis to sample
-float bounds;                       // Total size of the bounding box in which the points are generated in (maybe change to float3?)
+int3 numPointsPerAxis;              // Number of points on each axis to sample
+float3 bounds;                      // Total size of the bounding box in which the points are generated in (maybe change to float3?)
 float3 center;						// Center at which our noise is generated from
 float3 offset;						// Offset on the noise sampling
-float spacing;						// Spacing between each noise sample
+float3 spacing;						// Spacing between each noise sample
 float3 worldSize;
+
+struct SphereEditor {
+	float3 position;
+	float radius;
+	float noiseModifier;
+};
+
+StructuredBuffer<SphereEditor> spheres;
+int numSpheres;
+
 
 StructuredBuffer<float3> offsets;
 int octaves;                        // The number of loops the marching cubes runs on (higher octaves == finer detail)
@@ -26,14 +37,14 @@ float hardFloorWeight; //TODO: Modify this code for the cave gen concept
 float4 params;
 
 int indexFromCoord(uint x, uint y, uint z) { 
-    return z * numPointsPerAxis * numPointsPerAxis + y * numPointsPerAxis + x;
+    return z * numPointsPerAxis.z * numPointsPerAxis.y + y * numPointsPerAxis.x + x;
 }
 
 
 [numthreads(numThreads, numThreads, numThreads)]
 void GenerateNoise (int3 id : SV_DispatchThreadID)
 {
-	if (id.x >= numPointsPerAxis || id.y >= numPointsPerAxis || id.z >= numPointsPerAxis) {
+	if (id.x >= numPointsPerAxis.x || id.y >= numPointsPerAxis.y || id.z >= numPointsPerAxis.z) {
 		return;
 	}
 
@@ -47,7 +58,7 @@ void GenerateNoise (int3 id : SV_DispatchThreadID)
 
 	for (int o = 0; o < octaves; o++)
 	{
-		float n = snoise((noiseSamplePoint + offset) * frequency + offsets[o]);
+		float n = SimplexNoise3D((noiseSamplePoint + offset) * frequency + offsets[o]);
 		float v = 1 - abs(n);
 
 		v = v * v;	
@@ -61,14 +72,30 @@ void GenerateNoise (int3 id : SV_DispatchThreadID)
 
 	float finalNoiseValue = -(noiseSamplePoint.y + floorOffset) + noiseValue * noiseWeight + (noiseSamplePoint.y % params.x) * params.y;
 
+	for (int i = 0; i < numSpheres; i++)
+	{
+		if ((spheres[i].position.x - offset.x - noiseSamplePoint.x) * (spheres[i].position.x - offset.x - noiseSamplePoint.x) +
+			(spheres[i].position.y - offset.y - noiseSamplePoint.y) * (spheres[i].position.y - offset.y - noiseSamplePoint.y) +
+			(spheres[i].position.z - offset.z - noiseSamplePoint.z) * (spheres[i].position.z - offset.z - noiseSamplePoint.z) <= spheres[i].radius * spheres[i].radius)
+			{
+				finalNoiseValue += spheres[i].noiseModifier;
+			}
+	}
+
 	// if the noise value is below the floor, we scale the value accordingly
-	if (noiseSamplePoint.y < hardFloor) {
-		finalNoiseValue += hardFloorWeight;
+
+	if (noiseSamplePoint.y + offset.y < hardFloor) {
+		if (noiseSamplePoint.y + offset.y < hardFloor - spacing.y * 2) {
+			finalNoiseValue += min(-0.9, snoise(noiseSamplePoint + offset));
+		}	
+		else {
+			finalNoiseValue += hardFloorWeight + snoise(noiseSamplePoint + offset) * 4;
+		}
 	}
 
 	if (closeEdges) {
-		float3 edgeOffsets = abs(noiseSamplePoint * 2) - worldSize + spacing * 0.5f;
-		float edgeWeight = saturate(sign(max(max(edgeOffsets.x, edgeOffsets.y), edgeOffsets.z)));
+		float yEdgeOffset = abs(noiseSamplePoint.y * 2) - worldSize.y + spacing.y * 0.5f;
+		float edgeWeight = saturate(sign(yEdgeOffset));
 		finalNoiseValue = finalNoiseValue * (1 - edgeWeight) - 100 * edgeWeight;
 	}
 

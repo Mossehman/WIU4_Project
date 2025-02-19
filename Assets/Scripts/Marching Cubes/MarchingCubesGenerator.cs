@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class MarchingCubesGenerator : MonoBehaviour
 {
     const int numThreads = 8;
@@ -14,8 +11,8 @@ public class MarchingCubesGenerator : MonoBehaviour
 
     [Header("Marching Cubes config")]
     public float surfaceLevel = 0.4f;
-    public int numPointsPerAxis = 30;
-    public float bounds = 1;
+    public Vector3Int numPointsPerAxis = new Vector3Int(30, 30, 30);
+    public Vector3 bounds = new Vector3(20, 20, 20);
     public Vector3 center = Vector3.one;
     public Vector3 offset = Vector3.zero;
     public Material mat;
@@ -27,8 +24,8 @@ public class MarchingCubesGenerator : MonoBehaviour
     [Header("Chunks")]
     [SerializeField] private GameObject chunkPrefab;
     [SerializeField] private Transform player;                                                  // This is the position the chunks will use to see if they should be generated, unrendered or destroyed
-    [SerializeField] private Vector2Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
-    private Dictionary<Vector2Int, Chunk> loadedChunks = new Dictionary<Vector2Int, Chunk>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
+    [SerializeField] private Vector3Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
+    private Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
 
 
     //private Dictionary<Vector2Int, Chunk> unloadedChunks = new Dictionary<Vector2Int, Chunk>(); // When player render distance is on the edge of an existing chunk, set it to inactive instead of destroying it
@@ -39,20 +36,31 @@ public class MarchingCubesGenerator : MonoBehaviour
     public void GenerateMesh(Chunk chunk)
     {
         // Get the number of voxels/cubes we will need to march through in the compute shader
-        int numVoxelsPerAxis = numPointsPerAxis - 1;
-        int numThreadsPerAxis = Mathf.CeilToInt(numVoxelsPerAxis / (float)numThreads);
-        float spacing = bounds / (numPointsPerAxis - 1);
+        Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
+        Vector3Int numThreadsPerAxis = new Vector3Int(Mathf.CeilToInt(numVoxelsPerAxis.x / (float)numThreads), Mathf.CeilToInt(numVoxelsPerAxis.y / (float)numThreads), Mathf.CeilToInt(numVoxelsPerAxis.z / (float)numThreads));
+        Vector3 spacing = new Vector3(bounds.x / numVoxelsPerAxis.x, bounds.y / numVoxelsPerAxis.y, bounds.z / numVoxelsPerAxis.z);
 
-        Vector3 worldBounds = Vector3.one * bounds;
+        Vector3 worldBounds = bounds;
+        TerrainSphereEditor[] spheres = FindObjectsOfType<TerrainSphereEditor>();
+        SphereEditor[] sphereEdits = new SphereEditor[spheres.Length];
+        for (int i = 0; i < spheres.Length; i++)
+        {
+            sphereEdits[i] = new SphereEditor();
+            sphereEdits[i].position = spheres[i].gameObject.transform.position;
+            sphereEdits[i].radius = spheres[i].radius;
+            sphereEdits[i].noiseModifier = spheres[i].weightModifier;
+        }
+        marchingCubesNoise.spheres = sphereEdits;
+
         marchingCubesNoise.GenerateNoise(pointsBuffer, numPointsPerAxis, bounds, worldBounds, center, chunk.meshOffset, spacing);
 
         trianglesBuffer.SetCounterValue(0); //reset the index of the triangle buffer back to the start of the list
         marchingCubes.SetBuffer(0, "cubePoints", pointsBuffer);
         marchingCubes.SetBuffer(0, "triangles", trianglesBuffer);
-        marchingCubes.SetInt("numPointsPerAxis", numPointsPerAxis);
+        marchingCubes.SetInts("numPointsPerAxis", numPointsPerAxis.x, numPointsPerAxis.y, numPointsPerAxis.z);
         marchingCubes.SetFloat("surfaceLevel", surfaceLevel);
 
-        marchingCubes.Dispatch(0, numThreadsPerAxis, numThreadsPerAxis, numThreadsPerAxis);
+        marchingCubes.Dispatch(0, numThreadsPerAxis.x, numThreadsPerAxis.y, numThreadsPerAxis.z);
 
         ComputeBuffer.CopyCount(trianglesBuffer, triCountBuffer, 0);
         int[] triCountArray = { 0 };
@@ -109,6 +117,10 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         mesh.RecalculateNormals();
         chunk.GetMeshFilter().sharedMesh = mesh;
+        if (chunk.GetMeshCollider() != null)
+        {
+            chunk.GetMeshCollider().sharedMesh = mesh;
+        }
 
     }
 
@@ -129,9 +141,9 @@ public class MarchingCubesGenerator : MonoBehaviour
     }
     void CreateBuffers()
 {
-    int numPoints = numPointsPerAxis * numPointsPerAxis * numPointsPerAxis;
-    int numVoxelsPerAxis = numPointsPerAxis - 1;
-    int numVoxels = numVoxelsPerAxis * numVoxelsPerAxis * numVoxelsPerAxis;
+    int numPoints = numPointsPerAxis.x * numPointsPerAxis.y * numPointsPerAxis.z;
+    Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
+    int numVoxels = numVoxelsPerAxis.x * numVoxelsPerAxis.y * numVoxelsPerAxis.z;
     int maxTriangleCount = numVoxels * 5;
 
     if (pointsBuffer == null) { Debug.Log("Buffer was null!!!"); }
@@ -177,29 +189,34 @@ public class MarchingCubesGenerator : MonoBehaviour
     {
         if (player == null) { return; }
 
-        Vector2Int startingChunkIndex = PosToChunkIndex(player.position);
-        HashSet<Vector2Int> currentChunks = new HashSet<Vector2Int>(); //keep a lookup table of the chunks we are currently in
+        Vector3Int startingChunkIndex = PosToChunkIndex(player.position);
+        HashSet<Vector3Int> currentChunks = new HashSet<Vector3Int>(); //keep a lookup table of the chunks we are currently in
 
-        for (int x = startingChunkIndex.x - chunkRenderDistance.x; x <= startingChunkIndex.x + chunkRenderDistance.x; x++) {
-            for (int z = startingChunkIndex.y - chunkRenderDistance.y; z <= startingChunkIndex.y + chunkRenderDistance.y; z++) {
-                currentChunks.Add(new Vector2Int(x, z));
-                if (loadedChunks.ContainsKey(new Vector2Int(x, z))) { continue; } //chunk has already been loaded, no need to add it
+        for (int x = startingChunkIndex.x - chunkRenderDistance.x; x <= startingChunkIndex.x + chunkRenderDistance.x; x++) 
+        {
+            for (int y = startingChunkIndex.y - chunkRenderDistance.y; y <= startingChunkIndex.y + chunkRenderDistance.y; y++)
+            {
+                for (int z = startingChunkIndex.z - chunkRenderDistance.z; z <= startingChunkIndex.z + chunkRenderDistance.z; z++)
+                {
+                    currentChunks.Add(new Vector3Int(x, y, z));
+                    if (loadedChunks.ContainsKey(new Vector3Int(x, y, z))) { continue; } //chunk has already been loaded, no need to add it
 
-                GameObject newChunk = Instantiate(chunkPrefab);
-                newChunk.transform.position = new Vector3(x * bounds, transform.position.y, z * bounds);
-                newChunk.transform.parent = transform;
-                newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds, transform.position.y, z * bounds);
-                loadedChunks.Add(new Vector2Int(x, z), newChunk.GetComponent<Chunk>());
-                GenerateMesh(newChunk.GetComponent<Chunk>());
+                    GameObject newChunk = Instantiate(chunkPrefab);
+                    newChunk.transform.position = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
+                    newChunk.transform.parent = transform;
+                    newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
+                    loadedChunks.Add(new Vector3Int(x, y, z), newChunk.GetComponent<Chunk>());
+                    GenerateMesh(newChunk.GetComponent<Chunk>());
+                }
             }
 
         }
 
-        List<Vector2Int> chunksToRemove  = new List<Vector2Int>();  
+        List<Vector3Int> chunksToRemove  = new List<Vector3Int>();  
 
         foreach (var existingChunk in loadedChunks)
         {
-            Vector2Int chunkPos = existingChunk.Key;
+            Vector3Int chunkPos = existingChunk.Key;
             Chunk chunkData = existingChunk.Value;
 
             if (currentChunks.Contains(chunkPos)) { continue; }
@@ -213,12 +230,13 @@ public class MarchingCubesGenerator : MonoBehaviour
         }
     }
 
-    private Vector2Int PosToChunkIndex(Vector3 position)
+    private Vector3Int PosToChunkIndex(Vector3 position)
     {
-        int x = Mathf.RoundToInt(position.x / bounds);
-        int z = Mathf.RoundToInt(position.z / bounds);
+        int x = Mathf.RoundToInt(position.x / bounds.x);
+        int y = Mathf.RoundToInt(transform.position.y / bounds.y);
+        int z = Mathf.RoundToInt(position.z / bounds.z);
 
-        return new Vector2Int(x, z);
+        return new Vector3Int(x, y, z);
     }
 
     // Update is called once per frame
@@ -277,4 +295,11 @@ struct Triangle
             }
         }
     }
+}
+
+public struct SphereEditor
+{
+    public Vector3 position;
+    public float radius;
+    public float noiseModifier;
 }
