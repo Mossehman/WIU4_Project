@@ -528,6 +528,7 @@ MonoBehaviour:
   _baseMaxWeight: 10
   _currentWeight: 0
   _currentSort: 0
+  _isLocked: 
   _inventory: {fileID: 1640610471}
   _inventoryPanel: {fileID: 580379742}
   _itemPrefab: {fileID: 1476875478274334463, guid: 84d0afeef1bbb424896327d65d1d745d, type: 3}

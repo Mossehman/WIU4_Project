@@ -7,7 +7,13 @@ public class PlacableSlot : MonoBehaviour, IDropHandler
 {
     public void OnDrop(PointerEventData eventData)
     {
-        if (transform.childCount == 0)
+        if (transform.childCount == 0 && transform.tag != "Inventory")
+        {
+            GameObject dropped = eventData.pointerDrag;
+            Draggable Draggable = dropped.GetComponent<Draggable>();
+            Draggable._parentAfterDrag = transform;
+        }
+        else if (transform.tag == "Inventory")
         {
             GameObject dropped = eventData.pointerDrag;
             Draggable Draggable = dropped.GetComponent<Draggable>();
