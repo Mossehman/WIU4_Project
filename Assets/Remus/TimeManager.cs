@@ -40,7 +40,7 @@ public class TimeManager : MonoBehaviour
             hours++;
 
             hourAccumulator++;
-            if (hourAccumulator >= 1)
+            if (hourAccumulator >= 3)
             {
                 hourAccumulator = 0;
                 EventManager.Fire("OnHourPassed");

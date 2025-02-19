@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class WeatherManager : MonoBehaviour
@@ -5,18 +6,23 @@ public class WeatherManager : MonoBehaviour
     public enum WeatherType { None, Blizzard, Snowstorm, AcidRain, Heatwave, Sandstorm }
     public WeatherType currentWeather = WeatherType.None;
 
-    public float baseTemperature = 45f; // Default temperature (40-50°C)
+    public float baseTemperature = 45f; // Normal temperature range (40-50°C)
     public float temperature; // Current temperature
-    public float temperatureChangeSpeed = 0.5f; // How fast temperature changes
-    public int eventDuration = 0; // How many in-game hours the event lasts
+    public float temperatureChangeSpeed = 0.05f; // Lower value for gradual transitions
+    public int eventDuration = 0; // Duration of weather events
+
+    [SerializeField] private TextMeshProUGUI WeatherText; // Assign in Inspector
 
     void Start()
     {
-        EventManager.Connect("OnHourPassed", GachaWeather);
-        temperature = baseTemperature; // Start at base temp
+        EventManager.Connect("OnHourPassed", HandleHourlyUpdate);
+        temperature = baseTemperature; // Set initial temperature
+
+        AdjustTemperature();
+        UpdateWeatherText(); // Update UI
     }
 
-    void GachaWeather(object[] args)
+    void HandleHourlyUpdate(object[] args)
     {
         if (eventDuration > 0)
         {
@@ -33,6 +39,7 @@ public class WeatherManager : MonoBehaviour
         }
 
         AdjustTemperature();
+        UpdateWeatherText(); // Update UI
     }
 
     void TryStartWeatherEvent()
@@ -67,25 +74,29 @@ public class WeatherManager : MonoBehaviour
         switch (currentWeather)
         {
             case WeatherType.Blizzard:
-                targetTemperature -= 20f;
+                targetTemperature = Random.Range(-150f, -200f); // Blizzard can go as low as -200°C
                 break;
             case WeatherType.Snowstorm:
-                targetTemperature -= 15f;
+                targetTemperature = Random.Range(-50f, -100f);
                 break;
             case WeatherType.Heatwave:
-                targetTemperature += 15f;
+                targetTemperature = Random.Range(300f, 500f); // Heatwave can go up to 500°C
                 break;
             case WeatherType.Sandstorm:
-                targetTemperature += 10f;
+                targetTemperature = Random.Range(100f, 250f);
                 break;
             case WeatherType.AcidRain:
-                targetTemperature -= 5f;
+                targetTemperature = Random.Range(10f, 35f); // Acid Rain is not extreme
                 break;
         }
 
-        // Smooth temperature transition
+        // Gradually adjust temperature instead of instant jumps
         temperature = Mathf.Lerp(temperature, targetTemperature, temperatureChangeSpeed * Time.deltaTime);
+    }
 
-        Debug.Log(Mathf.FloorToInt(temperature) + "°C");
+    void UpdateWeatherText()
+    {
+        string weatherStatus = currentWeather == WeatherType.None ? "Clear Skies" : currentWeather.ToString();
+        WeatherText.text = $"{weatherStatus} {temperature:F1}°C";
     }
 }
