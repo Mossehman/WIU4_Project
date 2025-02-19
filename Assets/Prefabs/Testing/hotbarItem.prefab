@@ -90,6 +90,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b265ebed0899cd043be8435aab91ae5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  image: {fileID: 0}
+  _parentAfterDrag: {fileID: 0}
 --- !u!1 &4361628351297018262
 GameObject:
   m_ObjectHideFlags: 0

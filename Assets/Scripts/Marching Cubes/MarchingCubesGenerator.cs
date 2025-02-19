@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
-[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer)), ExecuteInEditMode]
+[RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class MarchingCubesGenerator : MonoBehaviour
 {
     const int numThreads = 8;
@@ -21,17 +24,27 @@ public class MarchingCubesGenerator : MonoBehaviour
     private ComputeBuffer trianglesBuffer;
     private ComputeBuffer triCountBuffer;
 
+    [Header("Chunks")]
+    [SerializeField] private GameObject chunkPrefab;
+    [SerializeField] private Transform player;                                                  // This is the position the chunks will use to see if they should be generated, unrendered or destroyed
+    [SerializeField] private Vector2Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
+    private Dictionary<Vector2Int, Chunk> loadedChunks = new Dictionary<Vector2Int, Chunk>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
+
+
+    //private Dictionary<Vector2Int, Chunk> unloadedChunks = new Dictionary<Vector2Int, Chunk>(); // When player render distance is on the edge of an existing chunk, set it to inactive instead of destroying it
+
     bool updated = false;
 
-        
-    public void GenerateMesh()
+
+    public void GenerateMesh(Chunk chunk)
     {
+        // Get the number of voxels/cubes we will need to march through in the compute shader
         int numVoxelsPerAxis = numPointsPerAxis - 1;
         int numThreadsPerAxis = Mathf.CeilToInt(numVoxelsPerAxis / (float)numThreads);
         float spacing = bounds / (numPointsPerAxis - 1);
 
-        Vector3 worldBounds = new Vector3(2, 1, 2) * bounds;
-        marchingCubesNoise.GenerateNoise(pointsBuffer, numPointsPerAxis, bounds, worldBounds, center, offset, spacing);
+        Vector3 worldBounds = Vector3.one * bounds;
+        marchingCubesNoise.GenerateNoise(pointsBuffer, numPointsPerAxis, bounds, worldBounds, center, chunk.meshOffset, spacing);
 
         trianglesBuffer.SetCounterValue(0); //reset the index of the triangle buffer back to the start of the list
         marchingCubes.SetBuffer(0, "cubePoints", pointsBuffer);
@@ -95,7 +108,8 @@ public class MarchingCubesGenerator : MonoBehaviour
         
 
         mesh.RecalculateNormals();
-        GetComponent<MeshFilter>().sharedMesh = mesh;
+        chunk.GetMeshFilter().sharedMesh = mesh;
+
     }
 
 
@@ -104,34 +118,37 @@ public class MarchingCubesGenerator : MonoBehaviour
     {
         if (Application.isPlaying)
         {
+            DestroyAllChunks();
             ReleaseBuffers();
         }
     }
 
-    void CreateBuffers()
+    void OnApplicationQuit()
     {
-        int numPoints = numPointsPerAxis * numPointsPerAxis * numPointsPerAxis;
-        int numVoxelsPerAxis = numPointsPerAxis - 1;
-        int numVoxels = numVoxelsPerAxis * numVoxelsPerAxis * numVoxelsPerAxis;
-        int maxTriangleCount = numVoxels * 5;
-
-        // Always create buffers in editor (since buffers are released immediately to prevent memory leak)
-        // Otherwise, only create if null or if size has changed
-        if (!Application.isPlaying || (pointsBuffer == null || numPoints != pointsBuffer.count))
-        {
-            if (Application.isPlaying)
-            {
-                ReleaseBuffers();
-            }
-            trianglesBuffer = new ComputeBuffer(maxTriangleCount, sizeof(float) * 3 * 3, ComputeBufferType.Append);
-            pointsBuffer = new ComputeBuffer(numPoints, sizeof(float) * 4);
-            triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
-
-        }
+        ReleaseBuffers();
     }
+    void CreateBuffers()
+{
+    int numPoints = numPointsPerAxis * numPointsPerAxis * numPointsPerAxis;
+    int numVoxelsPerAxis = numPointsPerAxis - 1;
+    int numVoxels = numVoxelsPerAxis * numVoxelsPerAxis * numVoxelsPerAxis;
+    int maxTriangleCount = numVoxels * 5;
+
+    if (pointsBuffer == null) { Debug.Log("Buffer was null!!!"); }
+
+    if (pointsBuffer == null || numPoints != pointsBuffer.count)
+    {
+        ReleaseBuffers();
+        trianglesBuffer = new ComputeBuffer(maxTriangleCount, sizeof(float) * 3 * 3, ComputeBufferType.Append);
+        pointsBuffer = new ComputeBuffer(numPoints, sizeof(float) * 4);
+        triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+    }
+}
 
     private void OnValidate()
     {
+        // Do not update the mesh when inspector data changes if we in play mode
+        if (!Application.isPlaying) return;
         updated = true;
     }
 
@@ -145,35 +162,99 @@ public class MarchingCubesGenerator : MonoBehaviour
         }
     }
 
-    //private void OnValidate()
-    //{
-    //    CreateBuffers();
-    //    GenerateMesh();
-    //    ReleaseBuffers();
-    //}
-
     void Start()
     {
+        DestroyAllChunks();
         CreateBuffers();
-        GenerateMesh();
-        ReleaseBuffers();
+        GenerateChunks();
+        //ReleaseBuffers();
+    }
+
+    /// <summary>
+    /// This should run everytime the player's current chunk updates
+    /// </summary>
+    private void GenerateChunks()
+    {
+        if (player == null) { return; }
+
+        Vector2Int startingChunkIndex = PosToChunkIndex(player.position);
+        HashSet<Vector2Int> currentChunks = new HashSet<Vector2Int>(); //keep a lookup table of the chunks we are currently in
+
+        for (int x = startingChunkIndex.x - chunkRenderDistance.x; x <= startingChunkIndex.x + chunkRenderDistance.x; x++) {
+            for (int z = startingChunkIndex.y - chunkRenderDistance.y; z <= startingChunkIndex.y + chunkRenderDistance.y; z++) {
+                currentChunks.Add(new Vector2Int(x, z));
+                if (loadedChunks.ContainsKey(new Vector2Int(x, z))) { continue; } //chunk has already been loaded, no need to add it
+
+                GameObject newChunk = Instantiate(chunkPrefab);
+                newChunk.transform.position = new Vector3(x * bounds, transform.position.y, z * bounds);
+                newChunk.transform.parent = transform;
+                newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds, transform.position.y, z * bounds);
+                loadedChunks.Add(new Vector2Int(x, z), newChunk.GetComponent<Chunk>());
+                GenerateMesh(newChunk.GetComponent<Chunk>());
+            }
+
+        }
+
+        List<Vector2Int> chunksToRemove  = new List<Vector2Int>();  
+
+        foreach (var existingChunk in loadedChunks)
+        {
+            Vector2Int chunkPos = existingChunk.Key;
+            Chunk chunkData = existingChunk.Value;
+
+            if (currentChunks.Contains(chunkPos)) { continue; }
+            Destroy(chunkData.gameObject);
+            chunksToRemove.Add(chunkPos);
+        }
+
+        foreach (var chunkToRemove in chunksToRemove)
+        {
+            loadedChunks.Remove(chunkToRemove);
+        }
+    }
+
+    private Vector2Int PosToChunkIndex(Vector3 position)
+    {
+        int x = Mathf.RoundToInt(position.x / bounds);
+        int z = Mathf.RoundToInt(position.z / bounds);
+
+        return new Vector2Int(x, z);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!updated) return;
-        updated = false;
-
-        CreateBuffers();
-        GenerateMesh();
-
-        if (!Application.isPlaying)
+        if (updated)
         {
-            ReleaseBuffers();
+            DestroyAllChunks();
+            updated = false;
         }
+
+        GenerateChunks();
+
+        //if (!updated && !Application.isPlaying) return;
+        //updated = false;
+
+        //CreateBuffers();
+
+        //if (!Application.isPlaying)
+        //{
+        //    ReleaseBuffers();
+        //}
+    }
+
+    private void DestroyAllChunks()
+    {
+        foreach (var chunk in loadedChunks)
+        {
+            Destroy(chunk.Value.gameObject);
+        }
+
+        loadedChunks.Clear();
     }
 }
+
+
 
 struct Triangle
 {

@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-
-
 namespace Assets.Scripts.AI.FiniteStateMachine
 {
     [CreateAssetMenu(fileName = "RestingState", menuName = "AI/RestingState")]

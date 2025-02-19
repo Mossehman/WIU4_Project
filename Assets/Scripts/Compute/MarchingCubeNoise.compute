@@ -37,18 +37,17 @@ void GenerateNoise (int3 id : SV_DispatchThreadID)
 		return;
 	}
 
-	float3 noiseSamplePoint = center + id * spacing - bounds / 2;
-	float noiseOffset = 0;
+	float3 noiseSamplePoint = center + id * spacing - (bounds * 0.5f);
 	float noiseValue = 0;
 
 	// Initialise the variables for calculating the final noise value
-	float frequency = noiseScale / 100;
+	float frequency = noiseScale * 0.01f;
 	float amplitude = 1;
 	float weight = 1;
 
 	for (int o = 0; o < octaves; o++)
 	{
-		float n = snoise((noiseSamplePoint + noiseOffset) * frequency + offsets[o] + offset);
+		float n = snoise((noiseSamplePoint + offset) * frequency + offsets[o]);
 		float v = 1 - abs(n);
 
 		v = v * v;	

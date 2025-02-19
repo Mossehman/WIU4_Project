@@ -1,11 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace Player.Inventory
 {
@@ -30,7 +26,7 @@ namespace Player.Inventory
         [SerializeField]    private SortingType         _currentSort = SortingType.DATE_ADDED;
         // LOCKING ITEMS
                             private BaseItem            _currentlySelected;
-                            private List<bool>          _isLocked;
+        [SerializeField]    private List<bool>          _isLocked;
 
         [Header("Inventory UI")]
         [SerializeField]    private GameObject          _inventory;

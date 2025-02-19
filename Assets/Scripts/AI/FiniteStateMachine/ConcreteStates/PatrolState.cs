@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
@@ -11,7 +10,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         [SerializeField] float hungerdrain = 10f;
         private float currenttime;
         [SerializeField] int numOfWalkDirections = 8;
-        CharacterController characterController;
         CreatureInfo stats;
 
         Vector3 movedirection;
@@ -19,7 +17,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         {
             base.OnInit(fsm);
             stats = fsm.GetComponent<CreatureInfo>();
-            characterController = fsm.GetComponent<CharacterController>();
         }
 
         public override void OnStateEnter(FiniteStateMachine fsm)
@@ -49,7 +46,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             if (currenttime > 0)
             {
                 float moveSpeed = stats.hunger <= 0 ? 0f : 1.0f;
-                characterController.Move(movedirection.normalized * 0.01f * moveSpeed);
+                stats.Move(0.01f * moveSpeed * movedirection.normalized);
                 currenttime -= Time.deltaTime;
             }
             else if (stats.hunger <= 50)
