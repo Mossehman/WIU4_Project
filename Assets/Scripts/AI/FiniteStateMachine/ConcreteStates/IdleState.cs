@@ -30,6 +30,25 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 foodobjects = foodobjects.OrderBy(c => Vector3.Distance(fsm.transform.position, c.transform.position)).ToArray();
                 stats.target = foodobjects[0].gameObject;
             }
+
+            // Check for nearby creatures to form a group
+            Collider[] nearbyCreatures = Physics.OverlapSphere(fsm.transform.position, 10f, fsm.gameObject.layer);
+            if (nearbyCreatures.Length > 1)
+            {
+
+                GameObject leader = nearbyCreatures[0].gameObject;
+                //Group group;
+                //if (leader.GetComponent<CreatureInfo>().CurrentGroup == null)
+                //{
+                //    group = new Group(leader);
+                //    leader.GetComponent<CreatureInfo>().CurrentGroup = group;
+                //}
+                //else
+                //    group = leader.GetComponent<CreatureInfo>().CurrentGroup;
+                Group group = leader.GetComponent<CreatureInfo>().CurrentGroup ?? new Group(leader);
+                group.AddMember(fsm.gameObject);
+                stats.CurrentGroup = group;
+            }
         }
 
         public override void OnStateLeave(FiniteStateMachine fsm)
@@ -46,21 +65,17 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
             else
             {
-                Debug.Log("Choice");
                 if (!TimeManager.Instance.IsWithinCurrentTimePeriod(awaketime))
                 {
                     fsm.SwapState("Resting");
-                    Debug.Log("Rest");
                 }
                 else if (foodobjects.Length > 0)
                 {
                     fsm.SwapState("Hunt");
-                    Debug.Log("Hunt");
                 }
                 else
                 {
                     fsm.SwapState("Patrol");
-                    Debug.Log("Patrol");
                 }
             }
         }

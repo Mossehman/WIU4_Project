@@ -12,7 +12,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         [SerializeField] LayerMask wallLayer;
 
         private float currenttime;
-        private CharacterController characterController;
         private CreatureInfo stats;
         private Vector3 movedirection;
         private bool isTurning;
@@ -21,7 +20,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         {
             base.OnInit(fsm);
             stats = fsm.GetComponent<CreatureInfo>();
-            characterController = fsm.GetComponent<CharacterController>();
         }
 
         public override void OnStateEnter(FiniteStateMachine fsm)
@@ -70,7 +68,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 if ((fsm.transform.position - stats.target.transform.position).sqrMagnitude <= 55f * 55f)
                 {
                     float moveSpeed = stats.hunger >= 50 ? speedmod : (stats.hunger <= 0 ? 0f : 1.0f);
-                    characterController.Move(movedirection * moveSpeed * Time.deltaTime * 5f);
+                    stats.Move(5f * moveSpeed * Time.deltaTime * movedirection);
 
                     currenttime -= Time.deltaTime;
                     stats.hunger -= hungerdrain * Time.deltaTime;
