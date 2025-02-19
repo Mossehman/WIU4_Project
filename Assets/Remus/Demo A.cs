@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class DemoA : MonoBehaviour
 {
+    [SerializeField] private GameObject testGameObject;
+
     // Start is called before the first frame update
     void Start()
     {
         EventManager.CreateEvent("OnPlayerJoin");
-        EventManager.Fire("OnPlayerJoin", "Player joined the game!");
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Fire the event, passing the GameObject and a message
+        EventManager.Fire("OnPlayerJoin", testGameObject, "Player joined the game!", true);
     }
 }

@@ -11,7 +11,8 @@ public class TimeManager : MonoBehaviour
     private float timeAccumulator = 0f;
     private float hourAccumulator = 0;
 
-    [SerializeField] private TextMeshProUGUI Day_TimeText;
+    [SerializeField] private TextMeshProUGUI dayText;
+    [SerializeField] private TextMeshProUGUI timeText;
 
     private void Start()
     {
@@ -61,6 +62,7 @@ public class TimeManager : MonoBehaviour
         int displayHour = (hours % 12 == 0) ? 12 : (hours % 12);
         //Debug.Log($"Day {days}, Time: {displayHour:D2}:{minutes:D2} {period}");
 
-        Day_TimeText.text = $"Day {days} . {displayHour:D2}:00 {period}";
+        dayText.text = $"Day {days}";
+        timeText.text = $"{displayHour:D2}:{minutes:D2} {period}";
     }
 }

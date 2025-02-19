@@ -10,14 +10,24 @@ public class DemoB : MonoBehaviour
         EventManager.Connect("OnPlayerJoin", OnPlayerJoin);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void OnPlayerJoin(object[] args)
     {
-        Debug.Log((string)args[0]);
+        // Extract GameObject, message, and bool flag
+        GameObject player = args[0] as GameObject;
+        string message = args[1] as string;
+        bool isConfirmed = (bool)args[2];
+
+        // Debug log the received data
+        Debug.Log($"[DemoB] {message} | Player: {player.name} | Confirmed: {isConfirmed}");
+
+        // Example usage: Check if the GameObject has a Rigidbody
+        if (player.GetComponent<Rigidbody>() != null)
+        {
+            Debug.Log("[DemoB] The player has a Rigidbody component!");
+        }
+        else
+        {
+            Debug.Log("[DemoB] The player does not have a Rigidbody component.");
+        }
     }
 }
