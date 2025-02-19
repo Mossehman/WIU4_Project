@@ -14,7 +14,7 @@ public static class EventManager
     /// </summary>
     private static Dictionary<string, List<Action<object[]>>> eventDictionary = new();
 
-    private static bool debugMode = true; // Enables or disables debugging logs for event tracking.
+    private static bool debugMode = false; // Enables or disables debugging logs for event tracking.
 
     /// <summary>
     /// Creates a new event if it does not already exist.
