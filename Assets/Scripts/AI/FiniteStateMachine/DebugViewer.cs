@@ -48,8 +48,10 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
         void PlotGraph()
         {
-            graphpoints[0].Add(new Vector3(0, AIBlackboardMediator.Instance.AITypeCounts[LayerMask.NameToLayer("Hostile")], 0));
-            graphpoints[1].Add(new Vector3(0, AIBlackboardMediator.Instance.AITypeCounts[LayerMask.NameToLayer("Passive")], 0));
+            if (AIBlackboardMediator.Instance.AITypeCounts.ContainsKey(LayerMask.NameToLayer("Hostile"))) 
+                graphpoints[0].Add(new Vector3(0, AIBlackboardMediator.Instance.AITypeCounts[LayerMask.NameToLayer("Hostile")], 0));
+            if (AIBlackboardMediator.Instance.AITypeCounts.ContainsKey(LayerMask.NameToLayer("Passive")))
+                graphpoints[1].Add(new Vector3(0, AIBlackboardMediator.Instance.AITypeCounts[LayerMask.NameToLayer("Passive")], 0));
         }
     }
 }

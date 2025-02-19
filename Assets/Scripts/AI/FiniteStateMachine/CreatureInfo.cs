@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using UnityEditor;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
@@ -11,12 +11,18 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public GameObject target;
         public GameObject segs;
         public FiniteStateMachine fsm;
-        public bool isSheltered = false; 
-        public Group CurrentGroup { get; set; } // Track the group this creature belongs to
+        public bool isSheltered = false;
 
+        public Group CurrentGroup; //{ get; set; }
+        public Vector3 FlockDirection = Vector3.zero; //{ get; private set; }
+        public float FlockSpeed = 2f;//{ get; private set; } = 2f;
+
+        private CharacterController characterController;
+        
         private void Start()
         {
             fsm = GetComponent<FiniteStateMachine>();
+            characterController = GetComponent<CharacterController>();
         }
 
         private void Update()
@@ -29,7 +35,39 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 Instantiate(segs).GetComponent<CreatureInfo>().hunger = 70;
             }
 
-            transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+            //transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+
+            if (CurrentGroup != null)
+            {
+                UpdateFlockingBehavior();
+            }
+        }
+
+        private void UpdateFlockingBehavior()
+        {
+            if (CurrentGroup.Leader == null || CurrentGroup.Leader == gameObject) return;
+
+            // Cohesion: Move towards the leader
+            Vector3 leaderPosition = CurrentGroup.Leader.transform.position;
+            Vector3 cohesion = (leaderPosition - transform.position).normalized;
+
+            // Separation: Avoid crowding local flockmates
+            Vector3 separation = Vector3.zero;
+            foreach (var member in CurrentGroup.Members)
+            {
+                if (member != gameObject && Vector3.Distance(transform.position, member.transform.position) < 2f)
+                {
+                    separation -= (member.transform.position - transform.position).normalized;
+                }
+            }
+
+            // Combine forces and apply movement
+            FlockDirection = (cohesion + separation).normalized;
+        }
+
+        public void Move(Vector3 dir)
+        {
+            characterController.Move(dir + FlockDirection + (Vector3.down * 9.8f));
         }
 
         private void OnDrawGizmos()

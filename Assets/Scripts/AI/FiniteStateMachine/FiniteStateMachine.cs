@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
 {
@@ -20,6 +18,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         [SerializeField] private string previousStateName = string.Empty;
         public string GetPreviousStateName() => previousStateName;
         public string GetCurrentStateName() => currentStateName;
+
         private void Awake()
         {
             nextState = null;
@@ -92,6 +91,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         {
             if (eventType == "Im gonna kill you rahh")
             {
+                if (currentStateName == "Resting") return;
                 if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
                 Debug.Log("Aw hell naw yo ass tweakin");
                 GameObject hunter = (GameObject)data;
@@ -103,6 +103,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
             else if (eventType == "Nvm Im not killing yall lol")
             {
+                if (currentStateName == "Resting") return;
                 if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
                 if (gameObject.GetComponent<CreatureInfo>().target == (GameObject)data)
                 {
