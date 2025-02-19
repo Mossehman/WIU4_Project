@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0945d4d5a5e834e84d1b2075b0bf18, type: 3}
-  m_Name: New Item
+  m_Name: Number3
   m_EditorClassIdentifier: 
-  itemName: ID1
-  _displayName: item1
-  _itemDescription: 
+  itemName: ID3
+  _displayName: Item 3
+  _itemDescription: e
   itemIcon: {fileID: 0}
   itemModel: {fileID: 0}
-  _weight: 10
-  _quantity: 1
+  _weight: 15
+  _quantity: 0
   recipes: []

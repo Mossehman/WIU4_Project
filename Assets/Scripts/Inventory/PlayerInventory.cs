@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using Unity.VisualScripting;
 
 namespace Player.Inventory
 {
@@ -49,7 +50,7 @@ namespace Player.Inventory
         [SerializeField]    private GameObject          _itemDescPanel;
 
         [Header("Hotbar Logic")]
-        [SerializeField]    private BaseItem[]          _hotbarItems;
+        [SerializeField]    private GameObject[]          _hotbarItems;
                             private int                 _maxHotbarItems = 5;
                             private SlotStatus[]        _hotbarItemStatus;
 
@@ -66,6 +67,7 @@ namespace Player.Inventory
             //_items = new List<BaseItem>();
             _isLocked = new List<bool>();
             _hotbarItemStatus = new SlotStatus[_maxHotbarItems];
+            _hotbarItems = new GameObject[_maxHotbarItems];
 
             foreach (Transform child in _hotBarPanel.transform)
             {
@@ -74,6 +76,7 @@ namespace Player.Inventory
             for (int i = 0; i <_maxHotbarItems; i++)
             {
                 GameObject hotbarItem = Instantiate(_hotBarSlotPrefab, _hotBarPanel.transform);
+                _hotbarSlots[i] = hotbarItem;
                 _hotbarItemStatus[i] = SlotStatus.EMPTY;
             }
 
@@ -82,24 +85,29 @@ namespace Player.Inventory
 
         void Update()
         {
-            
+            SortInventory(_currentSort);
+            if (_inventoryItems.Count != _inventoryItemStatus.Count)
+            {
+                _inventoryItemStatus.Add(SlotStatus.OCCUPIED);
+            }
         }
 
         public void AddItem(GameObject newItem)
         {
+            BaseItem tempItem = newItem.GetComponent<ItemModelScript>().getSO();
             foreach (var item in _inventoryItems)
             {
-                if (item.GetComponent<BaseItem>().getID() == newItem.GetComponent<BaseItem>().getID())
+                if (item.GetComponent<ItemModelScript>().getSO().getID() == tempItem.getID())
                 {
-                    item.GetComponent<BaseItem>()._quantity += newItem.GetComponent<BaseItem>()._quantity;
-                    _currentWeight += newItem.GetComponent<BaseItem>().getWeight() * newItem.GetComponent<BaseItem>()._quantity;
+                    item.GetComponent<BaseItem>()._quantity += tempItem._quantity;
+                    _currentWeight += tempItem.getWeight() * tempItem._quantity;
                     return;
                 }
             }
 
             _inventoryItems.Add(newItem);
             _isLocked.Add(false);
-            _currentWeight += newItem.GetComponent<BaseItem>().getWeight() * newItem.GetComponent<BaseItem>()._quantity;
+            _currentWeight += tempItem.getWeight() * tempItem._quantity;
         }
 
         private void RenderInventory()
@@ -114,9 +122,9 @@ namespace Player.Inventory
             foreach (var item in temp)
             {
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
-                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.GetComponent<BaseItem>().getDisplayName();
-                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item.GetComponent<BaseItem>()) );
-                itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<BaseItem>()._quantity.ToString();
+                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
+                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item.GetComponent<ItemModelScript>().getSO()) );
+                itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO()._quantity.ToString();
             }
         }
 
@@ -141,15 +149,15 @@ namespace Player.Inventory
                     break;
 
                 case SortingType.HEAVIEST:
-                    temp.Sort((a, b) => b.GetComponent<BaseItem>().getWeight().CompareTo(a.GetComponent<BaseItem>().getWeight()));
+                    temp.Sort((a, b) => b.GetComponent<ItemModelScript>().getSO().getWeight().CompareTo(a.GetComponent<ItemModelScript>().getSO().getWeight()));
                     break;
 
                 case SortingType.LIGHTEST:
-                    temp.Sort((a, b) => a.GetComponent<BaseItem>().getWeight().CompareTo(b.GetComponent<BaseItem>().getWeight()));
+                    temp.Sort((a, b) => a.GetComponent<ItemModelScript>().getSO().getWeight().CompareTo(b.GetComponent<ItemModelScript>().getSO().getWeight()));
                     break;
 
                 case SortingType.QUANTITY:
-                    temp.Sort((a, b) => b.GetComponent<BaseItem>()._quantity.CompareTo(a.GetComponent<BaseItem>()._quantity));
+                    temp.Sort((a, b) => b.GetComponent<ItemModelScript>().getSO()._quantity.CompareTo(a.GetComponent<ItemModelScript>().getSO()._quantity));
                     break;
             }
 
@@ -163,7 +171,7 @@ namespace Player.Inventory
                 foreach (GameObject item in _inventoryItems)
                 {
                     index++;
-                    if (item.GetComponent<BaseItem>().getID() == _currentlySelected.getID()) { break; }
+                    if (item.GetComponent<ItemModelScript>().getSO().getID() == _currentlySelected.getID()) { break; }
                 }
                 if (_isLocked[index] == true) { _isLocked[index] = false; }
                 else if (_isLocked[index] == false) { _isLocked[index] = true; }
@@ -188,41 +196,60 @@ namespace Player.Inventory
 
         void OnDropItem(object[] args)
         {
-            // Check if the gameobject is not null
-            if ((GameObject)args[0] != null)
+            if (args.Length > 0 && args[0] is GameObject obj)
             {
-                switch ((ItemDestination)args[1])
+                ItemModelScript rb = obj.GetComponent<ItemModelScript>();
+                if (rb != null)
                 {
-                    case ItemDestination.INVENTORY:
-                        for (int i = 0; i < _inventoryPanel.transform.childCount; i++)
-                        {
-                            if (_inventoryItemStatus[i] == SlotStatus.EMPTY && _inventory.transform.GetChild(i) != null)
-                            {
-                                _inventoryItems.Add((GameObject)args[0]);
-                            }
-                            if (_inventoryItemStatus[i] == SlotStatus.OCCUPIED && _inventory.transform.GetChild(i) == null)
-                            {
-                                _inventoryItems.Remove(_inventoryItems[i]);
-                            }
-                        }
-                        break;
-                    case ItemDestination.HOTBAR:
-                        for (int i = 0; i < _hotBarPanel.transform.childCount; i++)
-                        {
-                            if (_hotbarItemStatus[i] == SlotStatus.EMPTY && _hotbarSlots[i].transform.GetChild(0) != null)
-                            {
-                                _hotbarItems[i] = (BaseItem)args[0];
-                            }
-                            if (_inventoryItemStatus[i] == SlotStatus.OCCUPIED && _inventory.transform.GetChild(i) == null)
-                            {
-                                _hotbarItems[i] = null;
-                            }
-                        }
-                        break;
-                    case ItemDestination.STORAGE:
-                        break;
+                    Debug.Log("Rigidbody found!");
+                }
+                else
+                {
+                    Debug.Log("No Rigidbody attached!");
                 }
             }
+
+            //Debug.Log(args[0]);
+            //Debug.Log(args[1]);
+
+            //// Check if the gameobject is not null
+            //if ((GameObject)args[0] != null)
+            //{
+            //    switch ((ItemDestination)args[1])
+            //    {
+            //        case ItemDestination.INVENTORY:
+            //            for (int i = 0; i < _inventoryPanel.transform.childCount; i++)
+            //            {
+            //                if (_inventoryItemStatus[i] == SlotStatus.EMPTY && _inventoryPanel.transform.GetChild(i) != null)
+            //                {
+            //                    _inventoryItems.Add((GameObject)args[0]);
+            //                }
+            //                if (_inventoryItemStatus[i] == SlotStatus.OCCUPIED && _inventoryPanel.transform.GetChild(i) == null)
+            //                {
+            //                    _inventoryItems.Remove(_inventoryItems[i]);
+            //                }
+            //            }
+            //            break;
+            //        case ItemDestination.HOTBAR:
+            //            for (int i = 0; i < _hotBarPanel.transform.childCount; i++)
+            //            {
+            //                if (_hotbarSlots[i].transform.childCount > 0)
+            //                {
+            //                    if (_hotbarItemStatus[i] == SlotStatus.EMPTY && _hotbarSlots[i] != null && _hotbarSlots[i].transform.GetChild(0) != null)
+            //                    {
+            //                        _hotbarItems[i] = (GameObject)args[0];
+            //                    }
+            //                    if (_inventoryItemStatus[i] == SlotStatus.OCCUPIED && _inventory.transform.GetChild(0).transform == null)
+            //                    {
+            //                        _hotbarItems[i] = null;
+            //                    }
+            //                }
+            //            }
+            //            break;
+            //        case ItemDestination.STORAGE:
+            //            break;
+            //    }
+            //}
         }
     }
 }
