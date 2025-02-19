@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: RestingState 1
   m_EditorClassIdentifier: 
   awaketime:
-    start: 3
+    start: 2
     end: 0

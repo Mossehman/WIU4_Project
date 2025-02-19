@@ -93,12 +93,13 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             {
                 if (currentStateName == "Resting") return;
                 if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
-                Debug.Log("Aw hell naw yo ass tweakin");
                 GameObject hunter = (GameObject)data;
                 if (hunter != null || Vector3.Distance(transform.position, hunter.transform.position) <= 55f)
                 {
                     SwapState("Run");
-                    gameObject.GetComponent<CreatureInfo>().target = hunter;
+                    CreatureInfo info = gameObject.GetComponent<CreatureInfo>();
+                    info.target = hunter;
+                    if (info.CurrentGroup != null) info.CurrentGroup.Disband();
                 }
             }
             else if (eventType == "Nvm Im not killing yall lol")
@@ -107,7 +108,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
                 if (gameObject.GetComponent<CreatureInfo>().target == (GameObject)data)
                 {
-                    Debug.Log("Bet");
                     SwapState("Idle");
                     gameObject.GetComponent<CreatureInfo>().target = null;
                 }

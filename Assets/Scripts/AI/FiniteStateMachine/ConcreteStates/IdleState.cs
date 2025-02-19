@@ -32,22 +32,29 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
 
             // Check for nearby creatures to form a group
-            Collider[] nearbyCreatures = Physics.OverlapSphere(fsm.transform.position, 10f, fsm.gameObject.layer);
-            if (nearbyCreatures.Length > 1)
+            if (stats.gameObject.layer == LayerMask.NameToLayer("Passive"))
             {
-
-                GameObject leader = nearbyCreatures[0].gameObject;
-                //Group group;
-                //if (leader.GetComponent<CreatureInfo>().CurrentGroup == null)
-                //{
-                //    group = new Group(leader);
-                //    leader.GetComponent<CreatureInfo>().CurrentGroup = group;
-                //}
-                //else
-                //    group = leader.GetComponent<CreatureInfo>().CurrentGroup;
-                Group group = leader.GetComponent<CreatureInfo>().CurrentGroup ?? new Group(leader);
-                group.AddMember(fsm.gameObject);
-                stats.CurrentGroup = group;
+                Collider[] nearbyCreatures = Physics.OverlapSphere(fsm.transform.position, 10f, LayerMask.GetMask("Passive"));
+                if (nearbyCreatures.Length > 1)
+                {
+                    CreatureInfo leader = nearbyCreatures[0].GetComponent<CreatureInfo>();
+                    Group group = leader.CurrentGroup ?? new Group(leader);
+                    group.AddMember(stats);
+                    stats.CurrentGroup = group;
+                }
+            }
+            // Find a home if there is none
+            if (stats.assignedHome == null)
+            {
+                Collider[] nearbyShelters = Physics.OverlapSphere(fsm.transform.position, 30f, LayerMask.GetMask("Shelter"));
+                foreach (Collider c in nearbyShelters)
+                {
+                    CreatureShelter shelter = c.GetComponent<CreatureShelter>();
+                    if (((1 << stats.gameObject.layer) & shelter.creatureHome) != 0)
+                    {
+                        stats.assignedHome = shelter;
+                    }
+                }
             }
         }
 

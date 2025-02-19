@@ -68,7 +68,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 if ((fsm.transform.position - stats.target.transform.position).sqrMagnitude <= 55f * 55f)
                 {
                     float moveSpeed = stats.hunger >= 50 ? speedmod : (stats.hunger <= 0 ? 0f : 1.0f);
-                    stats.Move(5f * moveSpeed * Time.deltaTime * movedirection);
+                    stats.Move(moveSpeed * movedirection);
 
                     currenttime -= Time.deltaTime;
                     stats.hunger -= hungerdrain * Time.deltaTime;

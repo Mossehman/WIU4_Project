@@ -43,14 +43,26 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
             if (foodobjects.Length > 0)
             {
-                Collider target = foodobjects[0]; // Closest target
+                Collider target = null;
+                foreach (var food in foodobjects)
+                {
+                    if (food != null)
+                    {
+                        if (food.TryGetComponent<CreatureInfo>(out var info))
+                        {
+                            if (!info.isSheltered) target = food;
+                        }
+                        else
+                            target = food; // Closest target
+                    }
+                }
                 if (target != null)
                 {
                     stats.target = target.gameObject;
 
                     if (target.gameObject.layer == LayerMask.NameToLayer("Passive"))
                     {
-                        Debug.Log("Im gonna kill you rahh");
+                        //Debug.Log("Im gonna kill you rahh");
                         AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Im gonna kill you rahh", fsm.gameObject);
                     }
 

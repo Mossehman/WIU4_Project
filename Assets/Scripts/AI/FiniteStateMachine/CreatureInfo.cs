@@ -1,21 +1,25 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
 {
     // Temporary storage for entity stats
     public class CreatureInfo : MonoBehaviour
     {
+        [Header("Basic Info")]
         public float hunger = 80;
         public GameObject target;
         public GameObject segs;
         public FiniteStateMachine fsm;
-        public bool isSheltered = false;
 
-        public Group CurrentGroup; //{ get; set; }
-        public Vector3 FlockDirection = Vector3.zero; //{ get; private set; }
-        public float FlockSpeed = 2f;//{ get; private set; } = 2f;
+        [Header("Advanced Info")]
+        public Group CurrentGroup;
+        public Vector3 FlockDirection = Vector3.zero;
+        public float FlockSpeed = 0.05f;
+        public float FlockTightness = 1.0f;
+        public float MaxFlockDistance = 5.0f;
+
+        public CreatureShelter assignedHome;
+        public bool isSheltered = false;
 
         private CharacterController characterController;
         
@@ -31,19 +35,22 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
             if (hunger >= 90 && isSheltered)
             {
-                hunger -= 10;
+                hunger -= 30;
                 Instantiate(segs).GetComponent<CreatureInfo>().hunger = 70;
             }
-
-            //transform.position = new Vector3(transform.position.x, 0.5f, transform.position.z);
+            hunger = Mathf.Clamp(hunger, 0f, 120f);
 
             if (CurrentGroup != null)
             {
-                UpdateFlockingBehavior();
+                UpdateFlockingBehaviour();
+            if (FlockDirection.sqrMagnitude > 0)
+            characterController.Move((CurrentGroup != null ?
+                (CurrentGroup.Leader == this ? Vector3.zero : FlockDirection * FlockSpeed)
+                : Vector3.zero) * 0.01f);
             }
         }
 
-        private void UpdateFlockingBehavior()
+        private void UpdateFlockingBehaviour()
         {
             if (CurrentGroup.Leader == null || CurrentGroup.Leader == gameObject) return;
 
@@ -55,38 +62,76 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             Vector3 separation = Vector3.zero;
             foreach (var member in CurrentGroup.Members)
             {
-                if (member != gameObject && Vector3.Distance(transform.position, member.transform.position) < 2f)
+                if (member != null)
                 {
-                    separation -= (member.transform.position - transform.position).normalized;
+                    if (member != gameObject && Vector3.Distance(transform.position, member.transform.position) < 2f)
+                    {
+                        separation -= (member.transform.position - transform.position).normalized;
+                    }
                 }
             }
 
-            // Combine forces and apply movement
             FlockDirection = (cohesion + separation).normalized;
         }
 
         public void Move(Vector3 dir)
         {
-            characterController.Move(dir + FlockDirection + (Vector3.down * 9.8f));
+            Vector3 overalldir = dir 
+                ;
+
+            characterController.Move(overalldir * 0.01f);
+        }
+
+        private void LateUpdate()
+        {
+            characterController.Move(Vector3.down * 0.05f);
         }
 
         private void OnDrawGizmos()
         {
+            Vector3 upoffset = Vector3.zero;
             if (target != null)
             {
                 if (fsm.GetCurrentStateName() == "Run")
                 {
                     Gizmos.color = new Color(1, 0, 0, 0.5f);
-                    Gizmos.DrawLine(transform.position, target.transform.position);
+                    Gizmos.DrawLine(transform.position + upoffset, target.transform.position + upoffset);
+                    upoffset += Vector3.up;
                 }
                 else if (fsm.GetCurrentStateName() == "Hunt")
                 {
                     Gizmos.color = new Color(0, 1, 1, 0.5f);
-                    Gizmos.DrawLine(transform.position, target.transform.position);
+                    Gizmos.DrawLine(transform.position + upoffset, target.transform.position + upoffset);
+                    upoffset += Vector3.up;
                 }
             }
-            Gizmos.color = new Color(hunger <= 0f ? 0f : 1 - (hunger * 0.01f), hunger <= 0f ? 0f : hunger * 0.01f, 0, 0.5f);
-            Gizmos.DrawCube(transform.position + new Vector3(0,5,0), new Vector3(1, 1, 1));
+            if (CurrentGroup != null)
+            {
+                if (CurrentGroup.Leader != null)
+                {
+                    Gizmos.color = new Color(0, 1, 0, 0.5f);
+                    Gizmos.DrawLine(transform.position + upoffset, CurrentGroup.Leader.transform.position + upoffset);
+                    if (CurrentGroup.Leader == this)
+                    {
+                        Gizmos.color = new Color(0, 0, 1, 0.5f);
+                        Gizmos.DrawSphere(transform.position + new Vector3(0, 6, 0), 0.5f);
+                    }
+                    upoffset += Vector3.up;
+                }
+            }
+            if (assignedHome != null)
+            {
+                Gizmos.color = new Color(1, 1, 1, 0.25f);
+                Gizmos.DrawLine(transform.position + upoffset, assignedHome.transform.position + upoffset);
+
+                upoffset += Vector3.up;
+
+            }
+            if (hunger < 100f)
+                Gizmos.color = new Color(hunger <= 0f ? 0f : 1 - (hunger * 0.01f), hunger <= 0f ? 0f : hunger * 0.01f, 0, 0.5f);
+            else
+                Gizmos.color = new Color(0, 1 -((hunger-100f) * 0.01f), ((hunger-100f) * 0.01f), 0.5f);
+            Gizmos.DrawCube(transform.position + new Vector3(0, 5, 0), new Vector3(1, 1, 1));
         }
 
         private void OnDrawGizmosSelected()

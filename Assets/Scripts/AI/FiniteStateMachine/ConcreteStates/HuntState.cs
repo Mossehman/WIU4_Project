@@ -39,11 +39,16 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             {
                 Vector3 dir = stats.target.transform.position - fsm.transform.position;
                 currentdirection = Vector3.Slerp(currentdirection, dir.normalized, 0.1f);
-                stats.Move(0.01f * speedmod * currentdirection);
+                stats.Move(speedmod * currentdirection);
                 if (dir.sqrMagnitude <= 2f)
                 {
-                    Destroy(stats.target);
+                    if (stats.target.TryGetComponent<CreatureInfo>(out var creaturestats))
+                    {
+                        stats.hunger += creaturestats.hunger * 0.5f;
+                    }
                     stats.hunger += 15;
+                    stats.CurrentGroup?.ShareFood(15);
+                    Destroy(stats.target);
                     currenttime = 0;
                 }
                 else if (dir.sqrMagnitude >= 55f * 55f)

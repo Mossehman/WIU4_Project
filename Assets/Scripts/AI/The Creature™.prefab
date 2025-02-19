@@ -129,6 +129,11 @@ MonoBehaviour:
   target: {fileID: 0}
   segs: {fileID: 1289410198279785359}
   fsm: {fileID: 0}
+  FlockDirection: {x: 0, y: 0, z: 0}
+  FlockSpeed: 2
+  FlockTightness: 0.7
+  MaxFlockDistance: 10
+  assignedHome: {fileID: 0}
   isSheltered: 0
 --- !u!143 &6961039674905133527
 CharacterController:

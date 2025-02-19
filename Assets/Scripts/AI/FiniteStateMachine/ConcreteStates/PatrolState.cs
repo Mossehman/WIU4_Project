@@ -37,7 +37,9 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
         public override void OnStateLeave(FiniteStateMachine fsm)
         {
-            stats.hunger -= hungerdrain;
+            float totalhungerdrain = hungerdrain;
+            if (stats.CurrentGroup != null) totalhungerdrain *= 0.4f;
+            stats.hunger -= totalhungerdrain;
             currenttime = statetime + UnityEngine.Random.Range(0f, 3f);
         }
 
@@ -46,7 +48,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             if (currenttime > 0)
             {
                 float moveSpeed = stats.hunger <= 0 ? 0f : 1.0f;
-                stats.Move(0.01f * moveSpeed * movedirection.normalized);
+                stats.Move(moveSpeed * movedirection.normalized);
                 currenttime -= Time.deltaTime;
             }
             else if (stats.hunger <= 50)

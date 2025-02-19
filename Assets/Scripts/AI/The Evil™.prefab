@@ -154,3 +154,5 @@ MonoBehaviour:
   segs: {fileID: 68349615528311788}
   fsm: {fileID: 0}
   isSheltered: 0
+  FlockDirection: {x: 0, y: 0, z: 0}
+  FlockSpeed: 2

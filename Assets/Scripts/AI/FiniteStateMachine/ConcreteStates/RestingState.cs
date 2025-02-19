@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
@@ -23,7 +24,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
         public override void OnStateLeave(FiniteStateMachine fsm)
         {
-            stats.hunger = 80;
+            //stats.hunger = 80;
         }
 
         public override void WhileStateActive(FiniteStateMachine fsm)
@@ -32,6 +33,18 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             {
                 fsm.SwapState("Idle");
                 return;
+            }
+            if (stats.assignedHome != null)
+            {
+                if (!stats.isSheltered)
+                {
+                    Vector3 dir = stats.assignedHome.transform.position - stats.transform.position;
+                    stats.Move(dir.normalized * 2f);
+                }
+            }
+            else
+            {
+                stats.hunger += Time.deltaTime * 0.5f;
             }
         }
     }
