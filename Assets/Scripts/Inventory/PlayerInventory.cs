@@ -90,6 +90,7 @@ namespace Player.Inventory
                 GameObject hotbarItem = Instantiate(_hotBarSlotPrefab, _hotBarPanel.transform);
                 _hotbarSlots[i] = hotbarItem;
                 _hotbarItemStatus[i] = SlotStatus.EMPTY;
+                _hotbarSlots[i].tag = "Hotbar";
             }
         }
 
@@ -209,7 +210,59 @@ namespace Player.Inventory
 
         void OnDropItem(object[] args)
         {
-            
+            // UI Object that got dragged
+            GameObject item = args[0] as GameObject;
+            ItemOrigin origin = (ItemOrigin)args[1];
+            ItemDestination destination = (ItemDestination)args[2];
+
+            GameObject matchedGO;
+
+            if (origin == ItemOrigin.INVENTORY)
+            {
+                foreach(var invItem in _inventoryItems)
+                {
+                    if (invItem.GetComponent<ItemModelScript>().getSO().getID() == item.GetComponent<Draggable>()._item.GetComponent<ItemModelScript>().getSO().getID())
+                    {
+                        matchedGO = invItem;
+                        _inventoryItems.Remove(invItem);
+                    }
+                }
+            }
+            else if (origin == ItemOrigin.HOTBAR)
+            {
+                for (int i = 0; i < _maxHotbarItems; i++)
+                {
+                    if (_hotbarItems[i].GetComponent<ItemModelScript>().getSO().getID() == item.GetComponent<Draggable>()._item.GetComponent<ItemModelScript>().getSO().getID())
+                    {
+                        _hotbarItems[i] = null;
+                        break;
+                    }
+                }
+            }
+            else if (origin == ItemOrigin.STORAGE)
+            {
+
+            }
+
+            if (destination == ItemDestination.INVENTORY)
+            {
+                _inventoryItems.Add(item.GetComponent<Draggable>()._item);
+            }
+            else if (destination == ItemDestination.HOTBAR)
+            {
+                for (int i = 0; i < _maxHotbarItems; i++)
+                {
+                    if (_hotbarItems[i] == null) 
+                    { 
+                        _hotbarItems[i] = item.GetComponent<Draggable>()._item;
+                        break;
+                    }
+                }
+            }
+            else if (destination == ItemDestination.STORAGE)
+            {
+
+            }
         }
     }
 }
