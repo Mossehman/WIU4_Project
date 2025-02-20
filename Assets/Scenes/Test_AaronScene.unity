@@ -5294,6 +5294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 568084511}
   - component: {fileID: 568084512}
+  - component: {fileID: 568084513}
   m_Layer: 0
   m_Name: TerrainGenerator
   m_TagString: Untagged
@@ -5353,6 +5354,20 @@ MonoBehaviour:
   chunkPrefab: {fileID: 4771254396308166945, guid: 00fb46ff2a8c5584e888c0fda1ef4151, type: 3}
   player: {fileID: 963194228}
   chunkRenderDistance: {x: 10, y: 0, z: 10}
+--- !u!114 &568084513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568084510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4a1850009de8140a84a8765ec4fd0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxObjectsPerChunk: 0
+  terrainAssets: []
 --- !u!1 &595701461
 GameObject:
   m_ObjectHideFlags: 0
