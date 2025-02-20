@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using Unity.VisualScripting;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 
 namespace Player.Inventory
 {
@@ -15,12 +13,6 @@ namespace Player.Inventory
         LIGHTEST,
         QUANTITY,
         TOTAL
-    }
-
-    enum SlotStatus
-    {
-        EMPTY,
-        OCCUPIED
     }
 
     enum ItemDestination
@@ -48,7 +40,6 @@ namespace Player.Inventory
         // LOCKING ITEMS
                                     private GameObject          _currentlySelected;
                                     private List<bool>          _isLocked;
-                                    private List<SlotStatus>    _inventoryItemStatus;
 
         [Header("Inventory UI")]
         [SerializeField]            private GameObject          _inventory;
@@ -59,7 +50,6 @@ namespace Player.Inventory
         [Header("Hotbar Logic")]
         [SerializeField]            private GameObject[]        _hotbarItems;
                                     private int                 _maxHotbarItems = 5;
-                                    private SlotStatus[]        _hotbarItemStatus;
 
         [Header("Hotbar UI")]
         [SerializeField]            private GameObject          _hotBarPanel;
@@ -74,11 +64,9 @@ namespace Player.Inventory
             // INVENTORY
             _inventoryItems = new List<GameObject>();
             _isLocked = new List<bool>();
-            _inventoryItemStatus = new List<SlotStatus>();
             _currentWeight = _baseWeight;
 
             // HOT BAR
-            _hotbarItemStatus = new SlotStatus[_maxHotbarItems];
             _hotbarItems = new GameObject[_maxHotbarItems];
 
             foreach (Transform child in _hotBarPanel.transform)
@@ -89,7 +77,6 @@ namespace Player.Inventory
             {
                 GameObject hotbarItem = Instantiate(_hotBarSlotPrefab, _hotBarPanel.transform);
                 _hotbarSlots[i] = hotbarItem;
-                _hotbarItemStatus[i] = SlotStatus.EMPTY;
                 _hotbarSlots[i].tag = "Hotbar";
             }
         }
@@ -111,7 +98,6 @@ namespace Player.Inventory
                     _currentWeight += tempItem.getWeight() * tempItem._quantity;
                     return;
                 }
-                _inventoryItemStatus[index] = SlotStatus.OCCUPIED;
                 index++;
             }
 
