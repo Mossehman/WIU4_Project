@@ -46,7 +46,7 @@ namespace Player.Inventory
         // SORTING
         [SerializeField]            private SortingType         _currentSort = SortingType.DATE_ADDED;
         // LOCKING ITEMS
-                                    private BaseItem            _currentlySelected;
+                                    private GameObject          _currentlySelected;
                                     private List<bool>          _isLocked;
                                     private List<SlotStatus>    _inventoryItemStatus;
 
@@ -57,7 +57,7 @@ namespace Player.Inventory
         [SerializeField]            private GameObject          _itemDescPanel;
 
         [Header("Hotbar Logic")]
-        [SerializeField]            private GameObject[]          _hotbarItems;
+        [SerializeField]            private GameObject[]        _hotbarItems;
                                     private int                 _maxHotbarItems = 5;
                                     private SlotStatus[]        _hotbarItemStatus;
 
@@ -129,23 +129,27 @@ namespace Player.Inventory
 
             List<GameObject> temp = SortInventory(_currentSort);
 
+            int index = -1;
+
             foreach (var item in temp)
             {
+                index++;
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
                 itemUI.GetComponent<Draggable>()._item = item;
                 itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
-                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item.GetComponent<ItemModelScript>().getSO()) );
+                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item) );
                 itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO()._quantity.ToString();
                 itemUI.GetComponent<Image>().sprite = item.GetComponent<ItemModelScript>().getSO().getItemIcon();
+                itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
             }
         }
 
-        public void ShowItem(BaseItem item)
+        public void ShowItem(GameObject item)
         {
             _currentlySelected = item;
-            _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
-            _itemDescPanel.transform.Find("Desc_Scroll").GetComponentInChildren<TextMeshProUGUI>().text = item.getItemDescription();
-            _itemDescPanel.transform.Find("Image").GetComponent<Image>().sprite = item.getItemIcon();
+            _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
+            _itemDescPanel.transform.Find("Desc_Scroll").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getItemDescription();
+            _itemDescPanel.transform.Find("Image").GetComponent<Image>().sprite = item.GetComponent<ItemModelScript>().getSO().getItemIcon();
         }
 
         private List<GameObject> SortInventory(SortingType type)
@@ -185,10 +189,18 @@ namespace Player.Inventory
                 foreach (GameObject item in _inventoryItems)
                 {
                     index++;
-                    if (item.GetComponent<ItemModelScript>().getSO().getID() == _currentlySelected.getID()) { break; }
+                    if (item.GetComponent<ItemModelScript>().getSO().getID() == _currentlySelected.GetComponent<ItemModelScript>().getSO().getID()) { break; }
                 }
-                if (_isLocked[index] == true) { _isLocked[index] = false; }
-                else if (_isLocked[index] == false) { _isLocked[index] = true; }
+                if (_isLocked[index] == true) 
+                { 
+                    _isLocked[index] = false;
+                    _inventoryPanel.transform.GetChild(index).gameObject.transform.Find("Lock").GetComponent<Image>().enabled = false;
+                }
+                else if (_isLocked[index] == false) 
+                { 
+                    _isLocked[index] = true;
+                    _inventoryPanel.transform.GetChild(index).gameObject.transform.Find("Lock").GetComponent<Image>().enabled = true;
+                }
             }
         }
 
