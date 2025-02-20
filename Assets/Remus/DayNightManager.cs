@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DayNightCycle : MonoBehaviour
 {
-    public Light sun; // Assign your Directional Light (Sun) in the Inspector
+    public Light sun;
     private TimeManager timeManager;
 
     private float currentSunRotation;
@@ -25,10 +25,8 @@ public class DayNightCycle : MonoBehaviour
     {
         if (timeManager == null) return;
 
-        // Calculate the target sun rotation based on time
         targetSunRotation = CalculateSunRotation(timeManager.hours, timeManager.minutes);
 
-        // Smoothly interpolate sun rotation
         currentSunRotation = Mathf.Lerp(currentSunRotation, targetSunRotation, Time.deltaTime * (1f / timeManager.secondsPerHour));
         sun.transform.rotation = Quaternion.Euler(currentSunRotation, 170, 0);
     }

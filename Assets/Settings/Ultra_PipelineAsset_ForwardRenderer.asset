@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: FullScreenPassRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 0
@@ -89,6 +89,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8348406ff29047a4fb0434c408a532e9, type: 3}
   m_Name: TemplateRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   postShaders:
   - {fileID: 11400000, guid: 42afb020ccf221c4a8d107107039de37, type: 2}

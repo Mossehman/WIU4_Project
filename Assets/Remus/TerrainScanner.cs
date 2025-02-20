@@ -26,7 +26,7 @@ public class TerrainScanner : MonoBehaviour
 
     void Start()
     {
-        playerCamera = Camera.main; // Get main camera
+        playerCamera = Camera.main;
     }
 
     void Update()
@@ -96,18 +96,17 @@ public class TerrainScanner : MonoBehaviour
         // Set the target object and update position
         currentTarget = target;
 
-        // Get references to UI elements inside the panel
         TMP_Text titleText = currentPanel.transform.Find("TitleText").GetComponent<TMP_Text>();
         TMP_Text descText = currentPanel.transform.Find("DescText").GetComponent<TMP_Text>();
 
         if (titleText != null)
         {
-            titleText.text = target.name; // Set the object's name as the title
+            titleText.text = target.name;
         }
 
         if (descText != null)
         {
-            descText.text = "• Object"; // Customize this description
+            descText.text = "• Object";
         }
 
         // Restart the hide timer
