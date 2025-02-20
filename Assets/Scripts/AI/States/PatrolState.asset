@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: PatrolState
   m_EditorClassIdentifier: 
   statetime: 2
-  numOfWalkDirections: 8
+  hungerdrain: 10
+  numOfWalkDirections: 16
