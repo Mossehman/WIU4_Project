@@ -9,6 +9,8 @@ TagManager:
   - Inventory
   - Scannable
   - TriggerZone
+  - Hotbar
+  - Storage
   layers:
   - Default
   - TransparentFX

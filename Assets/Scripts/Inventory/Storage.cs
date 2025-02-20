@@ -12,12 +12,12 @@ namespace Player.Inventory
     public class Storage : MonoBehaviour
     {
         [Header("Storage Logic")]
-        [SerializeField]            private GameObject[]    _storageItems;
-        [SerializeField]            private int             _maxItems;
+        [SerializeField]            public GameObject[]     _storageItems;
+        [SerializeField]            public int              _maxItems = 10;
         [SerializeField]            private SortingType     _currentSort;
-        [SerializeField]            private GameObject      _currentSelected;
 
         [Header("Storage UI")]
+        [SerializeField]            private GameObject      _storage;
         [SerializeField]            private GameObject      _storagePanel;
         [SerializeField]            private GameObject      _storageSlotPrefab;
         [SerializeField]            private GameObject      _itemPrefab;
@@ -27,30 +27,59 @@ namespace Player.Inventory
         {
             _storageItems = new GameObject[_maxItems];
             _storageSlots = new GameObject[_maxItems];
+
+            RenderStorage();
         }
 
         void Update()
         {
             for (int i = 0; i < _storageItems.Length; i++)
             {
-                ItemModelScript item = _storageItems[i].GetComponent<ItemModelScript>();
-
-                if (item == null) continue;
-
-                string itemID = item.getSO().getID();
-
-                Transform slot = _storageSlots[i].transform;
-
-                if (slot.childCount > 0)
+                if (_storageItems[i] != null)
                 {
-                    GameObject slotItem = slot.GetChild(0).gameObject;
+                    ItemModelScript item = _storageItems[i].GetComponent<ItemModelScript>();
 
-                    ItemModelScript childItemModel = slotItem.GetComponent<ItemModelScript>();
+                    if (item == null) continue;
 
-                    if (childItemModel != null && childItemModel.getSO().getID() == itemID)
+                    string itemID = item.getSO().getID();
+
+                    Transform slot = _storageSlots[i].transform;
+
+                    if (slot.childCount > 0)
                     {
-                        slotItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.getSO()._quantity.ToString();
+                        GameObject slotItem = slot.GetChild(0).gameObject;
+
+                        ItemModelScript childItemModel = slotItem.GetComponent<ItemModelScript>();
+
+                        if (childItemModel != null && childItemModel.getSO().getID() == itemID)
+                        {
+                            slotItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.getSO()._quantity.ToString();
+                        }
                     }
+                }
+            }
+        }
+
+        public void AddStorageItem(GameObject newItem)
+        {
+            BaseItem temp = newItem.GetComponent<ItemModelScript>().getSO();
+            foreach (var item in _storageItems)
+            {
+                if (item != null)
+                {
+                    if (item.GetComponent<ItemModelScript>().getSO().getID() == temp.getID())
+                    {
+                        item.GetComponent<ItemModelScript>().getSO()._quantity++;
+                        return;
+                    }
+                }
+            }
+            for (int i = 0; i < _maxItems; i++)
+            {
+                if (_storageItems[i] == null)
+                {
+                    _storageItems[i] = newItem;
+                    return;
                 }
             }
         }
@@ -77,6 +106,7 @@ namespace Player.Inventory
                 item.GetComponent<Image>().sprite = tempStorage[i].GetComponent<ItemModelScript>().getSO().getItemIcon();
             }
         }
+
         public void SwitchSort()
         {
             int newSort = ((int)_currentSort + 1) % ((int)SortingType.TOTAL);
@@ -118,12 +148,12 @@ namespace Player.Inventory
 
         public void OnStorageOpen()
         {
-            if (_storagePanel.active == false)
+            if (_storage.active == false)
             {
-                _storagePanel.SetActive(true);
+                _storage.SetActive(true);
                 RenderStorage();
             }
-            else { _storagePanel.SetActive(false); }
+            else { _storage.SetActive(false); }
         }
     }
 }

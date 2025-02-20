@@ -11,7 +11,7 @@ public class PlacableSlot : MonoBehaviour, IDropHandler
 
     private void Start()
     {
-        EventManager.CreateEvent("OnDropItem");
+        EventManager.CreateEvent("OnItemMove");
 
         if (transform.tag == "Inventory") { _destination = ItemDestination.INVENTORY; }
         else if (transform.tag == "Hotbar") { _destination = ItemDestination.HOTBAR; }

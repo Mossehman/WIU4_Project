@@ -59,7 +59,7 @@ namespace Player.Inventory
 
         void Start()
         {
-            EventManager.Connect("OnDropItem", OnDropItem);
+            EventManager.Connect("OnItemMove", OnItemMove);
 
             // INVENTORY
             _inventoryItems = new List<GameObject>();
@@ -86,10 +86,20 @@ namespace Player.Inventory
             SortInventory(_currentSort);
         }
 
+        public void DropItem(GameObject droppedItem)
+        {
+            foreach (var item in _inventoryItems)
+            {
+                if (item.GetComponent<ItemModelScript>().getSO().getID() == droppedItem.GetComponent<ItemModelScript>().getSO().getID())
+                {
+                    droppedItem.GetComponent<ItemModelScript>().OnDropItem(droppedItem.GetComponent<ItemModelScript>().getSO());
+                }
+            }    
+        }    
+
         public void AddItem(GameObject newItem)
         {
             BaseItem tempItem = newItem.GetComponent<ItemModelScript>().getSO();
-            int index = 0;
             foreach (var item in _inventoryItems)
             {
                 if (item.GetComponent<ItemModelScript>().getSO().getID() == tempItem.getID())
@@ -98,7 +108,6 @@ namespace Player.Inventory
                     _currentWeight += tempItem.getWeight() * tempItem._quantity;
                     return;
                 }
-                index++;
             }
 
             _inventoryItems.Add(newItem);
@@ -206,7 +215,7 @@ namespace Player.Inventory
             else { _inventory.SetActive(false); }
         }
 
-        void OnDropItem(object[] args)
+        void OnItemMove(object[] args)
         {
             // UI Object that got dragged
             GameObject item = args[0] as GameObject;
