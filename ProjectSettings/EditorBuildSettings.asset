@@ -12,6 +12,6 @@ EditorBuildSettings:
     path: Assets/Remus/Test_Remus.unity
     guid: d62bd39332ff602479a8f3179427f414
   - enabled: 1
-    path: Assets/Remus/ShipInterior.unity
+    path: Assets/Remus/Ship_Interior.unity
     guid: 51f1bb10ce39f2f49bc4077fb3bcc64d
   m_configObjects: {}

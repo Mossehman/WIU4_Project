@@ -52,7 +52,7 @@ Material:
     - _Fullscreen_SrcAlphaBlend: 1
     - _Fullscreen_SrcColorBlend: 5
     - _VigenetteIntensity: 0
-    - _VignetteIntensity: 0
+    - _VignetteIntensity: 2.0682144
     - _VignettePower: 3
     m_Colors:
     - _Color: {r: 2.3005772, g: 3.9248028, b: 0, a: 0}
