@@ -50,10 +50,17 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     {
                         if (food.TryGetComponent<CreatureInfo>(out var info))
                         {
-                            if (!info.isSheltered) target = food;
+                            if (!info.isSheltered)
+                            {
+                                target = food;
+                                break;
+                            }
                         }
                         else
+                        {
                             target = food; // Closest target
+                            break;
+                        }
                     }
                 }
                 if (target != null)
@@ -62,10 +69,12 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
                     if (target.gameObject.layer == LayerMask.NameToLayer("Passive"))
                     {
-                        //Debug.Log("Im gonna kill you rahh");
-                        AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Im gonna kill you rahh", fsm.gameObject);
+                        AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Im gonna kill you rahh", new object[]{ fsm.gameObject });
                     }
-
+                    if (stats.CurrentGroup != null)
+                    {
+                        AIBlackboardMediator.Instance.Notify(fsm.gameObject, "I found food", new object[] { stats });
+                    }
                     fsm.SwapState("Hunt");
                     return;
                 }

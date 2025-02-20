@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8df90f2e698d674ab999c83ffcd7d62, type: 3}
   m_Name: IdleState
   m_EditorClassIdentifier: 
-  statetime: 1
+  statetime: 2
   food:
   - Fruit
   awaketime:

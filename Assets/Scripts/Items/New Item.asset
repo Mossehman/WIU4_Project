@@ -18,5 +18,5 @@ MonoBehaviour:
   itemIcon: {fileID: 0}
   itemModel: {fileID: 0}
   _weight: 10
-  _quantity: 1
+  _quantity: 0
   recipes: []

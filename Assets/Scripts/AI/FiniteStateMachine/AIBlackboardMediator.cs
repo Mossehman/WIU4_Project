@@ -50,7 +50,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         /// <summary>
         /// Notify FSMs of an event (e.g., AI has spotted an enemy)
         /// </summary>
-        public void Notify(GameObject sender, string eventType, object data)
+        public void Notify(GameObject sender, string eventType, object[] data)
         {
             foreach (var kvp in registeredFSMs)
             {

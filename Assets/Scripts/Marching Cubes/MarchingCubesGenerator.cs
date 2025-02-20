@@ -1,11 +1,15 @@
 using System.Collections.Generic;
+using System.ComponentModel;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class MarchingCubesGenerator : MonoBehaviour
 {
     const int numThreads = 8;
 
     [Header("Compute")]
+    public TerrainNoiseConfig noiseConfig;
     public MarchingCubesNoise marchingCubesNoise;
     public ComputeShader marchingCubes;
 
@@ -32,6 +36,40 @@ public class MarchingCubesGenerator : MonoBehaviour
 
     bool updated = false;
 
+
+    public void InitialiseNoiseData()
+    {
+        marchingCubesNoise.seed = noiseConfig.seed;
+        marchingCubesNoise.octaves = noiseConfig.octaves;
+        marchingCubesNoise.lacunarity = noiseConfig.lacunarity;
+        marchingCubesNoise.persistence = noiseConfig.persistence;
+        marchingCubesNoise.noiseScale = noiseConfig.noiseScale;
+        marchingCubesNoise.noiseWeight = noiseConfig.noiseWeight;
+        marchingCubesNoise.closeEdges = noiseConfig.sealTop;
+        marchingCubesNoise.floorOffset = noiseConfig.floorOffset;
+        marchingCubesNoise.weightMultiplier = noiseConfig.weightMultiplier;
+        marchingCubesNoise.hardFloorHeight = noiseConfig.hardFloorHeight;
+        marchingCubesNoise.hardFloorWeight = noiseConfig.hardFloorWeight;
+
+        marchingCubesNoise.shaderParams = noiseConfig.shaderParams;
+    }
+
+    public void SaveNoiseData()
+    {
+        noiseConfig.seed = marchingCubesNoise.seed;
+        noiseConfig.octaves = marchingCubesNoise.octaves;
+        noiseConfig.lacunarity = marchingCubesNoise.lacunarity;
+        noiseConfig.persistence = marchingCubesNoise.persistence;
+        noiseConfig.noiseScale = marchingCubesNoise.noiseScale;
+        noiseConfig.noiseWeight = marchingCubesNoise.noiseWeight;
+        noiseConfig.sealTop = marchingCubesNoise.closeEdges;
+        noiseConfig.floorOffset = marchingCubesNoise.floorOffset;
+        noiseConfig.weightMultiplier = marchingCubesNoise.weightMultiplier;
+        noiseConfig.hardFloorHeight = marchingCubesNoise.hardFloorHeight;
+        noiseConfig.hardFloorWeight = marchingCubesNoise.hardFloorWeight;
+
+        noiseConfig.shaderParams = marchingCubesNoise.shaderParams;
+    }
 
     public void GenerateMesh(Chunk chunk)
     {
@@ -107,7 +145,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         }
 
 
-        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        mesh.indexFormat = IndexFormat.UInt32;
 
 
         mesh.vertices = vertices;
@@ -116,9 +154,15 @@ public class MarchingCubesGenerator : MonoBehaviour
         
 
         mesh.RecalculateNormals();
+        chunk.GetMeshFilter().mesh.Clear();
         chunk.GetMeshFilter().sharedMesh = mesh;
         if (chunk.GetMeshCollider() != null)
         {
+            if (chunk.GetMeshCollider().sharedMesh != null)
+            {
+                chunk.GetMeshCollider().sharedMesh.Clear();
+
+            }
             chunk.GetMeshCollider().sharedMesh = mesh;
         }
 
@@ -137,6 +181,7 @@ public class MarchingCubesGenerator : MonoBehaviour
 
     void OnApplicationQuit()
     {
+        SaveNoiseData();
         ReleaseBuffers();
     }
     void CreateBuffers()
@@ -176,9 +221,13 @@ public class MarchingCubesGenerator : MonoBehaviour
 
     void Start()
     {
+
+        InitialiseNoiseData();
+
         DestroyAllChunks();
         CreateBuffers();
-        GenerateChunks();
+        InitialiseChunks();
+        //GenerateChunks();
         //ReleaseBuffers();
     }
 
@@ -190,6 +239,9 @@ public class MarchingCubesGenerator : MonoBehaviour
         if (player == null) { return; }
 
         Vector3Int startingChunkIndex = PosToChunkIndex(player.position);
+
+        Stack<Vector3Int> newChunkPositions = new Stack<Vector3Int>();
+
         HashSet<Vector3Int> currentChunks = new HashSet<Vector3Int>(); //keep a lookup table of the chunks we are currently in
 
         for (int x = startingChunkIndex.x - chunkRenderDistance.x; x <= startingChunkIndex.x + chunkRenderDistance.x; x++) 
@@ -198,35 +250,81 @@ public class MarchingCubesGenerator : MonoBehaviour
             {
                 for (int z = startingChunkIndex.z - chunkRenderDistance.z; z <= startingChunkIndex.z + chunkRenderDistance.z; z++)
                 {
-                    currentChunks.Add(new Vector3Int(x, y, z));
-                    if (loadedChunks.ContainsKey(new Vector3Int(x, y, z))) { continue; } //chunk has already been loaded, no need to add it
+                    Vector3Int currChunkID = new Vector3Int(x, y, z);
+                    currentChunks.Add(currChunkID);
+                    if (loadedChunks.ContainsKey(currChunkID)) { continue; } //chunk has already been loaded, no need to add it
+                    newChunkPositions.Push(currChunkID);
 
-                    GameObject newChunk = Instantiate(chunkPrefab);
-                    newChunk.transform.position = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
-                    newChunk.transform.parent = transform;
-                    newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
-                    loadedChunks.Add(new Vector3Int(x, y, z), newChunk.GetComponent<Chunk>());
-                    GenerateMesh(newChunk.GetComponent<Chunk>());
+                    //GameObject newChunk = Instantiate(chunkPrefab);
+                    //newChunk.transform.position = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
+                    //newChunk.transform.parent = transform;
+                    //newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
+                    //loadedChunks.Add(new Vector3Int(x, y, z), newChunk.GetComponent<Chunk>());
+                    //GenerateMesh(newChunk.GetComponent<Chunk>());
                 }
             }
 
         }
 
-        List<Vector3Int> chunksToRemove  = new List<Vector3Int>();  
+        //List<Vector3Int> chunksToRemove  = new List<Vector3Int>(); 
+        //List<Vector3Int> chunkIDsToAdd  = new List<Vector3Int>();  
+        //List<Chunk> chunksToAdd  = new List<Chunk>();
 
-        foreach (var existingChunk in loadedChunks)
+        Dictionary<Vector3Int, Chunk> existingChunksCopy = new Dictionary<Vector3Int, Chunk>(loadedChunks);
+
+        foreach (var existingChunk in existingChunksCopy)
         {
+            if (newChunkPositions.Count == 0) { break; }
             Vector3Int chunkPos = existingChunk.Key;
             Chunk chunkData = existingChunk.Value;
 
             if (currentChunks.Contains(chunkPos)) { continue; }
-            Destroy(chunkData.gameObject);
-            chunksToRemove.Add(chunkPos);
+            loadedChunks.Remove(chunkPos);
+            chunkData.gameObject.transform.position = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
+            chunkData.gameObject.GetComponent<Chunk>().meshOffset = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
+            GenerateMesh(chunkData.gameObject.GetComponent<Chunk>());
+            loadedChunks.TryAdd(newChunkPositions.Peek(), chunkData);
+            newChunkPositions.Pop();
+            break;
+
+            //Destroy(chunkData.gameObject);
+            //chunksToRemove.Add(chunkPos);
         }
 
-        foreach (var chunkToRemove in chunksToRemove)
+        //foreach (var chunkToRemove in chunksToRemove)
+        //{
+        //    loadedChunks.Remove(chunkToRemove);
+        //}
+        //
+        //for (int i = 0; i < chunkIDsToAdd.Count; i++)
+        //{
+        //    loadedChunks.TryAdd(chunkIDsToAdd[i], chunksToAdd[i]);
+        //}
+    }
+
+    private void InitialiseChunks()
+    {
+        if (player == null) { return; }
+
+        Vector3Int startingChunkIndex = PosToChunkIndex(player.position);
+
+        for (int x = startingChunkIndex.x - chunkRenderDistance.x; x <= startingChunkIndex.x + chunkRenderDistance.x; x++)
         {
-            loadedChunks.Remove(chunkToRemove);
+            for (int y = startingChunkIndex.y - chunkRenderDistance.y; y <= startingChunkIndex.y + chunkRenderDistance.y; y++)
+            {
+                for (int z = startingChunkIndex.z - chunkRenderDistance.z; z <= startingChunkIndex.z + chunkRenderDistance.z; z++)
+                {
+                    Vector3Int currChunkID = new Vector3Int(x, y, z);
+
+                    GameObject newChunk = Instantiate(chunkPrefab);
+                    newChunk.transform.position = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
+                    newChunk.transform.parent = transform;
+                    newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
+                    loadedChunks.Add(currChunkID, newChunk.GetComponent<Chunk>());
+                    //Debug.Log(currChunkID.ToString());
+                    GenerateMesh(newChunk.GetComponent<Chunk>());
+                }
+            }
         }
     }
 
@@ -242,11 +340,11 @@ public class MarchingCubesGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (updated)
-        {
-            DestroyAllChunks();
-            updated = false;
-        }
+        //if (updated)
+        //{
+        //    DestroyAllChunks();
+        //    updated = false;
+        //}
 
         GenerateChunks();
 

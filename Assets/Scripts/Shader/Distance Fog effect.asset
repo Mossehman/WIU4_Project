@@ -15,6 +15,6 @@ MonoBehaviour:
   shader: {fileID: 4800000, guid: 9fc443611fdaad243a68a93e333ca50b, type: 3}
   input: 4
   toProfile: 0
-  fogStartingDepth: 0.004
-  fogEndDepth: 0.002
+  fogStartingDepth: 0.03
+  fogEndDepth: 0.005
   fogColor: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}

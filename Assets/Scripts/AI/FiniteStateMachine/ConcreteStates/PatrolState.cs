@@ -22,7 +22,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public override void OnStateEnter(FiniteStateMachine fsm)
         {
             if (fsm.GetPreviousStateName() == "Search" || fsm.GetPreviousStateName() == "Hunt")
-                AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Nvm Im not killing yall lol", fsm.gameObject);
+                AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Nvm Im not killing yall lol", new object[]{ fsm.gameObject});
 
             Vector3[] dir = new Vector3[numOfWalkDirections];
             float incrementangle = 360f / numOfWalkDirections;
