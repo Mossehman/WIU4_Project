@@ -285,6 +285,7 @@ public class MarchingCubesGenerator : MonoBehaviour
             GenerateMesh(chunkData.gameObject.GetComponent<Chunk>());
             loadedChunks.TryAdd(newChunkPositions.Peek(), chunkData);
             newChunkPositions.Pop();
+            break;
 
             //Destroy(chunkData.gameObject);
             //chunksToRemove.Add(chunkPos);
