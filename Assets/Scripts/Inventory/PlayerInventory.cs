@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
 using Unity.VisualScripting;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 
 namespace Player.Inventory
 {
@@ -28,44 +29,55 @@ namespace Player.Inventory
         HOTBAR,
         STORAGE
     }
+    enum ItemOrigin
+    {
+        INVENTORY,
+        HOTBAR,
+        STORAGE
+    }
 
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Inventory Logic")]
-        [SerializeField]    private List<GameObject>    _inventoryItems;
-        [SerializeField]    public float                _baseWeight = 0.0f;
-        [SerializeField]    public float                _baseMaxWeight = 10.0f;
-        [SerializeField]    private float               _currentWeight;
+        [SerializeField]            private List<GameObject>    _inventoryItems;
+        [SerializeField]            public float                _baseWeight = 0.0f;
+        [SerializeField]            public float                _baseMaxWeight = 10.0f;
+        [SerializeField]            private float               _currentWeight;
         // SORTING
-        [SerializeField]    private SortingType         _currentSort = SortingType.DATE_ADDED;
+        [SerializeField]            private SortingType         _currentSort = SortingType.DATE_ADDED;
         // LOCKING ITEMS
-                            private BaseItem            _currentlySelected;
-                            private List<bool>          _isLocked;
-                            private List<SlotStatus>    _inventoryItemStatus;
+                                    private BaseItem            _currentlySelected;
+                                    private List<bool>          _isLocked;
+                                    private List<SlotStatus>    _inventoryItemStatus;
 
         [Header("Inventory UI")]
-        [SerializeField]    private GameObject          _inventory;
-        [SerializeField]    private GameObject          _inventoryPanel;
-        [SerializeField]    private GameObject          _itemPrefab;
-        [SerializeField]    private GameObject          _itemDescPanel;
+        [SerializeField]            private GameObject          _inventory;
+        [SerializeField]            private GameObject          _inventoryPanel;
+        [SerializeField]            private GameObject          _itemPrefab;
+        [SerializeField]            private GameObject          _itemDescPanel;
 
         [Header("Hotbar Logic")]
-        [SerializeField]    private GameObject[]          _hotbarItems;
-                            private int                 _maxHotbarItems = 5;
-                            private SlotStatus[]        _hotbarItemStatus;
+        [SerializeField]            private GameObject[]          _hotbarItems;
+                                    private int                 _maxHotbarItems = 5;
+                                    private SlotStatus[]        _hotbarItemStatus;
 
         [Header("Hotbar UI")]
-        [SerializeField]    private GameObject          _hotBarPanel;
-        [SerializeField]    private GameObject          _hotBarSlotPrefab;
-        [SerializeField]    private GameObject[]        _hotbarSlots;
-        [SerializeField]    private GameObject          _hotbarItemPrefab;
+        [SerializeField]            private GameObject          _hotBarPanel;
+        [SerializeField]            private GameObject          _hotBarSlotPrefab;
+        [SerializeField]            private GameObject[]        _hotbarSlots;
+        [SerializeField]            private GameObject          _hotbarItemPrefab;
 
         void Start()
         {
             EventManager.Connect("OnDropItem", OnDropItem);
 
-            //_items = new List<BaseItem>();
+            // INVENTORY
+            _inventoryItems = new List<GameObject>();
             _isLocked = new List<bool>();
+            _inventoryItemStatus = new List<SlotStatus>();
+            _currentWeight = _baseWeight;
+
+            // HOT BAR
             _hotbarItemStatus = new SlotStatus[_maxHotbarItems];
             _hotbarItems = new GameObject[_maxHotbarItems];
 
@@ -79,30 +91,27 @@ namespace Player.Inventory
                 _hotbarSlots[i] = hotbarItem;
                 _hotbarItemStatus[i] = SlotStatus.EMPTY;
             }
-
-            _currentWeight = _baseWeight;
         }
 
         void Update()
         {
             SortInventory(_currentSort);
-            if (_inventoryItems.Count != _inventoryItemStatus.Count)
-            {
-                _inventoryItemStatus.Add(SlotStatus.OCCUPIED);
-            }
         }
 
         public void AddItem(GameObject newItem)
         {
             BaseItem tempItem = newItem.GetComponent<ItemModelScript>().getSO();
+            int index = 0;
             foreach (var item in _inventoryItems)
             {
                 if (item.GetComponent<ItemModelScript>().getSO().getID() == tempItem.getID())
                 {
-                    item.GetComponent<BaseItem>()._quantity += tempItem._quantity;
+                    item.GetComponent<ItemModelScript>().getSO()._quantity++;
                     _currentWeight += tempItem.getWeight() * tempItem._quantity;
                     return;
                 }
+                _inventoryItemStatus[index] = SlotStatus.OCCUPIED;
+                index++;
             }
 
             _inventoryItems.Add(newItem);
@@ -122,9 +131,11 @@ namespace Player.Inventory
             foreach (var item in temp)
             {
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
+                itemUI.GetComponent<Draggable>()._item = item;
                 itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
                 itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item.GetComponent<ItemModelScript>().getSO()) );
                 itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO()._quantity.ToString();
+                itemUI.GetComponent<Image>().sprite = item.GetComponent<ItemModelScript>().getSO().getItemIcon();
             }
         }
 
@@ -133,6 +144,7 @@ namespace Player.Inventory
             _currentlySelected = item;
             _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
             _itemDescPanel.transform.Find("Desc_Scroll").GetComponentInChildren<TextMeshProUGUI>().text = item.getItemDescription();
+            _itemDescPanel.transform.Find("Image").GetComponent<Image>().sprite = item.getItemIcon();
         }
 
         private List<GameObject> SortInventory(SortingType type)
@@ -163,6 +175,7 @@ namespace Player.Inventory
 
             return temp;
         }
+
         public void LockItem()
         {
             if (_currentlySelected != null)
@@ -196,60 +209,7 @@ namespace Player.Inventory
 
         void OnDropItem(object[] args)
         {
-            if (args.Length > 0 && args[0] is GameObject obj)
-            {
-                ItemModelScript rb = obj.GetComponent<ItemModelScript>();
-                if (rb != null)
-                {
-                    Debug.Log("Rigidbody found!");
-                }
-                else
-                {
-                    Debug.Log("No Rigidbody attached!");
-                }
-            }
-
-            //Debug.Log(args[0]);
-            //Debug.Log(args[1]);
-
-            //// Check if the gameobject is not null
-            //if ((GameObject)args[0] != null)
-            //{
-            //    switch ((ItemDestination)args[1])
-            //    {
-            //        case ItemDestination.INVENTORY:
-            //            for (int i = 0; i < _inventoryPanel.transform.childCount; i++)
-            //            {
-            //                if (_inventoryItemStatus[i] == SlotStatus.EMPTY && _inventoryPanel.transform.GetChild(i) != null)
-            //                {
-            //                    _inventoryItems.Add((GameObject)args[0]);
-            //                }
-            //                if (_inventoryItemStatus[i] == SlotStatus.OCCUPIED && _inventoryPanel.transform.GetChild(i) == null)
-            //                {
-            //                    _inventoryItems.Remove(_inventoryItems[i]);
-            //                }
-            //            }
-            //            break;
-            //        case ItemDestination.HOTBAR:
-            //            for (int i = 0; i < _hotBarPanel.transform.childCount; i++)
-            //            {
-            //                if (_hotbarSlots[i].transform.childCount > 0)
-            //                {
-            //                    if (_hotbarItemStatus[i] == SlotStatus.EMPTY && _hotbarSlots[i] != null && _hotbarSlots[i].transform.GetChild(0) != null)
-            //                    {
-            //                        _hotbarItems[i] = (GameObject)args[0];
-            //                    }
-            //                    if (_inventoryItemStatus[i] == SlotStatus.OCCUPIED && _inventory.transform.GetChild(0).transform == null)
-            //                    {
-            //                        _hotbarItems[i] = null;
-            //                    }
-            //                }
-            //            }
-            //            break;
-            //        case ItemDestination.STORAGE:
-            //            break;
-            //    }
-            //}
+            
         }
     }
 }

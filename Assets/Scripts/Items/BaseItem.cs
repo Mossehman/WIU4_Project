@@ -30,6 +30,7 @@ public class BaseItem : ScriptableObject
     public string getDisplayName() { return _displayName; }
     public string getItemDescription() { return _itemDescription; }
     public float getWeight() { return _weight; }
+    public Sprite getItemIcon() { return itemIcon; }
 }
 
 [System.Serializable]
