@@ -35,14 +35,34 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             if (stats.gameObject.layer == LayerMask.NameToLayer("Passive"))
             {
                 Collider[] nearbyCreatures = Physics.OverlapSphere(fsm.transform.position, 10f, LayerMask.GetMask("Passive"));
-                if (nearbyCreatures.Length > 1)
+                foreach (Collider creature in nearbyCreatures)
                 {
-                    CreatureInfo leader = nearbyCreatures[0].GetComponent<CreatureInfo>();
-                    Group group = leader.CurrentGroup ?? new Group(leader);
-                    group.AddMember(stats);
-                    stats.CurrentGroup = group;
+                    CreatureInfo otherStats = creature.GetComponent<CreatureInfo>();
+
+                    if (otherStats == null || otherStats == stats) continue;
+
+                    if (otherStats.CurrentGroup != null)
+                    {
+                        // If the other creature has a group, try to merge
+                        if (stats.CurrentGroup != null && stats.CurrentGroup.CanMerge(otherStats.CurrentGroup))
+                        {
+                            stats.CurrentGroup.Merge(otherStats.CurrentGroup);
+                        }
+                        else if (stats.CurrentGroup == null && otherStats.CurrentGroup.Members.Count < 5)
+                        {
+                            otherStats.CurrentGroup.AddMember(stats);
+                        }
+                    }
+                    else
+                    {
+                        // Neither has a group, form a new one
+                        stats.CurrentGroup ??= new Group(stats);
+
+                        stats.CurrentGroup.AddMember(otherStats);
+                    }
                 }
             }
+
             // Find a home if there is none
             if (stats.assignedHome == null)
             {
@@ -50,9 +70,11 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 foreach (Collider c in nearbyShelters)
                 {
                     CreatureShelter shelter = c.GetComponent<CreatureShelter>();
+                    if (shelter.numOfRegisteredCreatures >= shelter.maxHousingSpace) continue;
                     if (((1 << stats.gameObject.layer) & shelter.creatureHome) != 0)
                     {
                         stats.assignedHome = shelter;
+                        shelter.numOfRegisteredCreatures++;
                     }
                 }
             }

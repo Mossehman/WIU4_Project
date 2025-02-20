@@ -22,7 +22,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public override void OnStateEnter(FiniteStateMachine fsm)
         {
             if (fsm.GetPreviousStateName() == "Search" || fsm.GetPreviousStateName() == "Hunt")
-                AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Nvm Im not killing yall lol", new object[]{ fsm.gameObject});
+                AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Nvm Im not killing yall lol", new object[] { fsm.gameObject });
 
             Vector3[] dir = new Vector3[numOfWalkDirections];
             float incrementangle = 360f / numOfWalkDirections;
@@ -32,8 +32,48 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 dir[i] = new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle), 0, Mathf.Cos(Mathf.Deg2Rad * angle));
             }
 
-            movedirection = dir[UnityEngine.Random.Range(0, numOfWalkDirections - 1)];
+            // Check if the creature has an assigned home
+            if (stats.assignedHome == null)
+            {
+                // Look for the nearest home within a 50-unit radius
+                Collider[] nearbyShelters = Physics.OverlapSphere(fsm.transform.position, 50f, LayerMask.GetMask("Shelter"));
+                Collider closestShelter = null;
+                float minDistance = float.MaxValue;
+
+                foreach (Collider c in nearbyShelters)
+                {
+                    float distance = Vector3.Distance(fsm.transform.position, c.transform.position);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestShelter = c;
+                    }
+                }
+
+                if (closestShelter != null)
+                {
+                    // Bias movement towards the nearest shelter (60% chance)
+                    if (Random.value < 0.6f)
+                    {
+                        movedirection = (closestShelter.transform.position - fsm.transform.position).normalized;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                // If the creature has a home, bias movement AWAY from it (70% chance)
+                if (Random.value < 0.7f)
+                {
+                    movedirection = (fsm.transform.position - stats.assignedHome.transform.position).normalized;
+                    return;
+                }
+            }
+
+            // If no shelter is found or if random chance dictates, pick a fully random direction
+            movedirection = dir[UnityEngine.Random.Range(0, numOfWalkDirections)];
         }
+
 
         public override void OnStateLeave(FiniteStateMachine fsm)
         {

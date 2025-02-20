@@ -7,6 +7,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
     {
         public CreatureInfo Leader { get; private set; }
         public List<CreatureInfo> Members { get; private set; } = new List<CreatureInfo>();
+        private const int MaxGroupSize = 5;
 
         public Group(CreatureInfo leader)
         {
@@ -14,13 +15,41 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             Members.Add(leader);
         }
 
-        public void AddMember(CreatureInfo member)
+        public bool AddMember(CreatureInfo member)
         {
+            // Reject if group is full
+            if (Members.Count >= MaxGroupSize) return false; 
+
+            CreatureShelter leaderHome = Leader.assignedHome;
+
+            if (leaderHome != null)
+            {
+                // Reject if leader's home is full
+                if (leaderHome.numOfRegisteredCreatures >= leaderHome.maxHousingSpace)
+                {
+                    return false;
+                }
+
+                // Relocate the member to the leader's home
+                if (member.assignedHome != null)
+                {
+                    member.assignedHome.numOfRegisteredCreatures--;
+                }
+
+                member.assignedHome = leaderHome;
+                leaderHome.numOfRegisteredCreatures++;
+            }
+
             if (!Members.Contains(member))
             {
                 Members.Add(member);
+                member.CurrentGroup = this;
+                return true;
             }
+
+            return false;
         }
+
 
         public void RemoveMember(CreatureInfo member)
         {
@@ -41,26 +70,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
         }
 
-        /// <summary>
-        /// Merges this group with another group.
-        /// </summary>
-        public void MergeWith(Group otherGroup)
-        {
-            if (otherGroup == null || otherGroup == this) return;
-
-            // Add all members of the other group to this group
-            foreach (var member in otherGroup.Members)
-            {
-                AddMember(member);
-            }
-
-            // Disband the other group
-            otherGroup.Disband();
-        }
-
-        /// <summary>
-        /// Disbands the group, setting CurrentGroup to null for all members.
-        /// </summary>
         public void Disband()
         {
             foreach (var member in Members)
@@ -73,6 +82,25 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
             Members.Clear();
             Leader = null;
+        }
+
+        public bool CanMerge(Group otherGroup)
+        {
+            return (Members.Count + otherGroup.Members.Count) <= MaxGroupSize;
+        }
+
+        public void Merge(Group otherGroup)
+        {
+            if (!CanMerge(otherGroup)) return;
+
+            foreach (var member in otherGroup.Members)
+            {
+                if (Members.Count < MaxGroupSize)
+                {
+                    AddMember(member);
+                }
+            }
+            otherGroup.Disband();
         }
     }
 }

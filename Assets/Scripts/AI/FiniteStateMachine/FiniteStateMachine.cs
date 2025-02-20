@@ -84,45 +84,105 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             return true;
         }
 
+        public void ForceSwapState(string newStateID, GameObject newTarget)
+        {
+            if (!finiteStates.ContainsKey(newStateID))
+            {
+                Debug.LogWarning("State ID cannot be found: " + newStateID);
+                return;
+            }
+
+            // Immediately transition
+            currentState.OnStateLeave(this);
+            currentState = finiteStates[newStateID];
+            currentState.OnStateEnter(this);
+
+            // Set new target if needed
+            CreatureInfo info = GetComponent<CreatureInfo>();
+            if (info != null)
+            {
+                info.target = newTarget;
+            }
+
+            // Update debug info
+            previousStateName = currentStateName;
+            currentStateName = newStateID;
+        }
+
         /// <summary>
-        /// Receives events from the Mediator
+        /// Receives events from the Mediator and updates the state accordingly
         /// </summary>
         public void ReceiveEvent(string eventType, object[] data)
         {
-            if (eventType == "Im gonna kill you rahh")
+            CreatureInfo info = gameObject.GetComponent<CreatureInfo>();
+            if (info == null) return; // Safety check
+
+            Group currentGroup = info.CurrentGroup;
+
+            switch (eventType)
             {
-                if (currentStateName == "Resting") return;
-                if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
-                GameObject hunter = (GameObject)data[0];
-                if (hunter != null || Vector3.Distance(transform.position, hunter.transform.position) <= 55f)
-                {
-                    SwapState("Run");
-                    CreatureInfo info = gameObject.GetComponent<CreatureInfo>();
-                    info.target = hunter;
-                    info.CurrentGroup?.Disband();
-                }
-            }
-            else if (eventType == "Nvm Im not killing yall lol")
-            {
-                if (currentStateName == "Resting") return;
-                if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
-                if (gameObject.GetComponent<CreatureInfo>().target == (GameObject)data[0])
-                {
-                    SwapState("Idle");
-                    gameObject.GetComponent<CreatureInfo>().target = null;
-                }
-            }
-            else if (eventType == "I found food")
-            {
-                if (currentStateName == "Resting") return;
-                if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
-                if (gameObject.GetComponent<CreatureInfo>().CurrentGroup == null) return;
-                CreatureInfo info = (CreatureInfo)data[0];
-                if (gameObject.GetComponent<CreatureInfo>().CurrentGroup == info.CurrentGroup)
-                {
-                    SwapState("Hunt");
-                    gameObject.GetComponent<CreatureInfo>().target = info.target;
-                }
+                case "Im gonna kill you rahh":
+                    if (currentStateName == "Resting" || gameObject.layer != LayerMask.NameToLayer("Passive")) return;
+
+                    GameObject hunter = data[0] as GameObject;
+                    if (hunter != null && Vector3.Distance(transform.position, hunter.transform.position) <= 55f)
+                    {
+                        if (currentGroup != null)
+                        {
+                            foreach (CreatureInfo member in currentGroup.Members)
+                            {
+                                if (member != null)
+                                {
+                                    member.fsm.ForceSwapState("Run", hunter);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ForceSwapState("Run", hunter);
+                        }
+                    }
+                    break;
+
+                case "Nvm Im not killing yall lol":
+                    if (currentStateName == "Resting" || gameObject.layer != LayerMask.NameToLayer("Passive")) return;
+
+                    GameObject previousThreat = data[0] as GameObject;
+                    if (info.target == previousThreat)
+                    {
+                        if (currentGroup != null)
+                        {
+                            foreach (CreatureInfo member in currentGroup.Members)
+                            {
+                                if (member != null)
+                                {
+                                    member.fsm.ForceSwapState("Idle", null);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ForceSwapState("Idle", null);
+                        }
+                    }
+                    break;
+
+                case "I found food":
+                    if (currentStateName == "Resting" || gameObject.layer != LayerMask.NameToLayer("Passive")) return;
+                    if (currentGroup == null) return;
+
+                    CreatureInfo foodFinder = data[0] as CreatureInfo;
+                    if (foodFinder != null && foodFinder.CurrentGroup == currentGroup)
+                    {
+                        foreach (CreatureInfo member in currentGroup.Members)
+                        {
+                            if (member != null)
+                            {
+                                member.fsm.ForceSwapState("Hunt", foodFinder.target);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 

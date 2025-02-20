@@ -14,6 +14,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         [Header("Advanced Info")]
         public Group CurrentGroup;
         public Vector3 FlockDirection = Vector3.zero;
+        private Vector3 currentFlockDirection = Vector3.zero;
         public float FlockSpeed = 0.05f;
         public float FlockTightness = 1.0f;
         public float MaxFlockDistance = 5.0f;
@@ -22,11 +23,14 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public bool isSheltered = false;
 
         private CharacterController characterController;
-        
+        private Animator animator;
         private void Start()
         {
             fsm = GetComponent<FiniteStateMachine>();
             characterController = GetComponent<CharacterController>();
+
+            if (transform.childCount > 0)
+                animator = transform.GetChild(0).GetComponent<Animator>();
         }
 
         private void Update()
@@ -42,11 +46,27 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
             if (CurrentGroup != null)
             {
-                UpdateFlockingBehaviour();
-            if (FlockDirection.sqrMagnitude > 0)
-            characterController.Move((CurrentGroup != null ?
-                (CurrentGroup.Leader == this ? Vector3.zero : FlockDirection * FlockSpeed)
-                : Vector3.zero) * 0.01f);
+                if (fsm.GetCurrentStateName() != "Hunt" || fsm.GetCurrentStateName() != "Run")
+                {
+                    UpdateFlockingBehaviour();
+                    if (FlockDirection.sqrMagnitude > 0)
+                    {
+                        currentFlockDirection = (CurrentGroup != null ?
+                           (CurrentGroup.Leader == this ? Vector3.zero : FlockDirection * FlockSpeed)
+                           : Vector3.zero) * 0.01f;
+                        if (currentFlockDirection.sqrMagnitude > 0)
+                            characterController.Move(currentFlockDirection);
+                    }
+                }
+            }
+            if (animator != null)
+            {
+                if (characterController.velocity.sqrMagnitude > 0f) 
+                    animator.SetBool("isMoving", true);
+                else
+                    animator.SetBool("isMoving", false);
+
+                animator.SetFloat("speedMod", characterController.velocity.magnitude);
             }
         }
 
@@ -76,15 +96,28 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
         public void Move(Vector3 dir)
         {
-            Vector3 overalldir = dir 
-                ;
+            Vector3 overalldir = dir;
+
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(overalldir, Vector3.up), 0.01f);
 
             characterController.Move(overalldir * 0.01f);
+
+
+            //if (animator != null)
+            //    animator.SetBool("isMoving", true);
         }
 
         private void LateUpdate()
         {
+
             characterController.Move(Vector3.down * 0.05f);
+            if (FlockDirection.sqrMagnitude > 0)
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(currentFlockDirection, Vector3.up), 0.01f);
+        }
+
+        private void OnDestroy()
+        {
+            if (assignedHome != null) assignedHome.numOfRegisteredCreatures--;
         }
 
         private void OnDrawGizmos()
@@ -132,12 +165,10 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             else
                 Gizmos.color = new Color(0, 1 -((hunger-100f) * 0.01f), ((hunger-100f) * 0.01f), 0.5f);
             Gizmos.DrawCube(transform.position + new Vector3(0, 5, 0), new Vector3(1, 1, 1));
-        }
 
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = new Color(1, 1, 1, 0.2f);
-            Gizmos.DrawSphere(transform.position, 30f);
+
+            Gizmos.color = new Color(0, 0, 1, 0.25f);
+            Gizmos.DrawLine(transform.position, (transform.position + transform.forward * 5f));
         }
     }
 }
