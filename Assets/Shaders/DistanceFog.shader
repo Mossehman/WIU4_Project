@@ -28,6 +28,7 @@ Shader "Unlit/DistanceFog"
 
             float _fogMinDepth;
             float _fogMaxDepth;
+            float _skyboxBlend;
 
             struct VertexData{
                 float4 position : POSITION;
@@ -54,6 +55,8 @@ Shader "Unlit/DistanceFog"
                 
                 float4 camColor = SAMPLE_TEXTURE2D(_CameraTexture, sampler_CameraTexture, input.uv);
                 float depth = SAMPLE_TEXTURE2D(_CameraDepthTexture, sampler_CameraDepthTexture, input.uv);
+                float isNotSky = -step(depth, 0) + 1;
+                float skyboxFactor = (1 - isNotSky) * _skyboxBlend;
 
                 if (_fogMaxDepth >= _fogMinDepth || depth > _fogMinDepth)
                 {
@@ -62,7 +65,15 @@ Shader "Unlit/DistanceFog"
 
                 float t = (_fogMinDepth - depth) / (_fogMinDepth - _fogMaxDepth);
 
-                return lerp(camColor, _fogColor, t);
+                if (isNotSky > 0)
+                {
+                    return lerp(camColor, _fogColor, t);
+                }
+                else
+                {
+                    return lerp(camColor, _fogColor, t * skyboxFactor);
+                }
+
             }
             ENDHLSL
         }

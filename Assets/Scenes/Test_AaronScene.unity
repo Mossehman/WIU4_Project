@@ -413,6 +413,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4409317180688557796, guid: cfe402a73e04eaf4d9b341277fe3227e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5a1853ba6b4d8e64aa63f5037936b122, type: 2}
     - target: {fileID: 919132149155446097, guid: cfe402a73e04eaf4d9b341277fe3227e, type: 3}
       propertyPath: m_Name
       value: platypus_anim_test
@@ -472,6 +476,99 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &204603445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 204603446}
+  m_Layer: 0
+  m_Name: GrassHopper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &204603446
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204603445}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 170.79907, y: 41.861286, z: 224.66064}
+  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 705882094}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &251251902
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 204603446}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Name
+      value: grasshoppper_walk
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 0e7123f791dc95a4ea22aaf64159f46b, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f1694a831083dff438968c1e87a70b73, type: 3}
 --- !u!1 &342767081
 GameObject:
   m_ObjectHideFlags: 0
@@ -5344,6 +5441,7 @@ MonoBehaviour:
     hardFloorHeight: 6.85
     hardFloorWeight: 32.9
     shaderParams: {x: 1, y: 0, z: 0, w: 0}
+  placementScript: {fileID: 568084513}
   marchingCubes: {fileID: 7200000, guid: 4ecfb4dfb5a23514e854485642bd77d2, type: 3}
   surfaceLevel: 0.4
   numPointsPerAxis: {x: 30, y: 90, z: 30}
@@ -14995,6 +15093,11 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!4 &705882094 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+  m_PrefabInstance: {fileID: 251251902}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &761291505
 GameObject:
   m_ObjectHideFlags: 0
@@ -15360,7 +15463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1038644327
 Transform:
   m_ObjectHideFlags: 0
@@ -28047,3 +28150,4 @@ SceneRoots:
   - {fileID: 1576110143}
   - {fileID: 1857863188}
   - {fileID: 1038644327}
+  - {fileID: 204603446}

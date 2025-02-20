@@ -11,6 +11,7 @@ public class MarchingCubesGenerator : MonoBehaviour
     [Header("Compute")]
     public TerrainNoiseConfig noiseConfig;
     public MarchingCubesNoise marchingCubesNoise;
+    public TerrainObjectPlacement placementScript;
     public ComputeShader marchingCubes;
 
     [Header("Marching Cubes config")]
@@ -126,23 +127,7 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         }
 
-        Vector3 minExtent = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-        Vector3 maxExtent = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            minExtent = Vector3.Min(minExtent, vertices[i]);
-            maxExtent = Vector3.Max(maxExtent, vertices[i]);
-        }
-
-        Vector2[] uvs = new Vector2[vertices.Length];
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            uvs[i] = new Vector2(
-                Mathf.InverseLerp(minExtent.x, maxExtent.x, vertices[i].x),
-                Mathf.InverseLerp(minExtent.z, maxExtent.z, vertices[i].z)
-            );
-        }
+        Vector3 centerPoint = mesh.bounds.center; // or set your own center
 
 
         mesh.indexFormat = IndexFormat.UInt32;
@@ -150,10 +135,42 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         mesh.vertices = vertices;
         mesh.triangles = meshTriangles;
-        mesh.uv = uvs;  
-        
-
         mesh.RecalculateNormals();
+        Vector3[] normals = mesh.normals;
+
+        Vector2[] uvs = new Vector2[vertices.Length];
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            // Get the vertex position (optionally offset by a center)
+            Vector3 pos = vertices[i] - centerPoint;
+            // Retrieve the normal for blending weights.
+            Vector3 n = normals[i];
+
+            // Compute the blending weights from the absolute normal components.
+            // These determine how much each planar projection contributes.
+            Vector3 blending = new Vector3(Mathf.Abs(n.x), Mathf.Abs(n.y), Mathf.Abs(n.z));
+            float total = blending.x + blending.y + blending.z;
+            if (total > 0)
+                blending /= total;
+            else
+                blending = new Vector3(0.33f, 0.33f, 0.33f);
+
+            // Compute UVs for each projection:
+            // Projection onto YZ plane (ignores X): use (Y, Z)
+            Vector2 uvX = new Vector2(pos.y, pos.z);
+            // Projection onto XZ plane (ignores Y): use (X, Z)
+            Vector2 uvY = new Vector2(pos.x, pos.z);
+            // Projection onto XY plane (ignores Z): use (X, Y)
+            Vector2 uvZ = new Vector2(pos.x, pos.y);
+
+            // Blend the three sets of UVs using the computed weights.
+            Vector2 uv = uvX * blending.x + uvY * blending.y + uvZ * blending.z;
+            uvs[i] = uv;
+        }
+
+
+        mesh.uv = uvs;  
+
         chunk.GetMeshFilter().mesh.Clear();
         chunk.GetMeshFilter().sharedMesh = mesh;
         if (chunk.GetMeshCollider() != null)
@@ -165,6 +182,8 @@ public class MarchingCubesGenerator : MonoBehaviour
             }
             chunk.GetMeshCollider().sharedMesh = mesh;
         }
+
+        placementScript.PlaceObjects(marchingCubesNoise.seed, chunk.meshOffset + center, bounds);
 
     }
 
@@ -185,22 +204,22 @@ public class MarchingCubesGenerator : MonoBehaviour
         ReleaseBuffers();
     }
     void CreateBuffers()
-{
-    int numPoints = numPointsPerAxis.x * numPointsPerAxis.y * numPointsPerAxis.z;
-    Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
-    int numVoxels = numVoxelsPerAxis.x * numVoxelsPerAxis.y * numVoxelsPerAxis.z;
-    int maxTriangleCount = numVoxels * 5;
-
-    if (pointsBuffer == null) { Debug.Log("Buffer was null!!!"); }
-
-    if (pointsBuffer == null || numPoints != pointsBuffer.count)
     {
-        ReleaseBuffers();
-        trianglesBuffer = new ComputeBuffer(maxTriangleCount, sizeof(float) * 3 * 3, ComputeBufferType.Append);
-        pointsBuffer = new ComputeBuffer(numPoints, sizeof(float) * 4);
-        triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+        int numPoints = numPointsPerAxis.x * numPointsPerAxis.y * numPointsPerAxis.z;
+        Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
+        int numVoxels = numVoxelsPerAxis.x * numVoxelsPerAxis.y * numVoxelsPerAxis.z;
+        int maxTriangleCount = numVoxels * 5;
+    
+        if (pointsBuffer == null) { Debug.Log("Buffer was null!!!"); }
+    
+        if (pointsBuffer == null || numPoints != pointsBuffer.count)
+        {
+            ReleaseBuffers();
+            trianglesBuffer = new ComputeBuffer(maxTriangleCount, sizeof(float) * 3 * 3, ComputeBufferType.Append);
+            pointsBuffer = new ComputeBuffer(numPoints, sizeof(float) * 4);
+            triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+        }
     }
-}
 
     private void OnValidate()
     {
@@ -221,7 +240,6 @@ public class MarchingCubesGenerator : MonoBehaviour
 
     void Start()
     {
-
         InitialiseNoiseData();
 
         DestroyAllChunks();
@@ -367,6 +385,61 @@ public class MarchingCubesGenerator : MonoBehaviour
         }
 
         loadedChunks.Clear();
+    }
+
+    Vector2 CubeMapUV(Vector3 d)
+    {
+        float absX = Mathf.Abs(d.x);
+        float absY = Mathf.Abs(d.y);
+        float absZ = Mathf.Abs(d.z);
+        float u, v;
+
+        // Determine the dominant axis.
+        if (absX >= absY && absX >= absZ)
+        {
+            // X is dominant.
+            if (d.x > 0)
+            {
+                u = -d.z / absX;
+                v = d.y / absX;
+            }
+            else
+            {
+                u = d.z / absX;
+                v = d.y / absX;
+            }
+        }
+        else if (absY >= absX && absY >= absZ)
+        {
+            // Y is dominant.
+            if (d.y > 0)
+            {
+                u = d.x / absY;
+                v = -d.z / absY;
+            }
+            else
+            {
+                u = d.x / absY;
+                v = d.z / absY;
+            }
+        }
+        else
+        {
+            // Z is dominant.
+            if (d.z > 0)
+            {
+                u = d.x / absZ;
+                v = d.y / absZ;
+            }
+            else
+            {
+                u = -d.x / absZ;
+                v = d.y / absZ;
+            }
+        }
+
+        // Map from [-1, 1] to [0, 1].
+        return new Vector2((u + 1f) * 0.5f, (v + 1f) * 0.5f);
     }
 }
 

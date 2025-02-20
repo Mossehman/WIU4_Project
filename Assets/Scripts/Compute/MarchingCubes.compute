@@ -18,6 +18,13 @@ struct Triangle {
 float surfaceLevel;     // the defined value to determine our marching cubes configuration based on which 8 points in the cube are above or below the surface level
 int3 numPointsPerAxis;  // the number of marching cube sample points along each X Y and Z axis
 
+struct ObjectPlacementData {
+    int3 voxelCellIndex;
+    float3 position;
+    float3 normal;
+};
+AppendStructuredBuffer<ObjectPlacementData> objectPlacementData;
+
 
 // AppendStructuredBuffer means only the shader can append to the end of it
 // RWStructuredBuffer means that this buffer can be externally written to and read from
@@ -82,6 +89,16 @@ void MarchingCubes (int3 id : SV_DispatchThreadID)             //id represents t
         tri.vertB = vertexInterpolation(cubeCorners[a1], cubeCorners[b1]);
         tri.vertC = vertexInterpolation(cubeCorners[a2], cubeCorners[b2]);
         triangles.Append(tri);
+
+        //ObjectPlacementData data;
+        //float3 u = tri.vertB - tri.vertA;
+        //float3 v = tri.vertC - tri.vertA;
+        //
+        //data.normal = normalize(cross(u, v));
+        //data.position = (tri.vertA + tri.vertB + tri.vertC) * 0.33333333333;
+        //data.voxelCellIndex = id;
+        //
+        //objectPlacementData.Append(data);
     }
 }
 
