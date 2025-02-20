@@ -87,29 +87,41 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         /// <summary>
         /// Receives events from the Mediator
         /// </summary>
-        public void ReceiveEvent(string eventType, object data)
+        public void ReceiveEvent(string eventType, object[] data)
         {
             if (eventType == "Im gonna kill you rahh")
             {
                 if (currentStateName == "Resting") return;
                 if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
-                GameObject hunter = (GameObject)data;
+                GameObject hunter = (GameObject)data[0];
                 if (hunter != null || Vector3.Distance(transform.position, hunter.transform.position) <= 55f)
                 {
                     SwapState("Run");
                     CreatureInfo info = gameObject.GetComponent<CreatureInfo>();
                     info.target = hunter;
-                    if (info.CurrentGroup != null) info.CurrentGroup.Disband();
+                    info.CurrentGroup?.Disband();
                 }
             }
             else if (eventType == "Nvm Im not killing yall lol")
             {
                 if (currentStateName == "Resting") return;
                 if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
-                if (gameObject.GetComponent<CreatureInfo>().target == (GameObject)data)
+                if (gameObject.GetComponent<CreatureInfo>().target == (GameObject)data[0])
                 {
                     SwapState("Idle");
                     gameObject.GetComponent<CreatureInfo>().target = null;
+                }
+            }
+            else if (eventType == "I found food")
+            {
+                if (currentStateName == "Resting") return;
+                if (gameObject.layer != LayerMask.NameToLayer("Passive")) return;
+                if (gameObject.GetComponent<CreatureInfo>().CurrentGroup == null) return;
+                CreatureInfo info = (CreatureInfo)data[0];
+                if (gameObject.GetComponent<CreatureInfo>().CurrentGroup == info.CurrentGroup)
+                {
+                    SwapState("Hunt");
+                    gameObject.GetComponent<CreatureInfo>().target = info.target;
                 }
             }
         }

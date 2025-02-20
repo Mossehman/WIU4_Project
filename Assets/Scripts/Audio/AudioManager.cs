@@ -177,6 +177,14 @@ public class AudioManager : MonoBehaviour
         BackgroundAmbience.Play();
     }
 
+    /// <summary>
+    /// This will attach an AudioSource to the targeted GameObject and play a looping sound
+    /// </summary>
+    /// <param name="soundName">The name of the sound you set in the Sound Libraries</param>
+    /// <param name="targetObject">The GameObject you want this audio to originate from</param>
+    /// <param name="volume">(Optional) The volume of the audio when you wish to override</param>
+    /// <param name="pitch">(Optional) The pitch of the audio</param>
+    /// <returns>The playing AudioSource so that you can modify it later (stop, increase pitch, etc)</returns>
     public AudioSource PlayLoopingSound(string soundName, GameObject targetObject, float? volume = null, float pitch = 1f)
     {
         if (soundLibraries == null || soundLibraries.Count == 0)
