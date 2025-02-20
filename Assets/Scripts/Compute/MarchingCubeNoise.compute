@@ -91,10 +91,15 @@ void GenerateNoise (int3 id : SV_DispatchThreadID)
 		finalNoiseValue = finalNoiseValue * (1 - edgeWeight) - 100 * edgeWeight;
 	}
 
-	if (noiseSamplePoint.y + offset.y < hardFloor) {
-		float distanceFromHardFloorBottom = (hardFloor - spacing.y * 6) - (noiseSamplePoint.y + offset.y);
+	float floorThreshold = hardFloor - max(2, ClassicNoise3D(noiseSamplePoint + offset) * 4);
 
-		if (noiseSamplePoint.y + offset.y < hardFloor - spacing.y * 6) {
+	if (noiseSamplePoint.y + offset.y < floorThreshold) {
+		float distanceFromHardFloorBottom = (floorThreshold - spacing.y * 6) - (noiseSamplePoint.y + offset.y);
+		//if (distanceFromHardFloorBottom > floorThreshold - spacing.y * 6) {
+		//	floorThreshold += 
+		//}
+
+		if (noiseSamplePoint.y + offset.y < floorThreshold - spacing.y * 6) {
 
 			if (distanceFromHardFloorBottom <= spacing.y * 12) {
 				finalNoiseValue += max(10, snoise(noiseSamplePoint + offset) * 20);

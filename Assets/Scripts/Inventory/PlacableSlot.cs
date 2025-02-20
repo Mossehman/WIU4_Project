@@ -6,38 +6,46 @@ using UnityEngine.EventSystems;
 
 public class PlacableSlot : MonoBehaviour, IDropHandler
 {
+    private ItemOrigin _origin;
+    private ItemDestination _destination;
+
     private void Start()
     {
-        EventManager.CreateEvent("OnDropItem");
+        EventManager.CreateEvent("OnItemMove");
+
+        if (transform.tag == "Inventory") { _destination = ItemDestination.INVENTORY; }
+        else if (transform.tag == "Hotbar") { _destination = ItemDestination.HOTBAR; }
+        else if (transform.tag == "Storage") { _destination = ItemDestination.STORAGE; }
     }
 
     public void OnDrop(PointerEventData eventData)
     {
         Debug.Log(transform);
+        GameObject dropped = eventData.pointerDrag;
+        Draggable Draggable = dropped.GetComponent<Draggable>();
+
+        if (Draggable._parentAfterDrag.transform.tag == "Inventory") { _origin = ItemOrigin.INVENTORY; }
+        else if (Draggable._parentAfterDrag.transform.tag == "Hotbar") { _origin = ItemOrigin.HOTBAR; }
+        else if (Draggable._parentAfterDrag.transform.tag == "Storage") { _origin = ItemOrigin.STORAGE; }
+
         if (transform.childCount == 0 && transform.tag != "Inventory")
         {
-            GameObject dropped = eventData.pointerDrag;
-            Draggable Draggable = dropped.GetComponent<Draggable>();
             Draggable._parentAfterDrag = transform;
-            EventManager.Fire("OnDropItem", dropped, ItemDestination.HOTBAR);
+            EventManager.Fire("OnDropItem", dropped, _origin, _destination);
         }
         else if (transform.tag == "Inventory")
         {
-            GameObject dropped = eventData.pointerDrag;
-            Draggable Draggable = dropped.GetComponent<Draggable>();
             Draggable._parentAfterDrag = transform;
-            EventManager.Fire("OnDropItem", dropped, ItemDestination.INVENTORY);
+            EventManager.Fire("OnDropItem", dropped, _origin, _destination);
         }
         else
         {
-            GameObject dropped = eventData.pointerDrag;
-            Draggable Draggable = dropped.GetComponent<Draggable>();
-
             GameObject current = transform.GetChild(0).gameObject;
             Draggable currentDraggable = current.GetComponent<Draggable>();
 
             currentDraggable.transform.SetParent(Draggable._parentAfterDrag);
             Draggable._parentAfterDrag = transform;
         }
+
     }
 }

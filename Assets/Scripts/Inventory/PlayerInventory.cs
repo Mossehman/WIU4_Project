@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using Unity.VisualScripting;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 
 namespace Player.Inventory
 {
@@ -15,12 +13,6 @@ namespace Player.Inventory
         LIGHTEST,
         QUANTITY,
         TOTAL
-    }
-
-    enum SlotStatus
-    {
-        EMPTY,
-        OCCUPIED
     }
 
     enum ItemDestination
@@ -46,9 +38,8 @@ namespace Player.Inventory
         // SORTING
         [SerializeField]            private SortingType         _currentSort = SortingType.DATE_ADDED;
         // LOCKING ITEMS
-                                    private BaseItem            _currentlySelected;
+                                    private GameObject          _currentlySelected;
                                     private List<bool>          _isLocked;
-                                    private List<SlotStatus>    _inventoryItemStatus;
 
         [Header("Inventory UI")]
         [SerializeField]            private GameObject          _inventory;
@@ -57,9 +48,8 @@ namespace Player.Inventory
         [SerializeField]            private GameObject          _itemDescPanel;
 
         [Header("Hotbar Logic")]
-        [SerializeField]            private GameObject[]          _hotbarItems;
+        [SerializeField]            private GameObject[]        _hotbarItems;
                                     private int                 _maxHotbarItems = 5;
-                                    private SlotStatus[]        _hotbarItemStatus;
 
         [Header("Hotbar UI")]
         [SerializeField]            private GameObject          _hotBarPanel;
@@ -69,16 +59,14 @@ namespace Player.Inventory
 
         void Start()
         {
-            EventManager.Connect("OnDropItem", OnDropItem);
+            EventManager.Connect("OnItemMove", OnItemMove);
 
             // INVENTORY
             _inventoryItems = new List<GameObject>();
             _isLocked = new List<bool>();
-            _inventoryItemStatus = new List<SlotStatus>();
             _currentWeight = _baseWeight;
 
             // HOT BAR
-            _hotbarItemStatus = new SlotStatus[_maxHotbarItems];
             _hotbarItems = new GameObject[_maxHotbarItems];
 
             foreach (Transform child in _hotBarPanel.transform)
@@ -89,7 +77,7 @@ namespace Player.Inventory
             {
                 GameObject hotbarItem = Instantiate(_hotBarSlotPrefab, _hotBarPanel.transform);
                 _hotbarSlots[i] = hotbarItem;
-                _hotbarItemStatus[i] = SlotStatus.EMPTY;
+                _hotbarSlots[i].tag = "Hotbar";
             }
         }
 
@@ -98,10 +86,20 @@ namespace Player.Inventory
             SortInventory(_currentSort);
         }
 
+        public void DropItem(GameObject droppedItem)
+        {
+            foreach (var item in _inventoryItems)
+            {
+                if (item.GetComponent<ItemModelScript>().getSO().getID() == droppedItem.GetComponent<ItemModelScript>().getSO().getID())
+                {
+                    droppedItem.GetComponent<ItemModelScript>().OnDropItem(droppedItem.GetComponent<ItemModelScript>().getSO());
+                }
+            }    
+        }    
+
         public void AddItem(GameObject newItem)
         {
             BaseItem tempItem = newItem.GetComponent<ItemModelScript>().getSO();
-            int index = 0;
             foreach (var item in _inventoryItems)
             {
                 if (item.GetComponent<ItemModelScript>().getSO().getID() == tempItem.getID())
@@ -110,8 +108,6 @@ namespace Player.Inventory
                     _currentWeight += tempItem.getWeight() * tempItem._quantity;
                     return;
                 }
-                _inventoryItemStatus[index] = SlotStatus.OCCUPIED;
-                index++;
             }
 
             _inventoryItems.Add(newItem);
@@ -128,23 +124,27 @@ namespace Player.Inventory
 
             List<GameObject> temp = SortInventory(_currentSort);
 
+            int index = -1;
+
             foreach (var item in temp)
             {
+                index++;
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
                 itemUI.GetComponent<Draggable>()._item = item;
                 itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
-                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item.GetComponent<ItemModelScript>().getSO()) );
+                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item) );
                 itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO()._quantity.ToString();
                 itemUI.GetComponent<Image>().sprite = item.GetComponent<ItemModelScript>().getSO().getItemIcon();
+                itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
             }
         }
 
-        public void ShowItem(BaseItem item)
+        public void ShowItem(GameObject item)
         {
             _currentlySelected = item;
-            _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
-            _itemDescPanel.transform.Find("Desc_Scroll").GetComponentInChildren<TextMeshProUGUI>().text = item.getItemDescription();
-            _itemDescPanel.transform.Find("Image").GetComponent<Image>().sprite = item.getItemIcon();
+            _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
+            _itemDescPanel.transform.Find("Desc_Scroll").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getItemDescription();
+            _itemDescPanel.transform.Find("Image").GetComponent<Image>().sprite = item.GetComponent<ItemModelScript>().getSO().getItemIcon();
         }
 
         private List<GameObject> SortInventory(SortingType type)
@@ -184,10 +184,18 @@ namespace Player.Inventory
                 foreach (GameObject item in _inventoryItems)
                 {
                     index++;
-                    if (item.GetComponent<ItemModelScript>().getSO().getID() == _currentlySelected.getID()) { break; }
+                    if (item.GetComponent<ItemModelScript>().getSO().getID() == _currentlySelected.GetComponent<ItemModelScript>().getSO().getID()) { break; }
                 }
-                if (_isLocked[index] == true) { _isLocked[index] = false; }
-                else if (_isLocked[index] == false) { _isLocked[index] = true; }
+                if (_isLocked[index] == true) 
+                { 
+                    _isLocked[index] = false;
+                    _inventoryPanel.transform.GetChild(index).gameObject.transform.Find("Lock").GetComponent<Image>().enabled = false;
+                }
+                else if (_isLocked[index] == false) 
+                { 
+                    _isLocked[index] = true;
+                    _inventoryPanel.transform.GetChild(index).gameObject.transform.Find("Lock").GetComponent<Image>().enabled = true;
+                }
             }
         }
 
@@ -207,9 +215,61 @@ namespace Player.Inventory
             else { _inventory.SetActive(false); }
         }
 
-        void OnDropItem(object[] args)
+        void OnItemMove(object[] args)
         {
-            
+            // UI Object that got dragged
+            GameObject item = args[0] as GameObject;
+            ItemOrigin origin = (ItemOrigin)args[1];
+            ItemDestination destination = (ItemDestination)args[2];
+
+            GameObject matchedGO;
+
+            if (origin == ItemOrigin.INVENTORY)
+            {
+                foreach(var invItem in _inventoryItems)
+                {
+                    if (invItem.GetComponent<ItemModelScript>().getSO().getID() == item.GetComponent<Draggable>()._item.GetComponent<ItemModelScript>().getSO().getID())
+                    {
+                        matchedGO = invItem;
+                        _inventoryItems.Remove(invItem);
+                    }
+                }
+            }
+            else if (origin == ItemOrigin.HOTBAR)
+            {
+                for (int i = 0; i < _maxHotbarItems; i++)
+                {
+                    if (_hotbarItems[i].GetComponent<ItemModelScript>().getSO().getID() == item.GetComponent<Draggable>()._item.GetComponent<ItemModelScript>().getSO().getID())
+                    {
+                        _hotbarItems[i] = null;
+                        break;
+                    }
+                }
+            }
+            else if (origin == ItemOrigin.STORAGE)
+            {
+
+            }
+
+            if (destination == ItemDestination.INVENTORY)
+            {
+                _inventoryItems.Add(item.GetComponent<Draggable>()._item);
+            }
+            else if (destination == ItemDestination.HOTBAR)
+            {
+                for (int i = 0; i < _maxHotbarItems; i++)
+                {
+                    if (_hotbarItems[i] == null) 
+                    { 
+                        _hotbarItems[i] = item.GetComponent<Draggable>()._item;
+                        break;
+                    }
+                }
+            }
+            else if (destination == ItemDestination.STORAGE)
+            {
+
+            }
         }
     }
 }
