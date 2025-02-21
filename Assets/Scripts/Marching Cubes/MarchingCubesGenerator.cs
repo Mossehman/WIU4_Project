@@ -98,6 +98,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         marchingCubes.SetBuffer(0, "triangles", trianglesBuffer);
         marchingCubes.SetInts("numPointsPerAxis", numPointsPerAxis.x, numPointsPerAxis.y, numPointsPerAxis.z);
         marchingCubes.SetFloat("surfaceLevel", surfaceLevel);
+        marchingCubes.SetVector("chunkCenter", chunk.meshOffset);
 
         marchingCubes.Dispatch(0, numThreadsPerAxis.x, numThreadsPerAxis.y, numThreadsPerAxis.z);
 
@@ -109,7 +110,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         // Get triangle data from shader
         Triangle[] tris = new Triangle[numTris];
         trianglesBuffer.GetData(tris, 0, 0, numTris);
-
+        var vertexIndexMap = new Dictionary<Vector2Int, int>();
 
         Mesh mesh = new Mesh();
         mesh.Clear();
@@ -117,15 +118,30 @@ public class MarchingCubesGenerator : MonoBehaviour
         var vertices = new Vector3[numTris * 3];
         var meshTriangles = new int[numTris * 3];
 
+
+        UnityEngine.Random.InitState(marchingCubesNoise.seed);
+
         for (int i = 0; i < numTris; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                meshTriangles[i * 3 + j] = i * 3 + j;
-                vertices[i * 3 + j] = tris[i][j];
+                int sharedVertexIndex;
+                if (vertexIndexMap.TryGetValue(tris[i][j].id, out sharedVertexIndex))
+                {
+                    meshTriangles[i * 3 + j] = sharedVertexIndex;
+                }
+                else
+                {
+                    vertexIndexMap.Add(tris[i][j].id, i * 3 + j);
+                    meshTriangles[i * 3 + j] = i * 3 + j;
+                    vertices[i * 3 + j] = tris[i][j].position;
+                }
             }
 
+            placementScript.PlaceObjects(marchingCubesNoise.seed, tris[i].center + chunk.meshOffset, tris[i].normal);
+
         }
+        UnityEngine.Random.InitState((int)Time.time);
 
         Vector3 centerPoint = mesh.bounds.center; // or set your own center
 
@@ -141,36 +157,28 @@ public class MarchingCubesGenerator : MonoBehaviour
         Vector2[] uvs = new Vector2[vertices.Length];
         for (int i = 0; i < vertices.Length; i++)
         {
-            // Get the vertex position (optionally offset by a center)
-            Vector3 pos = vertices[i] - centerPoint;
-            // Retrieve the normal for blending weights.
+            Vector3 pos = vertices[i] - centerPoint;    
             Vector3 n = normals[i];
-
-            // Compute the blending weights from the absolute normal components.
-            // These determine how much each planar projection contributes.
+            
             Vector3 blending = new Vector3(Mathf.Abs(n.x), Mathf.Abs(n.y), Mathf.Abs(n.z));
             float total = blending.x + blending.y + blending.z;
             if (total > 0)
                 blending /= total;
             else
                 blending = new Vector3(0.33f, 0.33f, 0.33f);
-
-            // Compute UVs for each projection:
-            // Projection onto YZ plane (ignores X): use (Y, Z)
+    
             Vector2 uvX = new Vector2(pos.y, pos.z);
-            // Projection onto XZ plane (ignores Y): use (X, Z)
             Vector2 uvY = new Vector2(pos.x, pos.z);
-            // Projection onto XY plane (ignores Z): use (X, Y)
             Vector2 uvZ = new Vector2(pos.x, pos.y);
-
-            // Blend the three sets of UVs using the computed weights.
+            
             Vector2 uv = uvX * blending.x + uvY * blending.y + uvZ * blending.z;
             uvs[i] = uv;
         }
 
 
-        mesh.uv = uvs;  
+        mesh.uv = uvs;
 
+        chunk.GenerateBounds(bounds);
         chunk.GetMeshFilter().mesh.Clear();
         chunk.GetMeshFilter().sharedMesh = mesh;
         if (chunk.GetMeshCollider() != null)
@@ -183,7 +191,7 @@ public class MarchingCubesGenerator : MonoBehaviour
             chunk.GetMeshCollider().sharedMesh = mesh;
         }
 
-        placementScript.PlaceObjects(marchingCubesNoise.seed, chunk.meshOffset + center, bounds);
+        //placementScript.PlaceObjects(marchingCubesNoise.seed, chunk.meshOffset + center, bounds);
 
     }
 
@@ -215,7 +223,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         if (pointsBuffer == null || numPoints != pointsBuffer.count)
         {
             ReleaseBuffers();
-            trianglesBuffer = new ComputeBuffer(maxTriangleCount, sizeof(float) * 3 * 3, ComputeBufferType.Append);
+            trianglesBuffer = new ComputeBuffer(maxTriangleCount, sizeof(float) * 3 * 5 + sizeof(int) * 2 * 3, ComputeBufferType.Append);
             pointsBuffer = new ComputeBuffer(numPoints, sizeof(float) * 4);
             triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
         }
@@ -272,21 +280,10 @@ public class MarchingCubesGenerator : MonoBehaviour
                     currentChunks.Add(currChunkID);
                     if (loadedChunks.ContainsKey(currChunkID)) { continue; } //chunk has already been loaded, no need to add it
                     newChunkPositions.Push(currChunkID);
-
-                    //GameObject newChunk = Instantiate(chunkPrefab);
-                    //newChunk.transform.position = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
-                    //newChunk.transform.parent = transform;
-                    //newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
-                    //loadedChunks.Add(new Vector3Int(x, y, z), newChunk.GetComponent<Chunk>());
-                    //GenerateMesh(newChunk.GetComponent<Chunk>());
                 }
             }
 
         }
-
-        //List<Vector3Int> chunksToRemove  = new List<Vector3Int>(); 
-        //List<Vector3Int> chunkIDsToAdd  = new List<Vector3Int>();  
-        //List<Chunk> chunksToAdd  = new List<Chunk>();
 
         Dictionary<Vector3Int, Chunk> existingChunksCopy = new Dictionary<Vector3Int, Chunk>(loadedChunks);
 
@@ -304,20 +301,7 @@ public class MarchingCubesGenerator : MonoBehaviour
             loadedChunks.TryAdd(newChunkPositions.Peek(), chunkData);
             newChunkPositions.Pop();
             break;
-
-            //Destroy(chunkData.gameObject);
-            //chunksToRemove.Add(chunkPos);
         }
-
-        //foreach (var chunkToRemove in chunksToRemove)
-        //{
-        //    loadedChunks.Remove(chunkToRemove);
-        //}
-        //
-        //for (int i = 0; i < chunkIDsToAdd.Count; i++)
-        //{
-        //    loadedChunks.TryAdd(chunkIDsToAdd[i], chunksToAdd[i]);
-        //}
     }
 
     private void InitialiseChunks()
@@ -386,72 +370,19 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         loadedChunks.Clear();
     }
-
-    Vector2 CubeMapUV(Vector3 d)
-    {
-        float absX = Mathf.Abs(d.x);
-        float absY = Mathf.Abs(d.y);
-        float absZ = Mathf.Abs(d.z);
-        float u, v;
-
-        // Determine the dominant axis.
-        if (absX >= absY && absX >= absZ)
-        {
-            // X is dominant.
-            if (d.x > 0)
-            {
-                u = -d.z / absX;
-                v = d.y / absX;
-            }
-            else
-            {
-                u = d.z / absX;
-                v = d.y / absX;
-            }
-        }
-        else if (absY >= absX && absY >= absZ)
-        {
-            // Y is dominant.
-            if (d.y > 0)
-            {
-                u = d.x / absY;
-                v = -d.z / absY;
-            }
-            else
-            {
-                u = d.x / absY;
-                v = d.z / absY;
-            }
-        }
-        else
-        {
-            // Z is dominant.
-            if (d.z > 0)
-            {
-                u = d.x / absZ;
-                v = d.y / absZ;
-            }
-            else
-            {
-                u = -d.x / absZ;
-                v = d.y / absZ;
-            }
-        }
-
-        // Map from [-1, 1] to [0, 1].
-        return new Vector2((u + 1f) * 0.5f, (v + 1f) * 0.5f);
-    }
 }
-
 
 
 struct Triangle
 {
-    public Vector3 a;
-    public Vector3 b;
-    public Vector3 c;
+    public Vertex a;
+    public Vertex b;
+    public Vertex c;
 
-    public Vector3 this[int i]
+    public Vector3 center;
+    public Vector3 normal;
+
+    public Vertex this[int i]
     {
         get
         {
@@ -466,6 +397,13 @@ struct Triangle
             }
         }
     }
+}
+
+
+struct Vertex
+{
+    public Vector3 position;
+    public Vector2Int id;
 }
 
 public struct SphereEditor

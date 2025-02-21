@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,28 +7,45 @@ using UnityEngine;
 public class TerrainObjectPlacement : MonoBehaviour
 {
     public uint maxObjectsPerChunk;
+    public uint objectPlacementChance;
 
     [Header("Assets")]
     public GameObject[] terrainAssets;
     [HideInInspector] public ComputeBuffer terrainObjectsBuffer;
+    
+    private int placedObjects = 0;
 
-    private Vector3 position = Vector3.zero;
-    private Vector3 bounds = Vector3.one * -1;
-    private bool setVals = false;
+    public List<Vector3> positions = new List<Vector3>();
+    public List<Vector3> normals = new List<Vector3>();
 
-    public void PlaceObjects(int seed, Vector3 position, Vector3 bounds)
+    public void PlaceObjects(int seed, Vector3 position, Vector3 normal)
     {
-        if (setVals) { return; }
+        if (placedObjects > maxObjectsPerChunk) { return; }
 
-        this.position = position;
-        this.bounds = bounds;
-        setVals = true;
+        if (position.y < 13) { return; }
+                
+        int toSpawn = Random.Range(0, (int)objectPlacementChance);
+        if (toSpawn > 0) { return; }
+
+        GameObject assetTest = Instantiate(terrainAssets[0]);
+        assetTest.transform.position = position;
+        assetTest.transform.LookAt(position - normal);
+        placedObjects++;
+
+        //Random.InitState((int)Time.time);
+
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawCube(position, new Vector3(bounds.x, 100, bounds.z));
+        //Gizmos.DrawCube(position, new Vector3(bounds.x, 100, bounds.z));
+
+        for (int i = 0; i < positions.Count; i++)
+        {
+            Gizmos.DrawLine(positions[i], positions[i] - normals[i]);
+        }
+
     }
 }
 
