@@ -51,7 +51,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _DayNightSlider: 0
-    - _HorizonBlend: 20.2
+    - _HorizonBlend: 29
     - _NadirBlend: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0

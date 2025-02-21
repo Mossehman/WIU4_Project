@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1383555210}
-  m_IndirectSpecularColor: {r: 0.1369621, g: 0.050739743, b: 0.017674051, a: 1}
+  m_IndirectSpecularColor: {r: 0.13703221, g: 0.0508097, b: 0.017744217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7048,7 +7048,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxObjectsPerChunk: 0
-  terrainAssets: []
+  objectPlacementChance: 0
+  terrainAssets:
+  - {fileID: 1526497705511942428, guid: 151652ed386abe949a46ac24d29f5917, type: 3}
+  positions: []
+  normals: []
 --- !u!1 &1415660881
 GameObject:
   m_ObjectHideFlags: 0
@@ -41834,3 +41838,4 @@ SceneRoots:
   - {fileID: 1482833723}
   - {fileID: 889260982}
   - {fileID: 12418488}
+  - {fileID: 2002123244}
