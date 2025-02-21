@@ -8,29 +8,40 @@
 // The number of threads per group we will use for this compute shader (example: threadGroupSize of 8 == 8 * 8 * 8 (512) threads being used)
 static const int threadGroupSize = 8;
 
+struct Vertex {
+    float3 position;
+    int2 id;
+};
+
 // Given that the data will be processed in a multi-threaded approach, we send all 3 vertices to the shader such that the triangles are created in the correct order
 struct Triangle {
-    float3 vertC;
-    float3 vertB;
-    float3 vertA;
+    Vertex vertC;
+    Vertex vertB;
+    Vertex vertA;
+
+    float3 center;
+    float3 normal;
 };
+
+
 
 float surfaceLevel;     // the defined value to determine our marching cubes configuration based on which 8 points in the cube are above or below the surface level
 int3 numPointsPerAxis;  // the number of marching cube sample points along each X Y and Z axis
+float3 chunkCenter;
 
-struct ObjectPlacementData {
-    int3 voxelCellIndex;
-    float3 position;
-    float3 normal;
-};
-AppendStructuredBuffer<ObjectPlacementData> objectPlacementData;
+//struct ObjectPlacementData {
+//    int3 voxelCellIndex;
+//    float3 position;
+//    float3 normal;
+//};
+//AppendStructuredBuffer<ObjectPlacementData> objectPlacementData;
 
 
 // AppendStructuredBuffer means only the shader can append to the end of it
 // RWStructuredBuffer means that this buffer can be externally written to and read from
 
 AppendStructuredBuffer<Triangle> triangles; // buffer of all the generated triangles
-RWStructuredBuffer<float4> cubePoints;         // buffer of the list of points in our marching cubes chunk
+RWStructuredBuffer<float4> cubePoints;      // buffer of the list of points in our marching cubes chunk
 
 ///Helper function to calculate the position of our vertices based on the surface level and position (as opposed to placing each vertex at the midpoint)
 float3 vertexInterpolation(float4 v1, float4 v2) {
@@ -44,6 +55,17 @@ int indexFromCoord(uint x, uint y, uint z) {
     return z * numPointsPerAxis.z * numPointsPerAxis.y + y * numPointsPerAxis.x + x;
 }
 
+int indexFromCoord(int3 pos) { 
+    return pos.z * numPointsPerAxis.z * numPointsPerAxis.y + pos.y * numPointsPerAxis.x + pos.x;
+}
+
+int2 createVertexID(int3 positionA, int3 positionB)
+{
+    int indexA = indexFromCoord(positionA + int3(chunkCenter));
+    int indexB = indexFromCoord(positionB + int3(chunkCenter));
+
+    return int2(min(indexA, indexB), max(indexA, indexB));
+}
 
 
 [numthreads(threadGroupSize, threadGroupSize, threadGroupSize)] //the defined dimensions of the thread groups for our code to run on (since compute shaders are multithreaded)
@@ -85,20 +107,29 @@ void MarchingCubes (int3 id : SV_DispatchThreadID)             //id represents t
         int b2 = cornerIndexBFromEdge[triangulationTable[cubeIndex][i+2]];
 
         Triangle tri;
-        tri.vertA = vertexInterpolation(cubeCorners[a0], cubeCorners[b0]);
-        tri.vertB = vertexInterpolation(cubeCorners[a1], cubeCorners[b1]);
-        tri.vertC = vertexInterpolation(cubeCorners[a2], cubeCorners[b2]);
-        triangles.Append(tri);
+        Vertex vertA;
+        Vertex vertB;
+        Vertex vertC;
 
-        //ObjectPlacementData data;
-        //float3 u = tri.vertB - tri.vertA;
-        //float3 v = tri.vertC - tri.vertA;
-        //
-        //data.normal = normalize(cross(u, v));
-        //data.position = (tri.vertA + tri.vertB + tri.vertC) * 0.33333333333;
-        //data.voxelCellIndex = id;
-        //
-        //objectPlacementData.Append(data);
+        vertA.position = vertexInterpolation(cubeCorners[a0], cubeCorners[b0]);
+        vertB.position = vertexInterpolation(cubeCorners[a1], cubeCorners[b1]);
+        vertC.position = vertexInterpolation(cubeCorners[a2], cubeCorners[b2]);
+
+        vertA.id = createVertexID(cubeCorners[a0], cubeCorners[b0]);
+        vertB.id = createVertexID(cubeCorners[a1], cubeCorners[b1]);
+        vertC.id = createVertexID(cubeCorners[a2], cubeCorners[b2]);
+
+        tri.vertA = vertA;
+        tri.vertB = vertB;
+        tri.vertC = vertC;
+
+        float3 u = tri.vertB.position - tri.vertA.position;
+        float3 v = tri.vertC.position - tri.vertA.position;
+        
+        tri.normal = normalize(cross(u, v));
+        tri.center = (tri.vertA.position + tri.vertB.position + tri.vertC.position) * 0.33333333333;
+
+        triangles.Append(tri);
     }
 }
 
