@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1868502787360254789}
   - component: {fileID: 6961039674905133527}
   m_Layer: 19
-  m_Name: "The Creature\u2122"
+  m_Name: Platypus
   m_TagString: Entities
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,6 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb8fe50d9c8d40d4fbf9e4c2ebf3d977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 60
   hunger: 80
   target: {fileID: 0}
   segs: {fileID: 1289410198279785359}
@@ -84,9 +85,12 @@ MonoBehaviour:
   MaxFlockDistance: 10
   assignedHome: {fileID: 0}
   isSheltered: 0
+  isDead: 0
   goes: platypus-goes
   walk: platypus-walk
   rest: platypus-rest
+  hurt: platypus-hurt
+  dead: platypus-dead
   voiceSource: {fileID: 0}
 --- !u!143 &6961039674905133527
 CharacterController:

@@ -25,6 +25,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine {
             {
                 if (creature == null) { continue; }
                 if (creature.hunger <= 80f) creature.hunger += Time.deltaTime * 2f;
+                creature.Health += Time.deltaTime * 2f;
             }
         }
 

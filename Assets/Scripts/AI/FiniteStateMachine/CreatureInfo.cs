@@ -7,10 +7,34 @@ namespace Assets.Scripts.AI.FiniteStateMachine
     public class CreatureInfo : MonoBehaviour
     {
         [Header("Basic Info")]
+        private float maxhealth;
+        [SerializeField] private float health;
         public float hunger = 80;
         public GameObject target;
         public GameObject segs;
         public FiniteStateMachine fsm;
+
+        public delegate void EntityDeath(CreatureInfo info);
+        public delegate void EntityHurt(CreatureInfo info);
+        public event EntityDeath OnEntityDeath;
+        public event EntityHurt OnEntityHurt;
+
+        public float Health { 
+            get { 
+                return health; 
+            } 
+            set { 
+                health = value;
+                if (value < health)
+                {
+                    OnEntityHurt?.Invoke(this);
+                }
+                if (health <= 0f)
+                {
+                    OnEntityDeath?.Invoke(this);
+                }
+            } 
+        }
 
         [Header("Advanced Info")]
         public Group CurrentGroup;
@@ -19,14 +43,19 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public float FlockSpeed = 0.05f;
         public float FlockTightness = 1.0f;
         public float MaxFlockDistance = 5.0f;
+        public float ProductionCooldown = 30.0f;
+        private float ProductionDuration = 30.0f;
 
         public CreatureShelter assignedHome;
         public bool isSheltered = false;
+        public bool isDead = false;
 
         [Header("Audio Info")]
         public string goes = string.Empty;
         public string walk = string.Empty;
         public string rest = string.Empty;
+        public string hurt = string.Empty;
+        public string dead = string.Empty;
 
         private CharacterController characterController;
         private Animator animator;
@@ -41,18 +70,43 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             voiceSource = gameObject.AddComponent<AudioSource>();
             if (transform.childCount > 0)
                 animator = transform.GetChild(0).GetComponent<Animator>();
+            maxhealth = health;
+            ProductionDuration = ProductionCooldown;
+            OnEntityHurt += (CreatureInfo _) =>
+            {
+                AudioManager.Instance.PlayNonSpamAudio(hurt, ref sfxSource, default, true, 1, true);
+            };
+
+            OnEntityDeath += (CreatureInfo _) =>
+            {
+                if (!isDead)
+                {
+                    isDead = true;
+                    AudioManager.Instance.PlayNonSpamAudio(dead, ref sfxSource, default, true, 1, true);
+                    if (animator != null) animator.SetBool("isMoving", false);
+                }
+            };
         }
 
         private void Update()
         {
-            if (hunger <= 0) Destroy(gameObject, 10f);
-
-            if (hunger >= 90 && isSheltered)
+            if (hunger <= 0 || isDead)
             {
+                Destroy(gameObject, 10f);
+                isDead = true;
+                characterController.Move(Vector3.zero);
+                return;
+            }
+            if (hunger >= 90 && isSheltered && ProductionDuration <= 0f)
+            {
+                ProductionDuration = ProductionCooldown;
                 hunger -= 30;
+                Debug.Log("B");
                 Instantiate(segs).GetComponent<CreatureInfo>().hunger = 70;
             }
+            ProductionDuration -= Time.deltaTime;
             hunger = Mathf.Clamp(hunger, 0f, 120f);
+            health = Mathf.Clamp(health, 0f, maxhealth);
 
             if (CurrentGroup != null)
             {
@@ -82,7 +136,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
                 animator.SetFloat("speedMod", characterController.velocity.magnitude);
             }
-            //Debug.Log(characterController.velocity);
         }
 
         private void UpdateFlockingBehaviour()
@@ -113,20 +166,17 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         {
             Vector3 overalldir = dir;
 
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(overalldir, Vector3.up), 0.01f);
+            if (overalldir.sqrMagnitude > 0)
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(overalldir, Vector3.up), 0.01f);
 
             characterController.Move(overalldir * 0.01f);
-
-
-            //if (animator != null)
-            //    animator.SetBool("isMoving", true);
         }
 
         private void LateUpdate()
         {
 
             characterController.Move(Vector3.down * 0.05f);
-            if (FlockDirection.sqrMagnitude > 0)
+            if (currentFlockDirection.sqrMagnitude > 0)
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(currentFlockDirection, Vector3.up), 0.01f);
         }
 
@@ -182,6 +232,8 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             Gizmos.DrawCube(transform.position + new Vector3(0, 5, 0), new Vector3(1, 1, 1));
 
 
+            Gizmos.color = new Color(health <= 0f ? 0f : 1 - (health / maxhealth), health <= 0f ? 0f : health / maxhealth, 0, 0.5f);
+            Gizmos.DrawCube(transform.position + new Vector3(0, 4, 0), new Vector3(1, 1, 1));
             Gizmos.color = new Color(0, 0, 1, 0.25f);
             Gizmos.DrawLine(transform.position, (transform.position + transform.forward * 5f));
         }
