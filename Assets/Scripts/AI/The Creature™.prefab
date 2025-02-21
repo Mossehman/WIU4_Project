@@ -84,6 +84,10 @@ MonoBehaviour:
   MaxFlockDistance: 10
   assignedHome: {fileID: 0}
   isSheltered: 0
+  goes: platypus-goes
+  walk: platypus-walk
+  rest: platypus-rest
+  voiceSource: {fileID: 0}
 --- !u!143 &6961039674905133527
 CharacterController:
   m_ObjectHideFlags: 0

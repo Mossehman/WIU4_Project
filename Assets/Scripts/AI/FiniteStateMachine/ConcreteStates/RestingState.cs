@@ -36,14 +36,15 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
             if (stats.assignedHome != null)
             {
-                if (!stats.isSheltered)
-                {
-                    Vector3 dir = stats.assignedHome.transform.position - stats.transform.position;
+                Vector3 dir = stats.assignedHome.transform.position - stats.transform.position;
+                if (dir.sqrMagnitude >= 10f)
                     stats.Move(dir.normalized * 2f);
-                }
+                else
+                    AudioManager.Instance.PlayNonSpamAudio(stats.rest, ref stats.voiceSource, default, true, 1);
             }
             else
             {
+                AudioManager.Instance.PlayNonSpamAudio(stats.rest, ref stats.voiceSource, default, true, 1);
                 stats.hunger += Time.deltaTime * 0.5f;
             }
         }

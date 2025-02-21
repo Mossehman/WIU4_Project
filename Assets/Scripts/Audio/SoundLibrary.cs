@@ -12,7 +12,7 @@ public class SoundLibrary : ScriptableObject
         public AudioPriority priority = AudioPriority.Medium;
         public float volume = 1f;
     }
-
+    public string libraryname = string.Empty;
     public List<SoundEntry> sounds = new List<SoundEntry>();
 
     public AudioClip GetClipByName(string name, out float volume, out AudioPriority priority)

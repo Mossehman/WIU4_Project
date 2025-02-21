@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
 {
@@ -22,13 +23,22 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public CreatureShelter assignedHome;
         public bool isSheltered = false;
 
+        [Header("Audio Info")]
+        public string goes = string.Empty;
+        public string walk = string.Empty;
+        public string rest = string.Empty;
+
         private CharacterController characterController;
         private Animator animator;
+        private AudioSource sfxSource;
+        public AudioSource voiceSource;
+        
         private void Start()
         {
             fsm = GetComponent<FiniteStateMachine>();
             characterController = GetComponent<CharacterController>();
-
+            sfxSource = gameObject.AddComponent<AudioSource>();
+            voiceSource = gameObject.AddComponent<AudioSource>();
             if (transform.childCount > 0)
                 animator = transform.GetChild(0).GetComponent<Animator>();
         }
@@ -61,13 +71,18 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
             if (animator != null)
             {
-                if (characterController.velocity.sqrMagnitude > 0f) 
+                if (characterController.velocity.sqrMagnitude > 0f)
+                {
                     animator.SetBool("isMoving", true);
+                    
+                    AudioManager.Instance.PlayNonSpamAudio(walk, ref sfxSource, default, true, characterController.velocity.magnitude, true);
+                }
                 else
                     animator.SetBool("isMoving", false);
 
                 animator.SetFloat("speedMod", characterController.velocity.magnitude);
             }
+            //Debug.Log(characterController.velocity);
         }
 
         private void UpdateFlockingBehaviour()

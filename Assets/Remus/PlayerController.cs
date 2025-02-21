@@ -28,11 +28,12 @@ public class PlayerController : MonoBehaviour
     private float mouseY;
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
-
+    private AudioSource audioSource;
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
+        audioSource = gameObject.AddComponent<AudioSource>();
     }
 
     private void Update()
@@ -51,6 +52,8 @@ public class PlayerController : MonoBehaviour
 
         if (IsGrounded())
         {
+            if (moveDirection.sqrMagnitude > 0)
+                AudioManager.Instance.PlayRandomAudio("PlayerFootsteps", ref audioSource, default, default, speed * 0.2f);
             if (velocity.y < 0) velocity.y = -2f; // Reset gravity accumulation
 
             if (jumpPressed)
