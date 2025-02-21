@@ -4,6 +4,7 @@ using UnityEngine;
 public class Chunk : MonoBehaviour
 {
     // Keep track of which chunk index this chunk lies on in world space (this is for debugging purposes)
+    [SerializeField] private bool cull = true;
     [SerializeField] private Vector2Int chunkID;
     [SerializeField] private MeshFilter meshFilter;
     [SerializeField] private MeshRenderer meshRenderer;
@@ -24,6 +25,7 @@ public class Chunk : MonoBehaviour
 
     private void Update()
     {
+        if (!cull) { return; }
         if (meshRenderer.enabled && !FrustumCull(bounds))
         {
             meshRenderer.enabled = false;
