@@ -55,9 +55,9 @@ Material:
     - _NadirBlend: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _StarHeight: 160
-    - _StarIntensity: 225
-    - _StarPower: 25
+    - _StarHeight: 107.6
+    - _StarIntensity: 121.5
+    - _StarPower: 70.6
     - _SunSize: 0.2
     - _ZenithBlend: 0.4
     m_Colors:

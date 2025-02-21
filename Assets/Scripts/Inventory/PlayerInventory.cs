@@ -57,6 +57,10 @@ namespace Player.Inventory
         [SerializeField]            private GameObject[]        _hotbarSlots;
         [SerializeField]            private GameObject          _hotbarItemPrefab;
 
+        [SerializeField]            private GameObject          _vitalsPanel;
+        [SerializeField]            private GameObject          _infoPanel;
+        [SerializeField]            private GameObject          _mapPanel;
+
         void Start()
         {
             EventManager.Connect("OnItemMove", OnItemMove);
@@ -83,6 +87,12 @@ namespace Player.Inventory
 
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                ToggleInventory();
+            }
+
             SortInventory(_currentSort);
         }
 
@@ -209,10 +219,21 @@ namespace Player.Inventory
         {
             if (_inventory.active == false)
             {
+                Cursor.lockState = CursorLockMode.Confined;
                 _inventory.SetActive(true);
+                _vitalsPanel.SetActive(false);
+                _infoPanel.SetActive(false);
+                _mapPanel.SetActive(false);
                 RenderInventory();
             }
-            else { _inventory.SetActive(false); }
+            else 
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                _inventory.SetActive(false);
+                _vitalsPanel.SetActive(true);
+                _infoPanel.SetActive(true);
+                _mapPanel.SetActive(true);
+            }
         }
 
         void OnItemMove(object[] args)
