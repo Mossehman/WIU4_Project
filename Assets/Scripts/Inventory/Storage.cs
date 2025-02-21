@@ -33,31 +33,31 @@ namespace Player.Inventory
 
         void Update()
         {
-            for (int i = 0; i < _storageItems.Length; i++)
-            {
-                if (_storageItems[i] != null)
-                {
-                    ItemModelScript item = _storageItems[i].GetComponent<ItemModelScript>();
+            //for (int i = 0; i < _storageItems.Length; i++)
+            //{
+            //    if (_storageItems[i] != null)
+            //    {
+            //        ItemModelScript item = _storageItems[i].GetComponent<ItemModelScript>();
 
-                    if (item == null) continue;
+            //        if (item == null) continue;
 
-                    string itemID = item.getSO().getID();
+            //        string itemID = item.getSO().getID();
 
-                    Transform slot = _storageSlots[i].transform;
+            //        Transform slot = _storageSlots[i].transform;
 
-                    if (slot.childCount > 0)
-                    {
-                        GameObject slotItem = slot.GetChild(0).gameObject;
+            //        if (slot.childCount > 0)
+            //        {
+            //            GameObject slotItem = slot.GetChild(0).gameObject;
 
-                        ItemModelScript childItemModel = slotItem.GetComponent<ItemModelScript>();
+            //            ItemModelScript childItemModel = slotItem.GetComponent<ItemModelScript>();
 
-                        if (childItemModel != null && childItemModel.getSO().getID() == itemID)
-                        {
-                            slotItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.getSO()._quantity.ToString();
-                        }
-                    }
-                }
-            }
+            //            if (childItemModel != null && childItemModel.getSO().getID() == itemID)
+            //            {
+            //                slotItem.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.getSO()._quantity.ToString();
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         public void AddStorageItem(GameObject newItem)
@@ -84,6 +84,7 @@ namespace Player.Inventory
             }
         }
 
+        [ContextMenu("Render Storage")]
         public void RenderStorage()
         {
             foreach (Transform child in _storagePanel.transform)
@@ -97,10 +98,12 @@ namespace Player.Inventory
             {
                 GameObject slot = Instantiate(_storageSlotPrefab, _storagePanel.transform);
                 slot.tag = "Storage";
+                _storageSlots[i] = slot;
             }
             for (int i = 0; i <_storageItems.Length; i++)
             {
                 GameObject item = Instantiate(_itemPrefab, _storageSlots[i].transform);
+                item.GetComponent<Draggable>()._item = item;
                 item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = tempStorage[i].GetComponent<ItemModelScript>().getSO().getDisplayName();
                 item.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = tempStorage[i].GetComponent<ItemModelScript>().getSO()._quantity.ToString();
                 item.GetComponent<Image>().sprite = tempStorage[i].GetComponent<ItemModelScript>().getSO().getItemIcon();
