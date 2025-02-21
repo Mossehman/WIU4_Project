@@ -31,12 +31,12 @@ public class PlacableSlot : MonoBehaviour, IDropHandler
         if (transform.childCount == 0 && transform.tag != "Inventory")
         {
             Draggable._parentAfterDrag = transform;
-            EventManager.Fire("OnDropItem", dropped, _origin, _destination);
+            EventManager.Fire("OnItemMove", dropped, _origin, _destination);
         }
         else if (transform.tag == "Inventory")
         {
             Draggable._parentAfterDrag = transform;
-            EventManager.Fire("OnDropItem", dropped, _origin, _destination);
+            EventManager.Fire("OnItemMove", dropped, _origin, _destination);
         }
         else
         {
