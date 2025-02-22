@@ -10,15 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
-  m_Name: PlayerSounds
+  m_Name: BirdChirps
   m_EditorClassIdentifier: 
   libraryname: 
-  sounds:
-  - soundName: player-hurt
-    clip: {fileID: 8300000, guid: 1e241c3241decda4ab4b02498a38adbb, type: 3}
-    priority: 0
-    volume: 0
-  - soundName: player-scan
-    clip: {fileID: 8300000, guid: 5030c78e3fb091e499de150b0c1fbde5, type: 3}
-    priority: 0
-    volume: 0
+  sounds: []

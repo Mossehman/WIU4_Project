@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: HuntState 1
   m_EditorClassIdentifier: 
   statetime: 20
+  attacktime: 0.8
   speedmod: 1.4

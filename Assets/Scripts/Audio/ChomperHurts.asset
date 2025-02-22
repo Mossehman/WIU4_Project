@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
-  m_Name: PlayerSounds
+  m_Name: ChomperHurts
   m_EditorClassIdentifier: 
-  libraryname: 
+  libraryname: ChomperHurts
   sounds:
-  - soundName: player-hurt
-    clip: {fileID: 8300000, guid: 1e241c3241decda4ab4b02498a38adbb, type: 3}
-    priority: 0
-    volume: 0
-  - soundName: player-scan
-    clip: {fileID: 8300000, guid: 5030c78e3fb091e499de150b0c1fbde5, type: 3}
-    priority: 0
-    volume: 0
+  - soundName: 
+    clip: {fileID: 8300000, guid: c51ff6b9e482c5246bc9b3720d23c88f, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: c3accec12c9824a4aa1d2c2c2f6120d7, type: 3}
+    priority: 64
+    volume: 1
