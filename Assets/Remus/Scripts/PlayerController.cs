@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
         float speed = isSprinting ? WalkSpeed * SprintMultiplier : WalkSpeed;
         characterController.Move(moveDirection * speed * Time.deltaTime);
 
-        if (IsGrounded())
+        if (characterController.isGrounded)
         {
             if (moveDirection.sqrMagnitude > 0)
                 //AudioManager.Instance.PlayRandomAudio("PlayerFootsteps", ref audioSource, default, default, speed * 0.2f);
@@ -66,6 +66,8 @@ public class PlayerController : MonoBehaviour
         {
             velocity.y += Gravity * Time.deltaTime;
         }
+
+
 
         characterController.Move(velocity * Time.deltaTime);
     }

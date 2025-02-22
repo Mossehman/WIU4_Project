@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 898600243}
-  m_IndirectSpecularColor: {r: 0.30362463, g: 0.13084488, b: 0.0456931, a: 1}
+  m_IndirectSpecularColor: {r: 0.13703221, g: 0.0508097, b: 0.017744217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1012,7 +1012,7 @@ Transform:
   m_GameObject: {fileID: 318933839}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.887, z: 0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1107,7 +1107,7 @@ Transform:
   m_GameObject: {fileID: 348617169}
   serializedVersion: 2
   m_LocalRotation: {x: 0.053271994, y: -0.0000000021477435, z: 1.1457726e-10, w: 0.99858004}
-  m_LocalPosition: {x: -12.35, y: 2, z: 0}
+  m_LocalPosition: {x: -12.35, y: 2.887, z: 0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1203,10 +1203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccb707ec82f4cb948b25fd3b09e656c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 348617171}
-  InteractionDistance: 3
-  interactionText: {fileID: 1678674480}
-  currentInteractable: {fileID: 0}
 --- !u!1 &362270176
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,7 +2159,7 @@ Transform:
   m_GameObject: {fileID: 702648585}
   serializedVersion: 2
   m_LocalRotation: {x: 0.053271994, y: -0.0000000021477435, z: 1.1457726e-10, w: 0.99858004}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.8870001, z: 0.24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3425,11 +3421,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8d070ac9823bc64bbbeaf9f2b0c1e76, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.744
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8d070ac9823bc64bbbeaf9f2b0c1e76, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.456
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b8d070ac9823bc64bbbeaf9f2b0c1e76, type: 3}
       propertyPath: m_LocalRotation.w
