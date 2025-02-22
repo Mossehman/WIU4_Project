@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
   m_Name: BirdChirps
   m_EditorClassIdentifier: 
-  libraryname: 
-  sounds: []
+  libraryname: BirdChirps
+  sounds:
+  - soundName: 
+    clip: {fileID: 8300000, guid: 03dbe53517323704082649347a6ee48d, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: 6d9d2c3715cd5ba47a48f3651d9c5f61, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: 39940818d12a96341ab56e1f67ec10ec, type: 3}
+    priority: 64
+    volume: 1

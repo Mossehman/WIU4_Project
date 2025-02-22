@@ -45,14 +45,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundLibraries:
+  - {fileID: 11400000, guid: b1960c589fa846e49b8f172cc2191525, type: 2}
+  - {fileID: 11400000, guid: b9600fed12a8cb844b9faaa79aaf7f32, type: 2}
+  - {fileID: 11400000, guid: 4cf2b4bb08917b646b544eaaf7ad8cb5, type: 2}
+  - {fileID: 11400000, guid: 55d1a8d18c0663946ab6a1ee77795733, type: 2}
   - {fileID: 11400000, guid: 04c3ed986dbaf8445ac4e92aab30ce4d, type: 2}
   - {fileID: 11400000, guid: 13433b8554f3cf745ba1d4e387caeaae, type: 2}
   - {fileID: 11400000, guid: b84916b902edde843bc1c4154d80051e, type: 2}
   - {fileID: 11400000, guid: e95a45b0c78be624bb84d88d804dec5e, type: 2}
   - {fileID: 11400000, guid: 454ee2a81b3b151488f241e0bae5e721, type: 2}
+  - {fileID: 11400000, guid: 1c1783bff32efdb4fbb1e54834d946a5, type: 2}
   - {fileID: 11400000, guid: f85e608ff6002e34b9a13a1a489c600f, type: 2}
   - {fileID: 11400000, guid: 82d00e874ac6aa447a04ee9fcb3d3ef8, type: 2}
   - {fileID: 11400000, guid: 12e24443de9a7c248876dcf688ac2c91, type: 2}
+  - {fileID: 11400000, guid: 0b859ae26c6baa647945f58cfc2eecff, type: 2}
+  - {fileID: 11400000, guid: 80456b8d8e2d5c643916860ccf676057, type: 2}
   maxSFXSources: 20
   audioSettings:
     RolloffMode: 0
