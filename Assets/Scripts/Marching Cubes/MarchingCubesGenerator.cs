@@ -72,6 +72,10 @@ public class MarchingCubesGenerator : MonoBehaviour
         noiseConfig.shaderParams = marchingCubesNoise.shaderParams;
     }
 
+    /// <summary>
+    /// Tells the chunk to update it's mesh data based on the marching cubes noise
+    /// </summary>
+    /// <param name="chunk">The chunk to update</param>
     public void GenerateMesh(Chunk chunk)
     {
         // Get the number of voxels/cubes we will need to march through in the compute shader
@@ -138,10 +142,9 @@ public class MarchingCubesGenerator : MonoBehaviour
                 }
             }
 
-            placementScript.PlaceObjects(marchingCubesNoise.seed, tris[i].center + chunk.meshOffset, tris[i].normal);
+            placementScript.GenerateSpawnPoints(marchingCubesNoise.seed, tris[i].center + chunk.meshOffset, tris[i].normal);
 
         }
-        UnityEngine.Random.InitState((int)Time.time);
 
         Vector3 centerPoint = mesh.bounds.center; // or set your own center
 
@@ -190,7 +193,8 @@ public class MarchingCubesGenerator : MonoBehaviour
             }
             chunk.GetMeshCollider().sharedMesh = mesh;
         }
-
+        placementScript.SpawnObjects(chunk.transform);
+        UnityEngine.Random.InitState((int)Time.time);
         //placementScript.PlaceObjects(marchingCubesNoise.seed, chunk.meshOffset + center, bounds);
 
     }
@@ -297,6 +301,12 @@ public class MarchingCubesGenerator : MonoBehaviour
             loadedChunks.Remove(chunkPos);
             chunkData.gameObject.transform.position = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
             chunkData.gameObject.GetComponent<Chunk>().meshOffset = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
+
+            for (int i = 0; i < chunkData.transform.childCount; i++)
+            {
+                Destroy(chunkData.transform.GetChild(i).gameObject);
+            }
+
             GenerateMesh(chunkData.gameObject.GetComponent<Chunk>());
             loadedChunks.TryAdd(newChunkPositions.Peek(), chunkData);
             newChunkPositions.Pop();

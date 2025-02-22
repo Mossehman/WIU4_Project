@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 04baf48beb828034bb3c967be607e41f, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.13703221, g: 0.0508097, b: 0.017744217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -491,7 +491,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &204603446
 Transform:
   m_ObjectHideFlags: 0
@@ -5521,12 +5521,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4a1850009de8140a84a8765ec4fd0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxObjectsPerChunk: 800
+  maxObjectsPerChunk: 10
   objectPlacementChance: 600
   terrainAssets:
   - {fileID: 6921072969651602650, guid: 35e7f3a55f5e1bb4ab5feb127ca85125, type: 3}
-  positions: []
-  normals: []
+  numSamples: 10
+  sampleRadius: 4
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  raycastYOffset: 5
+  raycastLength: 100
+  differenceInHeightThreshold: 9.5
+  differenceInNormalsThreshold: 0.51
 --- !u!1 &595701461
 GameObject:
   m_ObjectHideFlags: 0
@@ -25326,16 +25333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6ea0805f9d76a247a2679bec7756024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TerrainScannerPrefab: {fileID: 7812747987160554870, guid: 6881f1b4501e94041986475506da65ab, type: 3}
-  vfxDuration: 10
-  vfxSize: 500
-  scanDistance: 3
-  scannableLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  scanPanelPrefab: {fileID: 0}
-  worldCanvas: {fileID: 0}
-  panelDuration: 3
 --- !u!114 &1857863183
 MonoBehaviour:
   m_ObjectHideFlags: 0
