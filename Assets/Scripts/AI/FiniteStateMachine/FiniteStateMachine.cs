@@ -152,7 +152,8 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     {
                         if (currentGroup != null)
                         {
-                            foreach (CreatureInfo member in currentGroup.Members)
+                            List<CreatureInfo> grp = currentGroup.Members;
+                            foreach (CreatureInfo member in grp)
                             {
                                 if (member != null)
                                 {

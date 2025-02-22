@@ -5486,17 +5486,17 @@ MonoBehaviour:
   noiseConfig: {fileID: 11400000, guid: 7d00a3a78abcc9243a605a323008a5ae, type: 2}
   marchingCubesNoise:
     shader: {fileID: 7200000, guid: 1bfe96eadcc62c848ba1f0dd187cbf34, type: 3}
-    seed: 46
+    seed: 0
     octaves: 4
-    lacunarity: 1.49
-    persistence: 2.06
-    noiseScale: 2.17
-    noiseWeight: 9.75
+    lacunarity: 0.4
+    persistence: 4.44
+    noiseScale: 6.94
+    noiseWeight: 0.89
     closeEdges: 1
-    floorOffset: 27.7
-    weightMultiplier: 0.88
-    hardFloorHeight: 6.85
-    hardFloorWeight: 32.9
+    floorOffset: 6.7
+    weightMultiplier: 1.87
+    hardFloorHeight: 18.4
+    hardFloorWeight: 18.4
     shaderParams: {x: 1, y: 0, z: 0, w: 0}
   placementScript: {fileID: 568084513}
   marchingCubes: {fileID: 7200000, guid: 4ecfb4dfb5a23514e854485642bd77d2, type: 3}
@@ -5521,10 +5521,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4a1850009de8140a84a8765ec4fd0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxObjectsPerChunk: 500
-  objectPlacementChance: 300
+  maxObjectsPerChunk: 800
+  objectPlacementChance: 600
   terrainAssets:
-  - {fileID: 1526497705511942428, guid: 151652ed386abe949a46ac24d29f5917, type: 3}
+  - {fileID: 6921072969651602650, guid: 35e7f3a55f5e1bb4ab5feb127ca85125, type: 3}
   positions: []
   normals: []
 --- !u!1 &595701461

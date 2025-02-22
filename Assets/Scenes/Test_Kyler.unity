@@ -1393,7 +1393,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 68349615528311788, guid: a4d77473a22460d43b39286f17f85802, type: 3}
   spawnrate: 0
-  burstspawn: 0
+  burstspawn: 30
 --- !u!4 &979776593
 Transform:
   m_ObjectHideFlags: 0
@@ -2002,7 +2002,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1289410198279785359, guid: 8182e87fca800dc4d81692a606c66401, type: 3}
   spawnrate: 0
-  burstspawn: 1
+  burstspawn: 100
 --- !u!4 &1647486941
 Transform:
   m_ObjectHideFlags: 0
@@ -2357,6 +2357,18 @@ PrefabInstance:
     - target: {fileID: 3743202204434670995, guid: 06271ec5d86762348915d6c68013e160, type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204188402395627519, guid: 06271ec5d86762348915d6c68013e160, type: 3}
+      propertyPath: audioSettings.RolloffMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204188402395627519, guid: 06271ec5d86762348915d6c68013e160, type: 3}
+      propertyPath: audioSettings.MaximumRolloffDistance
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7204188402395627519, guid: 06271ec5d86762348915d6c68013e160, type: 3}
+      propertyPath: audioSettings.MinimumRolloffDistance
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8785993860881556281, guid: 06271ec5d86762348915d6c68013e160, type: 3}
       propertyPath: m_LocalPosition.x

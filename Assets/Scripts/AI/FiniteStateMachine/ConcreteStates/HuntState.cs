@@ -7,8 +7,10 @@ namespace Assets.Scripts.AI.FiniteStateMachine
     public class HuntState : BaseState
     {
         [SerializeField] float statetime = 20.0f;
+        [SerializeField] float attacktime = 0.7f;
         [SerializeField] float speedmod = 1.2f;
         private float currenttime;
+        private float currentattacktime;
         CreatureInfo stats;
 
         Vector3 currentdirection;
@@ -17,15 +19,18 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             base.OnInit(fsm);
             stats = fsm.GetComponent<CreatureInfo>();
             currenttime = statetime;
+            currentattacktime = 0f;
         }
 
         public override void OnStateEnter(FiniteStateMachine fsm)
         {
+            currenttime = statetime;
+            currentattacktime = 0f;
         }
 
         public override void OnStateLeave(FiniteStateMachine fsm)
         {
-            currenttime = statetime;
+
         }
 
         public override void WhileStateActive(FiniteStateMachine fsm)
@@ -40,16 +45,28 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 Vector3 dir = stats.target.transform.position - fsm.transform.position;
                 currentdirection = Vector3.Slerp(currentdirection, dir.normalized, 0.1f);
                 stats.Move(speedmod * currentdirection);
-                if (dir.sqrMagnitude <= 2f)
+                if (currentattacktime > 0) currentattacktime -= Time.deltaTime;
+                if (dir.sqrMagnitude <= 2f && currentattacktime <= 0f)
                 {
+                    currentattacktime = attacktime;
                     if (stats.target.TryGetComponent<CreatureInfo>(out var creaturestats))
                     {
-                        stats.hunger += creaturestats.hunger * 0.5f;
+                        creaturestats.Health -= 30;
+                        if (creaturestats.Health <= 0f)
+                        {
+                            stats.hunger += creaturestats.hunger * 0.25f;
+                            stats.hunger += 15;
+                            stats.CurrentGroup?.ShareFood(15);
+                        }
+                        return;
                     }
-                    stats.hunger += 15;
-                    stats.CurrentGroup?.ShareFood(15);
-                    Destroy(stats.target);
-                    currenttime = 0;
+                    else
+                    {
+                        Destroy(stats.target);
+                        stats.hunger += 15;
+                        stats.CurrentGroup?.ShareFood(15);
+                    }
+                    //currenttime = 0;
                 }
                 else if (dir.sqrMagnitude >= 55f * 55f)
                 {

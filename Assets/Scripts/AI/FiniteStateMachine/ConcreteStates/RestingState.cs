@@ -24,7 +24,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
         public override void OnStateLeave(FiniteStateMachine fsm)
         {
-            //stats.hunger = 80;
         }
 
         public override void WhileStateActive(FiniteStateMachine fsm)
@@ -46,6 +45,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             {
                 AudioManager.Instance.PlayNonSpamAudio(stats.rest, ref stats.voiceSource, default, true, 1);
                 stats.hunger += Time.deltaTime * 0.5f;
+                stats.Health += Time.deltaTime * 0.5f;
             }
         }
     }

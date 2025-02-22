@@ -20,10 +20,12 @@ public class TerrainObjectPlacement : MonoBehaviour
 
     public void PlaceObjects(int seed, Vector3 position, Vector3 normal)
     {
-        if (placedObjects > maxObjectsPerChunk) { return; }
+        if (placedObjects > maxObjectsPerChunk || terrainAssets.Length == 0) { return; }
 
         if (position.y < 13) { return; }
-                
+        float dotProduct = Vector3.Dot(normal.normalized, Vector3.down);
+        if (dotProduct < 0.7f) { return; }  
+
         int toSpawn = Random.Range(0, (int)objectPlacementChance);
         if (toSpawn > 0) { return; }
 

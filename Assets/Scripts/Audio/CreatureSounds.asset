@@ -22,3 +22,11 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 22071b7247b34c849ae2f332f09cdae6, type: 3}
     priority: 64
     volume: 1
+  - soundName: platypus-hurt
+    clip: {fileID: 8300000, guid: 4a3b74d19aeb93c4b9040f844b4cc25b, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: platypus-dead
+    clip: {fileID: 8300000, guid: a41414a8a5c71554797921660360f6f2, type: 3}
+    priority: 64
+    volume: 1
