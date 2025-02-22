@@ -13,4 +13,16 @@ MonoBehaviour:
   m_Name: BirdSounds
   m_EditorClassIdentifier: 
   libraryname: 
-  sounds: []
+  sounds:
+  - soundName: bird-flap
+    clip: {fileID: 8300000, guid: 84ab7f13f5680eb479b0b4b7f93f6393, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: bird-hurt
+    clip: {fileID: 8300000, guid: b46399cc91b003b43830f425466fe1aa, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: bird-dead
+    clip: {fileID: 8300000, guid: 8706860f3b7ee2244b179907902ec1b5, type: 3}
+    priority: 64
+    volume: 1

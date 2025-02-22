@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
   m_Name: GrasshopperCroaks
   m_EditorClassIdentifier: 
-  libraryname: 
-  sounds: []
+  libraryname: GrasshopperCroaks
+  sounds:
+  - soundName: 
+    clip: {fileID: 8300000, guid: 90b6e79158460cb44a463f0ffdc77ece, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: df7f5baf2cca2b8438f78783bc801dfd, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: b5e15225695c64c4abd6064dce2ae194, type: 3}
+    priority: 64
+    volume: 1

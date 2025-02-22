@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
   m_Name: CraftingSounds
   m_EditorClassIdentifier: 
-  libraryname: 
-  sounds: []
+  libraryname: CraftingSounds
+  sounds:
+  - soundName: 
+    clip: {fileID: 8300000, guid: 961bb628d2da92945af07860cddf53dc, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: b268f644a65414846a2535eafb7592fd, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: 8175731e722b0684abc71448df2d58b0, type: 3}
+    priority: 0
+    volume: 1

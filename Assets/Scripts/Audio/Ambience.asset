@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
   m_Name: Ambience
   m_EditorClassIdentifier: 
-  libraryname: 
-  sounds: []
+  libraryname: Ambience
+  sounds:
+  - soundName: 
+    clip: {fileID: 8300000, guid: 50d121783af01fb439a3fc6e49fa308b, type: 3}
+    priority: 128
+    volume: 1

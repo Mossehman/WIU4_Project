@@ -22,3 +22,7 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 42bdd92be97e91440a1390b5d8ba5181, type: 3}
     priority: 64
     volume: 1
+  - soundName: grasshopper-walk
+    clip: {fileID: 8300000, guid: 484d4c291fcd32a4aad2ca5196a8c2cf, type: 3}
+    priority: 64
+    volume: 1

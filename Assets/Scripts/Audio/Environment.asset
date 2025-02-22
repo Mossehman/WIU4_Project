@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: Environment
   m_EditorClassIdentifier: 
   libraryname: 
-  sounds: []
+  sounds:
+  - soundName: fire-sound
+    clip: {fileID: 8300000, guid: c8b29f450b9e4344e92cd46d3d7ba999, type: 3}
+    priority: 64
+    volume: 1

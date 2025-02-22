@@ -13,4 +13,20 @@ MonoBehaviour:
   m_Name: UISounds
   m_EditorClassIdentifier: 
   libraryname: 
-  sounds: []
+  sounds:
+  - soundName: ui-select-large
+    clip: {fileID: 8300000, guid: 024b82da9720b704f94b0dcfa8277341, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: ui-select-small1
+    clip: {fileID: 8300000, guid: 63b499e1b00076d489354c0968805625, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: ui-select-small2
+    clip: {fileID: 8300000, guid: 9be00cccdd04fd749a77d88210140d84, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: ui-deny-small
+    clip: {fileID: 8300000, guid: 7f6e1d72f5722394e88bd3de4dced907, type: 3}
+    priority: 0
+    volume: 1
