@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Linq;
 using System;
+using Unity.VisualScripting;
 
 namespace Player.Inventory
 {
@@ -88,7 +89,7 @@ namespace Player.Inventory
                 if (_storageItems[i] != null)
                 {
                     GameObject item = Instantiate(_itemPrefab, _storageSlots[i].transform);
-                    item.GetComponent<Draggable>()._item = item;
+                    item.GetComponent<Draggable>()._item = item.GetComponent<ItemModelScript>();
                     item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = tempStorage[i].GetComponent<ItemModelScript>().getSO().getDisplayName();
                     item.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = tempStorage[i].GetComponent<ItemModelScript>().getSO()._quantity.ToString();
                     item.GetComponent<Image>().sprite = tempStorage[i].GetComponent<ItemModelScript>().getSO().getItemIcon();

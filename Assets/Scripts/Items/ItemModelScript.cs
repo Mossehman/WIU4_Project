@@ -52,7 +52,7 @@ public class ItemModelScript : MonoBehaviour
         PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
         if (playerInventory != null)
         {
-            playerInventory.AddItem(gameObject);
+            playerInventory.AddItem(gameObject.GetComponent<ItemModelScript>());
             Destroy(gameObject);
         }
     }
