@@ -2,42 +2,42 @@ using UnityEngine;
 
 public class DayNightCycle : MonoBehaviour
 {
-    public Light sun;
-    private TimeManager timeManager;
-
-    private float currentSunRotation;
-    private float targetSunRotation;
+    public Light sun; // Directional light for the sun
+    public float dayLengthInSeconds = 180f; // Full 24-hour cycle in real-time seconds
+    public float startTime = 8f; // 8 AM as the starting time
+    public float currentTime; // Current time of day
 
     void Start()
     {
-        timeManager = FindObjectOfType<TimeManager>();
-        if (timeManager == null)
-        {
-            Debug.LogError("TimeManager not found in the scene!");
-            return;
-        }
-
-        currentSunRotation = CalculateSunRotation(timeManager.hours, timeManager.minutes);
-        sun.transform.rotation = Quaternion.Euler(currentSunRotation, 170, 0);
+        // Initialize time to the starting time (8 AM)
+        currentTime = startTime;
     }
 
     void Update()
     {
-        if (timeManager == null) return;
+        // Rotate the sun naturally over time
+        sun.transform.Rotate(Vector3.right * (360f / dayLengthInSeconds) * Time.deltaTime);
 
-        targetSunRotation = CalculateSunRotation(timeManager.hours, timeManager.minutes);
+        // Convert sun rotation to time of day (0° = 8 AM, 360° = next 8 AM)
+        float normalizedRotation = sun.transform.eulerAngles.x;
+        currentTime = (normalizedRotation / 360f) * 24f + startTime;
 
-        currentSunRotation = Mathf.Lerp(currentSunRotation, targetSunRotation, Time.deltaTime * (1f / timeManager.secondsPerHour));
-        sun.transform.rotation = Quaternion.Euler(currentSunRotation, 170, 0);
+        // Keep time within 0-24 hour range
+        if (currentTime >= 24f) currentTime -= 24f;
+
+        // Debug: Show time of day in console
+        Debug.Log($"Time: {FormatTime(currentTime)}");
     }
 
-    float CalculateSunRotation(int hour, int minute)
+    string FormatTime(float time)
     {
-        float totalMinutes = (hour * 60) + minute; // Convert current time to total minutes
-        float adjustedMinutes = totalMinutes - (8 * 60); // Shift time so 8 AM starts at 0
-        float dayProgress = adjustedMinutes / 1440f; // Normalize time to 0-1 (full day cycle)
+        int hours = Mathf.FloorToInt(time);
+        int minutes = Mathf.FloorToInt((time - hours) * 60);
+        string amPm = (hours >= 12) ? "PM" : "AM";
 
-        // Ensure we stay in a 0-360° range while keeping 8 AM as the start
-        return (Mathf.Lerp(180f, 540f, dayProgress) % 360f);
+        if (hours > 12) hours -= 12;
+        if (hours == 0) hours = 12;
+
+        return $"{hours:D2}:{minutes:D2} {amPm}";
     }
 }

@@ -96,6 +96,34 @@ namespace Player.Inventory
             SortInventory(_currentSort);
         }
 
+        public void PickupItem(GameObject itemObject)
+        {
+            BaseItem itemData = itemObject.GetComponent<ItemModelScript>().getSO();
+            if (itemData == null) return;
+
+            // Check if item already exists in inventory
+            foreach (var item in _inventoryItems)
+            {
+                if (item.GetComponent<ItemModelScript>().getSO().getID() == itemData.getID())
+                {
+                    item.GetComponent<ItemModelScript>().getSO()._quantity++;
+                    _currentWeight += itemData.getWeight();
+
+                    // Disable the item instead of destroying it immediately
+                    itemObject.SetActive(false);
+                    return;
+                }
+            }
+
+            // If item is new, add it to inventory
+            _inventoryItems.Add(itemObject);
+            _isLocked.Add(false);
+            _currentWeight += itemData.getWeight();
+
+            // Disable the item instead of destroying it immediately
+            itemObject.SetActive(false);
+        }
+
         public void DropItem(GameObject droppedItem)
         {
             foreach (var item in _inventoryItems)
@@ -132,20 +160,26 @@ namespace Player.Inventory
                 Destroy(child.gameObject);
             }
 
-            List<GameObject> temp = SortInventory(_currentSort);
-
+            List<GameObject> sortedItems = SortInventory(_currentSort);
             int index = -1;
 
-            foreach (var item in temp)
+            foreach (var item in sortedItems)
             {
                 index++;
+                if (item == null) continue; // Ensure we skip any invalid objects
+
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
-                itemUI.GetComponent<Draggable>()._item = item;
-                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
-                itemUI.GetComponent<Button>().onClick.AddListener( () => ShowItem(item) );
-                itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO()._quantity.ToString();
-                itemUI.GetComponent<Image>().sprite = item.GetComponent<ItemModelScript>().getSO().getItemIcon();
+
+                ItemModelScript itemModel = item.GetComponent<ItemModelScript>();
+                if (itemModel == null) continue;
+
+                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = itemModel.getSO().getDisplayName();
+                itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = itemModel.getSO()._quantity.ToString();
+                itemUI.GetComponent<Image>().sprite = itemModel.getSO().getItemIcon();
                 itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
+
+                // Store the actual GameObject reference in Draggable
+                itemUI.GetComponent<Draggable>()._item = item;
             }
         }
 

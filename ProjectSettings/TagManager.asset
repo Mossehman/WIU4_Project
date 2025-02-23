@@ -11,6 +11,7 @@ TagManager:
   - TriggerZone
   - Hotbar
   - Storage
+  - PickupItem
   layers:
   - Default
   - TransparentFX

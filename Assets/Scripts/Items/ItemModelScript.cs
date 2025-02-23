@@ -1,3 +1,4 @@
+using Player.Inventory;
 using UnityEngine;
 
 /// <summary>
@@ -34,7 +35,6 @@ public class ItemModelScript : MonoBehaviour
         modelRB.AddForce(dropDirection * dropForce);
     }
 
-
     /// <summary>
     /// Method for dropping our item from our inventory/item list
     /// </summary>
@@ -47,7 +47,16 @@ public class ItemModelScript : MonoBehaviour
         modelCollider.isTrigger = false;
     }
 
-    public BaseItem getSO ()
+    private void OnTriggerEnter(Collider other)
+    {
+        PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
+        if (playerInventory != null)
+        {
+            playerInventory.PickupItem(gameObject);
+        }
+    }
+
+    public BaseItem getSO()
     {
         return item;
     }

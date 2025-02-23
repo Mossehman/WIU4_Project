@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 898600243}
-  m_IndirectSpecularColor: {r: 0.13703221, g: 0.0508097, b: 0.017744217, a: 1}
+  m_IndirectSpecularColor: {r: 0.30362463, g: 0.13084488, b: 0.0456931, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 100933709}
   - component: {fileID: 100933715}
   m_Layer: 7
-  m_Name: Capsule
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2362,7 +2362,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 803098783}
-  - component: {fileID: 803098782}
+  - component: {fileID: 803098784}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -2370,21 +2370,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &803098782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 803098781}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 240d9ea1e396a7349b17998b1501685d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 348617171}
-  InteractionDistance: 3
-  interactionText: {fileID: 1678674480}
 --- !u!4 &803098783
 Transform:
   m_ObjectHideFlags: 0
@@ -2400,6 +2385,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &803098784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803098781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 240d9ea1e396a7349b17998b1501685d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerCamera: {fileID: 348617171}
+  InteractionDistance: 3
+  interactionText: {fileID: 1678674480}
 --- !u!1 &808852559
 GameObject:
   m_ObjectHideFlags: 0
@@ -3973,7 +3973,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74d765002999fb84e9a494d2c278b20f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionText: Press E to Interact (Water Tank)
+  interactionText: Press E to Interact
 --- !u!1 &1230128043
 GameObject:
   m_ObjectHideFlags: 0
@@ -15633,7 +15633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9556d60a7e5a6e49a76d7181f0bd8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionText: Press E to Interact (Exit)
+  interactionText: Press E to Interact
 --- !u!65 &1873291734
 BoxCollider:
   m_ObjectHideFlags: 0

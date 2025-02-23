@@ -6,7 +6,7 @@ public class TimeManager : MonoBehaviour
     public int hours = 8; // Start at 08:00 AM
     public int minutes = 0;
     public int days = 1;
-    public float secondsPerHour = 3f; // Each in-game hour lasts 3 real-world seconds
+    public float secondsPerHour = 7.5f; // Each in-game hour lasts 3 real-world seconds
 
     private float timeAccumulator = 0f;
     private float hourAccumulator = 0;
