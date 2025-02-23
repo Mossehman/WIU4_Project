@@ -52,7 +52,8 @@ public class ItemModelScript : MonoBehaviour
         PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
         if (playerInventory != null)
         {
-            playerInventory.PickupItem(gameObject);
+            playerInventory.AddItem(gameObject);
+            Destroy(gameObject);
         }
     }
 

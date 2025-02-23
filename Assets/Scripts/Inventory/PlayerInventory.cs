@@ -31,35 +31,35 @@ namespace Player.Inventory
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Inventory Logic")]
-        [SerializeField]            private List<GameObject>    _inventoryItems;
-        [SerializeField]            public float                _baseWeight = 0.0f;
-        [SerializeField]            public float                _baseMaxWeight = 10.0f;
-        [SerializeField]            private float               _currentWeight;
+        [SerializeField] private List<GameObject> _inventoryItems;
+        [SerializeField] public float _baseWeight = 0.0f;
+        [SerializeField] public float _baseMaxWeight = 10.0f;
+        [SerializeField] private float _currentWeight;
         // SORTING
-        [SerializeField]            private SortingType         _currentSort = SortingType.DATE_ADDED;
+        [SerializeField] private SortingType _currentSort = SortingType.DATE_ADDED;
         // LOCKING ITEMS
-                                    private GameObject          _currentlySelected;
-                                    private List<bool>          _isLocked;
+        private GameObject _currentlySelected;
+        private List<bool> _isLocked;
 
         [Header("Inventory UI")]
-        [SerializeField]            private GameObject          _inventory;
-        [SerializeField]            private GameObject          _inventoryPanel;
-        [SerializeField]            private GameObject          _itemPrefab;
-        [SerializeField]            private GameObject          _itemDescPanel;
+        [SerializeField] private GameObject _inventory;
+        [SerializeField] private GameObject _inventoryPanel;
+        [SerializeField] private GameObject _itemPrefab;
+        [SerializeField] private GameObject _itemDescPanel;
 
         [Header("Hotbar Logic")]
-        [SerializeField]            private GameObject[]        _hotbarItems;
-                                    private int                 _maxHotbarItems = 5;
+        [SerializeField] private GameObject[] _hotbarItems;
+        private int _maxHotbarItems = 5;
 
         [Header("Hotbar UI")]
-        [SerializeField]            private GameObject          _hotBarPanel;
-        [SerializeField]            private GameObject          _hotBarSlotPrefab;
-        [SerializeField]            private GameObject[]        _hotbarSlots;
-        [SerializeField]            private GameObject          _hotbarItemPrefab;
+        [SerializeField] private GameObject _hotBarPanel;
+        [SerializeField] private GameObject _hotBarSlotPrefab;
+        [SerializeField] private GameObject[] _hotbarSlots;
+        [SerializeField] private GameObject _hotbarItemPrefab;
 
-        [SerializeField]            private GameObject          _vitalsPanel;
-        [SerializeField]            private GameObject          _infoPanel;
-        [SerializeField]            private GameObject          _mapPanel;
+        [SerializeField] private GameObject _vitalsPanel;
+        [SerializeField] private GameObject _infoPanel;
+        [SerializeField] private GameObject _mapPanel;
 
         void Start()
         {
@@ -77,7 +77,7 @@ namespace Player.Inventory
             {
                 Destroy(child.gameObject);
             }
-            for (int i = 0; i <_maxHotbarItems; i++)
+            for (int i = 0; i < _maxHotbarItems; i++)
             {
                 GameObject hotbarItem = Instantiate(_hotBarSlotPrefab, _hotBarPanel.transform);
                 _hotbarSlots[i] = hotbarItem;
@@ -96,34 +96,6 @@ namespace Player.Inventory
             SortInventory(_currentSort);
         }
 
-        public void PickupItem(GameObject itemObject)
-        {
-            BaseItem itemData = itemObject.GetComponent<ItemModelScript>().getSO();
-            if (itemData == null) return;
-
-            // Check if item already exists in inventory
-            foreach (var item in _inventoryItems)
-            {
-                if (item.GetComponent<ItemModelScript>().getSO().getID() == itemData.getID())
-                {
-                    item.GetComponent<ItemModelScript>().getSO()._quantity++;
-                    _currentWeight += itemData.getWeight();
-
-                    // Disable the item instead of destroying it immediately
-                    itemObject.SetActive(false);
-                    return;
-                }
-            }
-
-            // If item is new, add it to inventory
-            _inventoryItems.Add(itemObject);
-            _isLocked.Add(false);
-            _currentWeight += itemData.getWeight();
-
-            // Disable the item instead of destroying it immediately
-            itemObject.SetActive(false);
-        }
-
         public void DropItem(GameObject droppedItem)
         {
             foreach (var item in _inventoryItems)
@@ -132,8 +104,8 @@ namespace Player.Inventory
                 {
                     droppedItem.GetComponent<ItemModelScript>().OnDropItem(droppedItem.GetComponent<ItemModelScript>().getSO());
                 }
-            }    
-        }    
+            }
+        }
 
         public void AddItem(GameObject newItem)
         {
@@ -160,26 +132,20 @@ namespace Player.Inventory
                 Destroy(child.gameObject);
             }
 
-            List<GameObject> sortedItems = SortInventory(_currentSort);
+            List<GameObject> temp = SortInventory(_currentSort);
+
             int index = -1;
 
-            foreach (var item in sortedItems)
+            foreach (var item in temp)
             {
                 index++;
-                if (item == null) continue; // Ensure we skip any invalid objects
-
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
-
-                ItemModelScript itemModel = item.GetComponent<ItemModelScript>();
-                if (itemModel == null) continue;
-
-                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = itemModel.getSO().getDisplayName();
-                itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = itemModel.getSO()._quantity.ToString();
-                itemUI.GetComponent<Image>().sprite = itemModel.getSO().getItemIcon();
-                itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
-
-                // Store the actual GameObject reference in Draggable
                 itemUI.GetComponent<Draggable>()._item = item;
+                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO().getDisplayName();
+                itemUI.GetComponent<Button>().onClick.AddListener(() => ShowItem(item));
+                itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item.GetComponent<ItemModelScript>().getSO()._quantity.ToString();
+                itemUI.GetComponent<Image>().sprite = item.GetComponent<ItemModelScript>().getSO().getItemIcon();
+                itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
             }
         }
 
@@ -193,7 +159,7 @@ namespace Player.Inventory
 
         private List<GameObject> SortInventory(SortingType type)
         {
-            List <GameObject> temp = _inventoryItems;
+            List<GameObject> temp = _inventoryItems;
 
             switch (type)
             {
@@ -230,13 +196,13 @@ namespace Player.Inventory
                     index++;
                     if (item.GetComponent<ItemModelScript>().getSO().getID() == _currentlySelected.GetComponent<ItemModelScript>().getSO().getID()) { break; }
                 }
-                if (_isLocked[index] == true) 
-                { 
+                if (_isLocked[index] == true)
+                {
                     _isLocked[index] = false;
                     _inventoryPanel.transform.GetChild(index).gameObject.transform.Find("Lock").GetComponent<Image>().enabled = false;
                 }
-                else if (_isLocked[index] == false) 
-                { 
+                else if (_isLocked[index] == false)
+                {
                     _isLocked[index] = true;
                     _inventoryPanel.transform.GetChild(index).gameObject.transform.Find("Lock").GetComponent<Image>().enabled = true;
                 }
@@ -245,8 +211,8 @@ namespace Player.Inventory
 
         public void SwitchSort()
         {
-            int newSort = ((int) _currentSort + 1) % ((int) SortingType.TOTAL);
-            _currentSort = (SortingType) newSort;
+            int newSort = ((int)_currentSort + 1) % ((int)SortingType.TOTAL);
+            _currentSort = (SortingType)newSort;
         }
 
         public void ToggleInventory()
@@ -260,7 +226,7 @@ namespace Player.Inventory
                 _mapPanel.SetActive(false);
                 RenderInventory();
             }
-            else 
+            else
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 _inventory.SetActive(false);
@@ -281,7 +247,7 @@ namespace Player.Inventory
 
             if (origin == ItemOrigin.INVENTORY)
             {
-                foreach(var invItem in _inventoryItems)
+                foreach (var invItem in _inventoryItems)
                 {
                     if (invItem.GetComponent<ItemModelScript>().getSO().getID() == item.GetComponent<Draggable>()._item.GetComponent<ItemModelScript>().getSO().getID())
                     {
@@ -314,8 +280,8 @@ namespace Player.Inventory
             {
                 for (int i = 0; i < _maxHotbarItems; i++)
                 {
-                    if (_hotbarItems[i] == null) 
-                    { 
+                    if (_hotbarItems[i] == null)
+                    {
                         _hotbarItems[i] = item.GetComponent<Draggable>()._item;
                         break;
                     }

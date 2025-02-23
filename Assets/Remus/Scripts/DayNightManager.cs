@@ -26,7 +26,7 @@ public class DayNightCycle : MonoBehaviour
         if (currentTime >= 24f) currentTime -= 24f;
 
         // Debug: Show time of day in console
-        Debug.Log($"Time: {FormatTime(currentTime)}");
+        //Debug.Log($"Time: {FormatTime(currentTime)}");
     }
 
     string FormatTime(float time)
