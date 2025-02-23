@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -32,6 +33,11 @@ public class MarchingCubesGenerator : MonoBehaviour
     [SerializeField] private Vector3Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
     private Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
 
+
+    [Header("AStar")]
+    [SerializeField] private AStarBounds AStar;
+    private ComputeBuffer AStarNodeBuffer;
+    private ComputeBuffer AStarBufferCount;
 
     //private Dictionary<Vector2Int, Chunk> unloadedChunks = new Dictionary<Vector2Int, Chunk>(); // When player render distance is on the edge of an existing chunk, set it to inactive instead of destroying it
 
@@ -72,6 +78,50 @@ public class MarchingCubesGenerator : MonoBehaviour
         noiseConfig.shaderParams = marchingCubesNoise.shaderParams;
     }
 
+    public void GenerateAStar(Chunk chunk)
+    {
+        if (AStar == null || AStarNodeBuffer == null) { return; }
+
+        Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
+        ComputeBuffer.CopyCount(AStarNodeBuffer, AStarBufferCount, 0);
+        int[] AStarCount = { 0 };
+        AStarBufferCount.GetData(AStarCount);
+        int numNodes = AStarCount[0];
+
+        AStarComputeNode[] aStarNodes = new AStarComputeNode[numNodes];
+        AStarNodeBuffer.GetData(aStarNodes, 0, 0, numNodes);
+
+        chunk.AStarPositions.Clear();
+
+        Vector3 spacing = new Vector3(
+            bounds.x / numVoxelsPerAxis.x,
+            bounds.y / numVoxelsPerAxis.y,
+            bounds.z / numVoxelsPerAxis.z
+        );
+
+        for (int i = 0; i < numNodes; i++)
+        {
+            Vector3Int localVoxelIndex = aStarNodes[i].voxelIndex;
+
+            // Calculate global voxel index by combining chunk grid position and local index
+            Vector3Int globalVoxelIndex = new Vector3Int(
+                chunk.chunkID.x * numVoxelsPerAxis.x + localVoxelIndex.x,
+                localVoxelIndex.y,
+                chunk.chunkID.y * numVoxelsPerAxis.z + localVoxelIndex.z
+            );
+
+            // Compute world position using chunk offset and local voxel position
+            Vector3 nodePosition = chunk.meshOffset + new Vector3(
+                localVoxelIndex.x * spacing.x + center.x - bounds.x * 0.5f,
+                localVoxelIndex.y * spacing.y + center.y - bounds.y * 0.5f,
+                localVoxelIndex.z * spacing.z + center.z - bounds.z * 0.5f
+            );
+
+            AStar.GenerateNode(globalVoxelIndex, nodePosition, true);
+            chunk.AStarPositions.Add(nodePosition);
+        }
+    }
+
     /// <summary>
     /// Tells the chunk to update it's mesh data based on the marching cubes noise
     /// </summary>
@@ -104,6 +154,9 @@ public class MarchingCubesGenerator : MonoBehaviour
         marchingCubes.SetFloat("surfaceLevel", surfaceLevel);
         marchingCubes.SetVector("chunkCenter", chunk.meshOffset);
 
+        AStarNodeBuffer.SetCounterValue(0);
+        marchingCubes.SetBuffer(0, "aStarNodeBuffer", AStarNodeBuffer);
+        
         marchingCubes.Dispatch(0, numThreadsPerAxis.x, numThreadsPerAxis.y, numThreadsPerAxis.z);
 
         ComputeBuffer.CopyCount(trianglesBuffer, triCountBuffer, 0);
@@ -121,9 +174,6 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         var vertices = new Vector3[numTris * 3];
         var meshTriangles = new int[numTris * 3];
-
-
-        UnityEngine.Random.InitState(marchingCubesNoise.seed);
 
         for (int i = 0; i < numTris; i++)
         {
@@ -194,7 +244,9 @@ public class MarchingCubesGenerator : MonoBehaviour
             chunk.GetMeshCollider().sharedMesh = mesh;
         }
         placementScript.SpawnObjects(chunk.transform);
-        UnityEngine.Random.InitState((int)Time.time);
+
+        GenerateAStar(chunk);
+
         //placementScript.PlaceObjects(marchingCubesNoise.seed, chunk.meshOffset + center, bounds);
 
     }
@@ -222,14 +274,17 @@ public class MarchingCubesGenerator : MonoBehaviour
         int numVoxels = numVoxelsPerAxis.x * numVoxelsPerAxis.y * numVoxelsPerAxis.z;
         int maxTriangleCount = numVoxels * 5;
     
-        if (pointsBuffer == null) { Debug.Log("Buffer was null!!!"); }
-    
         if (pointsBuffer == null || numPoints != pointsBuffer.count)
         {
             ReleaseBuffers();
             trianglesBuffer = new ComputeBuffer(maxTriangleCount, sizeof(float) * 3 * 5 + sizeof(int) * 2 * 3, ComputeBufferType.Append);
             pointsBuffer = new ComputeBuffer(numPoints, sizeof(float) * 4);
             triCountBuffer = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
+
+            int stride = sizeof(int) * 4;
+            // Each AStar node has a vector3Int (for voxel index) and a bool (for passability)
+            AStarNodeBuffer = new ComputeBuffer(numVoxels, stride, ComputeBufferType.Append);
+            AStarBufferCount = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
         }
     }
 
@@ -248,11 +303,18 @@ public class MarchingCubesGenerator : MonoBehaviour
             pointsBuffer.Release();
             triCountBuffer.Release();
         }
+
+        if (AStarNodeBuffer != null)
+        {
+            AStarNodeBuffer.Release();
+            AStarBufferCount.Release();
+        }
     }
 
     void Start()
     {
         InitialiseNoiseData();
+        this.AStar = GetComponent<AStarBounds>();
 
         DestroyAllChunks();
         CreateBuffers();
@@ -290,6 +352,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         }
 
         Dictionary<Vector3Int, Chunk> existingChunksCopy = new Dictionary<Vector3Int, Chunk>(loadedChunks);
+        UnityEngine.Random.InitState(marchingCubesNoise.seed);
 
         foreach (var existingChunk in existingChunksCopy)
         {
@@ -301,6 +364,7 @@ public class MarchingCubesGenerator : MonoBehaviour
             loadedChunks.Remove(chunkPos);
             chunkData.gameObject.transform.position = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
             chunkData.gameObject.GetComponent<Chunk>().meshOffset = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
+            chunkData.GetComponent<Chunk>().chunkID = new Vector2Int(newChunkPositions.Peek().x, newChunkPositions.Peek().z);
 
             for (int i = 0; i < chunkData.transform.childCount; i++)
             {
@@ -312,6 +376,7 @@ public class MarchingCubesGenerator : MonoBehaviour
             newChunkPositions.Pop();
             break;
         }
+        UnityEngine.Random.InitState((int)Time.time);
     }
 
     private void InitialiseChunks()
@@ -319,6 +384,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         if (player == null) { return; }
 
         Vector3Int startingChunkIndex = PosToChunkIndex(player.position);
+        UnityEngine.Random.InitState(marchingCubesNoise.seed);
 
         for (int x = startingChunkIndex.x - chunkRenderDistance.x; x <= startingChunkIndex.x + chunkRenderDistance.x; x++)
         {
@@ -332,12 +398,14 @@ public class MarchingCubesGenerator : MonoBehaviour
                     newChunk.transform.position = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
                     newChunk.transform.parent = transform;
                     newChunk.GetComponent<Chunk>().meshOffset = new Vector3(x * bounds.x, y * bounds.y, z * bounds.z);
+                    newChunk.GetComponent<Chunk>().chunkID = new Vector2Int(x, z);
                     loadedChunks.Add(currChunkID, newChunk.GetComponent<Chunk>());
                     //Debug.Log(currChunkID.ToString());
                     GenerateMesh(newChunk.GetComponent<Chunk>());
                 }
             }
         }
+        UnityEngine.Random.InitState((int)Time.time);
     }
 
     private Vector3Int PosToChunkIndex(Vector3 position)

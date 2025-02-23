@@ -23,7 +23,10 @@ struct Triangle {
     float3 normal;
 };
 
-
+struct Node {
+    int3 voxelIndex;
+    int passable;
+};
 
 float surfaceLevel;     // the defined value to determine our marching cubes configuration based on which 8 points in the cube are above or below the surface level
 int3 numPointsPerAxis;  // the number of marching cube sample points along each X Y and Z axis
@@ -37,11 +40,15 @@ float3 chunkCenter;
 //AppendStructuredBuffer<ObjectPlacementData> objectPlacementData;
 
 
+
+
+
 // AppendStructuredBuffer means only the shader can append to the end of it
 // RWStructuredBuffer means that this buffer can be externally written to and read from
 
 AppendStructuredBuffer<Triangle> triangles; // buffer of all the generated triangles
 RWStructuredBuffer<float4> cubePoints;      // buffer of the list of points in our marching cubes chunk
+AppendStructuredBuffer<Node> aStarNodeBuffer;
 
 ///Helper function to calculate the position of our vertices based on the surface level and position (as opposed to placing each vertex at the midpoint)
 float3 vertexInterpolation(float4 v1, float4 v2) {
@@ -83,7 +90,7 @@ void MarchingCubes (int3 id : SV_DispatchThreadID)             //id represents t
         cubePoints[indexFromCoord(id.x + 1, id.y + 1, id.z + 1)],
         cubePoints[indexFromCoord(id.x, id.y + 1, id.z + 1)]
     };
-
+    
     int cubeIndex = 0;
     if (cubeCorners[0].w < surfaceLevel) cubeIndex |= 1;
     if (cubeCorners[1].w < surfaceLevel) cubeIndex |= 2;
@@ -93,6 +100,7 @@ void MarchingCubes (int3 id : SV_DispatchThreadID)             //id represents t
     if (cubeCorners[5].w < surfaceLevel) cubeIndex |= 32;
     if (cubeCorners[6].w < surfaceLevel) cubeIndex |= 64;
     if (cubeCorners[7].w < surfaceLevel) cubeIndex |= 128;
+
     
     //get the triangle points based on the cube configuration
     for (int i = 0; triangulationTable[cubeIndex][i] != -1; i +=3) {         //for loop just checks if the end result of the triangulation results in -1
@@ -131,6 +139,15 @@ void MarchingCubes (int3 id : SV_DispatchThreadID)             //id represents t
 
         triangles.Append(tri);
     }
+
+    if (cubeIndex != 255 && cubeIndex != 0)
+    {
+        Node node;
+        node.voxelIndex = id;
+        node.passable = 1; //temporary for testing purposes
+        aStarNodeBuffer.Append(node);
+    }
+
 }
 
 

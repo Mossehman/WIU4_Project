@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
@@ -5,12 +6,14 @@ public class Chunk : MonoBehaviour
 {
     // Keep track of which chunk index this chunk lies on in world space (this is for debugging purposes)
     [SerializeField] private bool cull = true;
-    [SerializeField] private Vector2Int chunkID;
+    public Vector2Int chunkID;
     [SerializeField] private MeshFilter meshFilter;
     [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private MeshCollider meshCollider;
     public Vector3 meshOffset = Vector3.zero;
     [HideInInspector] private Bounds bounds;
+
+    public List<Vector3> AStarPositions = new List<Vector3>();
 
     private void Awake()
     {
@@ -41,6 +44,15 @@ public class Chunk : MonoBehaviour
         Plane[] planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
         return GeometryUtility.TestPlanesAABB(planes, meshBounds);
 
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        foreach (var pos in AStarPositions)
+        {
+            Gizmos.DrawWireCube(pos, new Vector3(0.5f, 0.5f, 0.5f));
+        }
     }
 
     public MeshFilter GetMeshFilter() { return meshFilter; }
