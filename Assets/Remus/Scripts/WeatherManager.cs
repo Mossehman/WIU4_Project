@@ -186,4 +186,11 @@ public class WeatherManager : MonoBehaviour
         if (currentWeather == WeatherType.AcidRain) { weatherStatus = "Acid Rain"; }
         WeatherText.text = $"{weatherStatus} {temperature:F1}°C";
     }
+
+    bool IsPlayerUnderShelter()
+    {
+        Transform player = GameObject.FindWithTag("Player").transform;
+        RaycastHit2D hit = Physics2D.Raycast(player.position, Vector2.up, 10f)
+        return hit.collider != null;
+    }
 }

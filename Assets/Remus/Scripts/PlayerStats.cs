@@ -5,7 +5,6 @@ using System.Collections;
 
 public class PlayerStats : MonoBehaviour
 {
-    // Singleton instance
     public static PlayerStats Instance { get; private set; }
 
     public enum StatType { Health, Stamina, Oxygen, Water }
@@ -32,8 +31,8 @@ public class PlayerStats : MonoBehaviour
     private float _health, _stamina, _oxygen, _water;
 
     [Header("Drain Rates")]
-    public float oxygenDrainRate = 1f;  // Oxygen loss per second
-    public float waterDrainRate = 0.5f; // Water loss per second
+    public float oxygenDrainRate = 1f;
+    public float waterDrainRate = 0.5f;
 
     [Header("Damage Overlay")]
     public Image overlay;
@@ -41,47 +40,31 @@ public class PlayerStats : MonoBehaviour
     public float fadeSpeed = 2f;
     private float _durationTimer;
 
-    //public Transform playerSpawn;
-
     void Awake()
     {
-        // Ensure only one instance exists
+        // Singleton (no DontDestroyOnLoad)
         if (Instance == null)
         {
             Instance = this;
         }
         else
         {
-            Destroy(gameObject); // Prevent duplicates
+            Destroy(gameObject); // Destroy duplicate instances
             return;
         }
-
-        DontDestroyOnLoad(gameObject); // Keep PlayerStats across scenes
     }
 
     void Start()
     {
-        LoadStats();
+        LoadStats(); // Load stats when the scene starts
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0);
 
-        // Start draining oxygen and water over time
         StartCoroutine(DrainOxygen());
         StartCoroutine(DrainWater());
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            StartCoroutine(DemoDrainHealthAndRestore());
-            StartCoroutine(DemoDrainStaminaAndRestore());
-        }
-
-        if (_health <= 0)
-        {
-            //HandleDeath();
-        }
-
         _health = Mathf.Clamp(_health, 0, maxHealth);
         _stamina = Mathf.Clamp(_stamina, 0, maxStamina);
         _oxygen = Mathf.Clamp(_oxygen, 0, maxOxygen);
@@ -91,30 +74,6 @@ public class PlayerStats : MonoBehaviour
         UpdateStatUI(StatType.Stamina, _stamina, maxStamina, staminaBarFront, staminaBarBack, staminaText);
         UpdateStatUI(StatType.Oxygen, _oxygen, maxOxygen, oxygenBarFront, oxygenBarBack, oxygenText);
         UpdateStatUI(StatType.Water, _water, maxWater, waterBarFront, waterBarBack, waterText);
-
-        HandleOverlayEffect();
-    }
-
-    //private void HandleDeath()
-    //{
-    //    ResetStats();
-    //    transform.position = new Vector3(playerSpawn.transform.position.x, playerSpawn.transform.position.y + 2, playerSpawn.transform.position.z);
-    //    SaveStats();
-    //}
-
-    private void HandleOverlayEffect()
-    {
-        if (overlay.color.a > 0)
-        {
-            if (_health < 30) return;
-            _durationTimer += Time.deltaTime;
-            if (_durationTimer > overlayDuration)
-            {
-                float tempAlpha = overlay.color.a;
-                tempAlpha -= Time.deltaTime * fadeSpeed;
-                overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, tempAlpha);
-            }
-        }
     }
 
     private void UpdateStatUI(StatType type, float value, float maxValue, Image frontBar, Image backBar, TextMeshProUGUI text)
@@ -128,8 +87,7 @@ public class PlayerStats : MonoBehaviour
             frontBar.fillAmount = hFraction;
             backBar.color = Color.red;
             _lerpTimer += Time.deltaTime;
-            float percentComplete = _lerpTimer / chipSpeed;
-            backBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete);
+            backBar.fillAmount = Mathf.Lerp(fillB, hFraction, _lerpTimer / chipSpeed);
         }
 
         if (fillF < hFraction)
@@ -137,8 +95,7 @@ public class PlayerStats : MonoBehaviour
             backBar.color = Color.green;
             backBar.fillAmount = hFraction;
             _lerpTimer += Time.deltaTime;
-            float percentComplete = _lerpTimer / chipSpeed;
-            frontBar.fillAmount = Mathf.Lerp(fillF, backBar.fillAmount, percentComplete);
+            frontBar.fillAmount = Mathf.Lerp(fillF, backBar.fillAmount, _lerpTimer / chipSpeed);
         }
 
         switch (type)
@@ -162,57 +119,24 @@ public class PlayerStats : MonoBehaviour
     {
         switch (type)
         {
-            case StatType.Health:
-                ApplyDamage(amount);
-                break;
-            case StatType.Stamina:
-                _stamina -= amount;
-                break;
-            case StatType.Oxygen:
-                _oxygen -= amount;
-                break;
-            case StatType.Water:
-                _water -= amount;
-                break;
+            case StatType.Health: _health -= amount; break;
+            case StatType.Stamina: _stamina -= amount; break;
+            case StatType.Oxygen: _oxygen -= amount; break;
+            case StatType.Water: _water -= amount; break;
         }
-        _lerpTimer = 0f;
-        SaveStats();
+        SaveStats(); // Save the updated values
     }
 
     public void IncreaseStat(StatType type, float amount)
     {
         switch (type)
         {
-            case StatType.Health:
-                _health += amount;
-                break;
-            case StatType.Stamina:
-                _stamina += amount;
-                break;
-            case StatType.Oxygen:
-                _oxygen += amount;
-                break;
-            case StatType.Water:
-                _water += amount;
-                break;
+            case StatType.Health: _health += amount; break;
+            case StatType.Stamina: _stamina += amount; break;
+            case StatType.Oxygen: _oxygen += amount; break;
+            case StatType.Water: _water += amount; break;
         }
-        _lerpTimer = 0f;
-        SaveStats();
-    }
-
-    private void ApplyDamage(float damage)
-    {
-        _health -= damage;
-        _durationTimer = 0;
-        overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("TBC"))
-        {
-            DecreaseStat(StatType.Health, Random.Range(5, 10));
-        }
+        SaveStats(); // Save the updated values
     }
 
     private void SaveStats()
@@ -232,16 +156,6 @@ public class PlayerStats : MonoBehaviour
         _water = PlayerPrefs.GetFloat("Water", maxWater);
     }
 
-    private void ResetStats()
-    {
-        _health = maxHealth;
-        _stamina = maxStamina;
-        _oxygen = maxOxygen;
-        _water = maxWater;
-        SaveStats();
-    }
-
-    // Oxygen drains over time
     private IEnumerator DrainOxygen()
     {
         while (true)
@@ -251,7 +165,6 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    // Water drains over time
     private IEnumerator DrainWater()
     {
         while (true)
@@ -259,21 +172,5 @@ public class PlayerStats : MonoBehaviour
             yield return new WaitForSeconds(1f);
             DecreaseStat(StatType.Water, waterDrainRate);
         }
-    }
-
-    // Demo function to drain and restore health
-    public IEnumerator DemoDrainHealthAndRestore()
-    {
-        DecreaseStat(StatType.Health, maxHealth / 2);
-        yield return new WaitForSeconds(2);
-        IncreaseStat(StatType.Health, maxHealth / 2);
-    }
-
-    // Demo function to drain and restore stamina
-    public IEnumerator DemoDrainStaminaAndRestore()
-    {
-        DecreaseStat(StatType.Stamina, maxStamina / 2);
-        yield return new WaitForSeconds(2);
-        IncreaseStat(StatType.Stamina, maxStamina / 2);
     }
 }

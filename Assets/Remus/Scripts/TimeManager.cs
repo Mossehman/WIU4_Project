@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    static public TimeManager Instance { get; private set; }
+
     public int hours = 8; // Start at 08:00 AM
     public int minutes = 0;
     public int days = 1;
@@ -11,8 +13,9 @@ public class TimeManager : MonoBehaviour
     private float timeAccumulator = 0f;
     private float hourAccumulator = 0;
 
-    [SerializeField] private TextMeshProUGUI dayText;
-    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI dayTimeText;
+
+    public TimeOfTheDay timeOfTheDay;
 
     private void Start()
     {
@@ -53,6 +56,7 @@ public class TimeManager : MonoBehaviour
             }
         }
 
+        UpdateTimeOfDay();
         DisplayTime();
     }
 
@@ -62,7 +66,47 @@ public class TimeManager : MonoBehaviour
         int displayHour = (hours % 12 == 0) ? 12 : (hours % 12);
         //Debug.Log($"Day {days}, Time: {displayHour:D2}:{minutes:D2} {period}");
 
-        dayText.text = $"Day {days}";
-        timeText.text = $"{displayHour:D2}:{minutes:D2} {period}";
+        dayTimeText.text = $"DAY {days} {displayHour:D2}:{minutes:D2} {period}";
     }
+
+    public bool IsWithinCurrentTimePeriod(TimeOfTheDay start, TimeOfTheDay end)
+    {
+        if (start <= end)
+            return timeOfTheDay >= start && timeOfTheDay <= end;
+        else
+            return timeOfTheDay >= start || timeOfTheDay <= end;
+    }
+
+    public bool IsWithinCurrentTimePeriod(MinMaxEnum<TimeOfTheDay> range)
+    {
+        return IsWithinCurrentTimePeriod(range.start, range.end);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        float rad = -((360 * hours / 24f) - 90f) * Mathf.Deg2Rad;
+        Gizmos.DrawLine(transform.position, transform.position + (new Vector3(50f * Mathf.Cos(rad), 50f * Mathf.Sin(rad), 0)));
+    }
+
+    void UpdateTimeOfDay()
+    {
+        if (hours >= 0 && hours < 6)
+            timeOfTheDay = TimeOfTheDay.Midnight;
+        else if (hours >= 6 && hours < 12)
+            timeOfTheDay = TimeOfTheDay.Morning;
+        else if (hours >= 12 && hours < 18)
+            timeOfTheDay = TimeOfTheDay.Afternoon;
+        else
+            timeOfTheDay = TimeOfTheDay.Night;
+    }
+}
+
+public enum TimeOfTheDay
+{
+    Midnight,
+    Morning,
+    Afternoon,
+    Night,
+    NumOfPeriods,
 }

@@ -53,7 +53,7 @@ public class ItemModelScript : MonoBehaviour
         if (playerInventory != null)
         {
             playerInventory.AddItem(gameObject);
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 
