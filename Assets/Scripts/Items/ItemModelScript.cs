@@ -50,9 +50,9 @@ public class ItemModelScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
-        if (playerInventory != null)
+        if (playerInventory != null && item != null)
         {
-            playerInventory.AddItem(gameObject);
+            playerInventory.AddItem(item);
             //Destroy(gameObject);
         }
     }

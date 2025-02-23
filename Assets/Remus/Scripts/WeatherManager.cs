@@ -190,7 +190,7 @@ public class WeatherManager : MonoBehaviour
     bool IsPlayerUnderShelter()
     {
         Transform player = GameObject.FindWithTag("Player").transform;
-        RaycastHit2D hit = Physics2D.Raycast(player.position, Vector2.up, 10f)
+        RaycastHit2D hit = Physics2D.Raycast(player.position, Vector2.up, 10f);
         return hit.collider != null;
     }
 }
