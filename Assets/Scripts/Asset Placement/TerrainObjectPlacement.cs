@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 /// <summary>
 /// Helper class to procedurally place objects down into the marching cubes scene
@@ -10,6 +8,7 @@ public class TerrainObjectPlacement : MonoBehaviour
 {
     public uint maxObjectsPerChunk;
     public uint objectPlacementChance;
+    public bool drawGizmos = false;
 
     [Header("Assets")]
     public GameObject[] terrainAssets;
@@ -79,6 +78,8 @@ public class TerrainObjectPlacement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!drawGizmos) { return; }
+
         Gizmos.color = Color.green;
         //Gizmos.DrawCube(position, new Vector3(bounds.x, 100, bounds.z));
 

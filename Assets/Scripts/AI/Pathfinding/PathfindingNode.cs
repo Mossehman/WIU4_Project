@@ -10,7 +10,7 @@ public class PathfindingNode
 {
     public Vector3 position; // node position
     public bool passable = true;
-    public List<Vector3Int> neighbouringNodeIndexes = new List<Vector3Int>(); // the surrounding nodes that connect to this current node, should be 18 points (we allow for diagonal movement)
+    public List<Vector3Int> neighbouringNodeIndexes = new List<Vector3Int>(); // the surrounding nodes that connect to this current node, should be 26 cubic points (we allow for diagonal movement)
 
     // weighting values for determining if the path is the most efficient route
     public float localGoal = 0.0f;

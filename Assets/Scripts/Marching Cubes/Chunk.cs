@@ -13,6 +13,9 @@ public class Chunk : MonoBehaviour
     public Vector3 meshOffset = Vector3.zero;
     [HideInInspector] private Bounds bounds;
 
+    public bool drawNodes = false;
+
+    public List<Vector3Int> AStarIndexes = new List<Vector3Int>();
     public List<Vector3> AStarPositions = new List<Vector3>();
 
     private void Awake()
@@ -48,6 +51,7 @@ public class Chunk : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!drawNodes) { return; }
         Gizmos.color = Color.blue;
         foreach (var pos in AStarPositions)
         {
