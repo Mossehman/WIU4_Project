@@ -8,6 +8,8 @@ using UnityEngine;
 public class AStarBounds : MonoBehaviour
 {
     public Dictionary<Vector3Int, PathfindingNode> nodes = new Dictionary<Vector3Int, PathfindingNode>();
+    // The range from the player where the chunks will generate with the AStar algorithm
+    public uint AStarRange = 2; 
     
     /// <summary>
     /// Creates a path
@@ -18,7 +20,7 @@ public class AStarBounds : MonoBehaviour
     public List<Vector3> Pathfind(Vector3Int startIndex, Vector3Int endIndex)
     {
         ///TODO: Try multithreading this code
-
+        Debug.Log("Pathfinding start!");
         List<Vector3> path = new List<Vector3>();
 
         PathfindingNode startNode;
@@ -29,7 +31,11 @@ public class AStarBounds : MonoBehaviour
 
 
         // we are attempting to access a node out of bounds
-        if (startNode == null || endNode == null) return path;
+        if (startNode == null || endNode == null)
+        {
+            Debug.Log("Start/End node was null!!");
+            return path;
+        }
 
         // reset our nodes for pathfinding
         foreach (var node in nodes)
@@ -46,8 +52,7 @@ public class AStarBounds : MonoBehaviour
         startNode.localGoal = 0.0f;
         startNode.globalGoal = Heuristic(startNode, endNode, startNode.weight);
 
-        List<PathfindingNode> uncheckedNodes = new List<PathfindingNode>();
-        uncheckedNodes.Add(startNode);
+        List<PathfindingNode> uncheckedNodes = new List<PathfindingNode> { startNode };
 
         while (uncheckedNodes.Count > 0 && currentNode != endNode)
         {
@@ -65,14 +70,20 @@ public class AStarBounds : MonoBehaviour
                 PathfindingNode neighbouringNode;
                 nodes.TryGetValue(neighbouringNodeIndex, out neighbouringNode); // check if the path's neighbour exists, if it does not/is impassable, skip over it
 
-                if (neighbouringNode == null || !neighbouringNode.passable) { continue; }
+                if (neighbouringNode == null) { continue; }
                 
                 float lowerGoalCheck = currentNode.localGoal + Heuristic(currentNode, neighbouringNode, neighbouringNode.weight); // check the node weightage and determine it's cost
                 if (lowerGoalCheck < neighbouringNode.localGoal)
                 {
                     neighbouringNode.parent = currentNode;
                     neighbouringNode.localGoal = lowerGoalCheck;
-                    neighbouringNode.globalGoal = Heuristic(neighbouringNode, endNode, neighbouringNode.weight);
+                    // Typically, globalGoal = localGoal + heuristic
+                    neighbouringNode.globalGoal = neighbouringNode.localGoal + Heuristic(neighbouringNode, endNode, neighbouringNode.weight);
+
+                    if (!uncheckedNodes.Contains(neighbouringNode))
+                    {
+                        uncheckedNodes.Add(neighbouringNode);
+                    }
                 }
             }
         }
@@ -146,11 +157,21 @@ public class AStarBounds : MonoBehaviour
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x - 1, index.y, index.z - 1)); // back-left node
 
 
+
+
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x + 1, index.y + 1, index.z + 1)); // front-top-right node
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x - 1, index.y + 1, index.z + 1)); // front-top-left node
 
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x + 1, index.y + 1, index.z - 1)); // back-top-right node
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x - 1, index.y + 1, index.z - 1)); // back-top-left node
+
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x + 1, index.y + 1, index.z)); // top-right node
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x - 1, index.y + 1, index.z)); // top-left node
+
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x, index.y + 1, index.z + 1)); // top-front node
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x, index.y + 1, index.z - 1)); // top-back node
+
+
 
 
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x + 1, index.y - 1, index.z + 1)); // front-bottom-right node
@@ -159,7 +180,22 @@ public class AStarBounds : MonoBehaviour
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x + 1, index.y - 1, index.z - 1)); // back-bottom-right node
         newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x - 1, index.y - 1, index.z - 1)); // back-bottom-left node
 
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x + 1, index.y - 1, index.z)); // bottom-right node
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x - 1, index.y - 1, index.z)); // bottom-left node
+
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x, index.y - 1, index.z + 1)); // bottom-front node
+        newNode.neighbouringNodeIndexes.Add(new Vector3Int(index.x, index.y - 1, index.z - 1)); // bottom-back node
+
 
         nodes.TryAdd(index, newNode); // add our pathfinding node to the list of existing nodes
     }
+
+    //private void OnDrawGizmos()
+    //{
+    //    if (nodes.ContainsKey(new Vector3Int(-3, 43, 0)))
+    //    {
+    //        Gizmos.color = Color.red;
+    //        Gizmos.DrawCube(nodes[new Vector3Int(-3, 43, 0)].position, new Vector3(0.5f, 0.5f, 0.5f));
+    //    }
+    //}
 }

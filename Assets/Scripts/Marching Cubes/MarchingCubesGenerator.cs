@@ -1,13 +1,26 @@
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class MarchingCubesGenerator : MonoBehaviour
 {
     const int numThreads = 8;
+
+    public static MarchingCubesGenerator instance { get; private set; }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            this.AStar = GetComponent<AStarBounds>();
+        }
+        else
+        {
+            DestroyImmediate(gameObject);
+        }
+    }
 
     [Header("Compute")]
     public TerrainNoiseConfig noiseConfig;
@@ -32,6 +45,7 @@ public class MarchingCubesGenerator : MonoBehaviour
     [SerializeField] private Transform player;                                                  // This is the position the chunks will use to see if they should be generated, unrendered or destroyed
     [SerializeField] private Vector3Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
     private Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
+    private HashSet<Vector3Int> loadedAStarChunks = new HashSet<Vector3Int>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
 
 
     [Header("AStar")]
@@ -78,6 +92,21 @@ public class MarchingCubesGenerator : MonoBehaviour
         noiseConfig.shaderParams = marchingCubesNoise.shaderParams;
     }
 
+    public void UnloadAStar(Chunk chunk)
+    {
+        chunk.AStarPositions.Clear();
+        if (chunk.AStarIndexes.Count <= 0) { return; }
+        foreach (var voxelIndex in chunk.AStarIndexes)
+        {
+            AStar.nodes.Remove(voxelIndex);
+        }
+        chunk.AStarIndexes.Clear();
+    }
+
+    /// <summary>
+    /// Generate the AStar nodes for a specific chunk's surface
+    /// </summary>
+    /// <param name="chunk">The chunk to create the navigation surface for</param>
     public void GenerateAStar(Chunk chunk)
     {
         if (AStar == null || AStarNodeBuffer == null) { return; }
@@ -91,7 +120,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         AStarComputeNode[] aStarNodes = new AStarComputeNode[numNodes];
         AStarNodeBuffer.GetData(aStarNodes, 0, 0, numNodes);
 
-        chunk.AStarPositions.Clear();
+        UnloadAStar(chunk);
 
         Vector3 spacing = new Vector3(
             bounds.x / numVoxelsPerAxis.x,
@@ -101,20 +130,22 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         for (int i = 0; i < numNodes; i++)
         {
-            Vector3Int localVoxelIndex = aStarNodes[i].voxelIndex;
+            Vector3Int localVoxelIndex = new Vector3Int(aStarNodes[i].voxelIndex.x - (int)(numVoxelsPerAxis.x * 0.5f),
+                                                        aStarNodes[i].voxelIndex.y - (int)(numVoxelsPerAxis.y * 0.5f),
+                                                        aStarNodes[i].voxelIndex.z - (int)(numVoxelsPerAxis.z * 0.5f));
 
-            // Calculate global voxel index by combining chunk grid position and local index
+            
             Vector3Int globalVoxelIndex = new Vector3Int(
                 chunk.chunkID.x * numVoxelsPerAxis.x + localVoxelIndex.x,
                 localVoxelIndex.y,
                 chunk.chunkID.y * numVoxelsPerAxis.z + localVoxelIndex.z
             );
 
-            // Compute world position using chunk offset and local voxel position
+            
             Vector3 nodePosition = chunk.meshOffset + new Vector3(
-                localVoxelIndex.x * spacing.x + center.x - bounds.x * 0.5f,
-                localVoxelIndex.y * spacing.y + center.y - bounds.y * 0.5f,
-                localVoxelIndex.z * spacing.z + center.z - bounds.z * 0.5f
+                localVoxelIndex.x * spacing.x,
+                localVoxelIndex.y * spacing.y,
+                localVoxelIndex.z * spacing.z
             );
 
             AStar.GenerateNode(globalVoxelIndex, nodePosition, true);
@@ -126,7 +157,7 @@ public class MarchingCubesGenerator : MonoBehaviour
     /// Tells the chunk to update it's mesh data based on the marching cubes noise
     /// </summary>
     /// <param name="chunk">The chunk to update</param>
-    public void GenerateMesh(Chunk chunk)
+    public void GenerateMesh(Chunk chunk, bool generateObjects = true)
     {
         // Get the number of voxels/cubes we will need to march through in the compute shader
         Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
@@ -192,7 +223,10 @@ public class MarchingCubesGenerator : MonoBehaviour
                 }
             }
 
-            placementScript.GenerateSpawnPoints(marchingCubesNoise.seed, tris[i].center + chunk.meshOffset, tris[i].normal);
+            if (generateObjects)
+            {
+                placementScript.GenerateSpawnPoints(marchingCubesNoise.seed, tris[i].center + chunk.meshOffset, tris[i].normal);
+            }
 
         }
 
@@ -243,12 +277,42 @@ public class MarchingCubesGenerator : MonoBehaviour
             }
             chunk.GetMeshCollider().sharedMesh = mesh;
         }
-        placementScript.SpawnObjects(chunk.transform);
+        if (generateObjects)
+        {
+            placementScript.SpawnObjects(chunk.transform);
+        }
 
-        GenerateAStar(chunk);
+        //GenerateAStar(chunk);
 
         //placementScript.PlaceObjects(marchingCubesNoise.seed, chunk.meshOffset + center, bounds);
 
+    }
+
+    public Vector3Int PositionToGlobalVoxelIndex(Vector3 position)
+    {
+        Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
+
+        Vector3 spacing = new Vector3(
+            bounds.x / numVoxelsPerAxis.x,
+            bounds.y / numVoxelsPerAxis.y,
+            bounds.z / numVoxelsPerAxis.z
+        );
+
+        Vector3Int voxelIndex = new Vector3Int(Mathf.FloorToInt(position.x / spacing.x), Mathf.FloorToInt(position.y / spacing.y), Mathf.FloorToInt(position.z / spacing.z));
+        return voxelIndex;
+    }
+
+    public Vector3 VoxelToPosition(Vector3Int voxelPosition)
+    {
+        Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
+
+        Vector3 spacing = new Vector3(
+            bounds.x / numVoxelsPerAxis.x,
+            bounds.y / numVoxelsPerAxis.y,
+            bounds.z / numVoxelsPerAxis.z
+        );
+
+        return new Vector3(voxelPosition.x * spacing.x, voxelPosition.y * spacing.y, voxelPosition.z * spacing.z);
     }
 
 
@@ -314,7 +378,7 @@ public class MarchingCubesGenerator : MonoBehaviour
     void Start()
     {
         InitialiseNoiseData();
-        this.AStar = GetComponent<AStarBounds>();
+
 
         DestroyAllChunks();
         CreateBuffers();
@@ -335,6 +399,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         Stack<Vector3Int> newChunkPositions = new Stack<Vector3Int>();
 
         HashSet<Vector3Int> currentChunks = new HashSet<Vector3Int>(); //keep a lookup table of the chunks we are currently in
+        HashSet<Vector3Int> aStarChunks = new HashSet<Vector3Int>();
 
         for (int x = startingChunkIndex.x - chunkRenderDistance.x; x <= startingChunkIndex.x + chunkRenderDistance.x; x++) 
         {
@@ -343,6 +408,14 @@ public class MarchingCubesGenerator : MonoBehaviour
                 for (int z = startingChunkIndex.z - chunkRenderDistance.z; z <= startingChunkIndex.z + chunkRenderDistance.z; z++)
                 {
                     Vector3Int currChunkID = new Vector3Int(x, y, z);
+                    if (AStar != null && 
+                        Mathf.Abs(x - startingChunkIndex.x) <= AStar.AStarRange &&
+                        Mathf.Abs(y - startingChunkIndex.y) <= AStar.AStarRange &&
+                        Mathf.Abs(z - startingChunkIndex.z) <= AStar.AStarRange)
+                    {
+                        aStarChunks.Add(currChunkID);
+                    }
+
                     currentChunks.Add(currChunkID);
                     if (loadedChunks.ContainsKey(currChunkID)) { continue; } //chunk has already been loaded, no need to add it
                     newChunkPositions.Push(currChunkID);
@@ -360,11 +433,16 @@ public class MarchingCubesGenerator : MonoBehaviour
             Vector3Int chunkPos = existingChunk.Key;
             Chunk chunkData = existingChunk.Value;
 
+            if (!aStarChunks.Contains(chunkPos)) {
+                loadedAStarChunks.Remove(chunkPos);
+                UnloadAStar(chunkData); 
+            }
             if (currentChunks.Contains(chunkPos)) { continue; }
             loadedChunks.Remove(chunkPos);
             chunkData.gameObject.transform.position = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
             chunkData.gameObject.GetComponent<Chunk>().meshOffset = new Vector3(newChunkPositions.Peek().x * bounds.x, newChunkPositions.Peek().y * bounds.y, newChunkPositions.Peek().z * bounds.z);
             chunkData.GetComponent<Chunk>().chunkID = new Vector2Int(newChunkPositions.Peek().x, newChunkPositions.Peek().z);
+
 
             for (int i = 0; i < chunkData.transform.childCount; i++)
             {
@@ -372,10 +450,27 @@ public class MarchingCubesGenerator : MonoBehaviour
             }
 
             GenerateMesh(chunkData.gameObject.GetComponent<Chunk>());
+            //if (aStarChunks.Contains(newChunkPositions.Peek())) { GenerateAStar(chunkData); }
             loadedChunks.TryAdd(newChunkPositions.Peek(), chunkData);
             newChunkPositions.Pop();
-            break;
+            return;
         }
+
+        foreach(var aStarChunkID in aStarChunks)
+        {
+            Chunk chunkData;
+
+            loadedChunks.TryGetValue(aStarChunkID, out chunkData);
+            Vector3Int AStarChunkID = new Vector3Int(chunkData.chunkID.x, 0, chunkData.chunkID.y);
+            if (aStarChunks.Contains(AStarChunkID) && !loadedAStarChunks.Contains(AStarChunkID))
+            {
+                GenerateMesh(chunkData, false);
+                loadedAStarChunks.Add(AStarChunkID);
+                GenerateAStar(chunkData);
+                return;
+            }
+        }
+
         UnityEngine.Random.InitState((int)Time.time);
     }
 
@@ -402,6 +497,16 @@ public class MarchingCubesGenerator : MonoBehaviour
                     loadedChunks.Add(currChunkID, newChunk.GetComponent<Chunk>());
                     //Debug.Log(currChunkID.ToString());
                     GenerateMesh(newChunk.GetComponent<Chunk>());
+
+
+                    if (AStar != null &&
+                        Mathf.Abs(x - startingChunkIndex.x) <= AStar.AStarRange &&
+                        Mathf.Abs(y - startingChunkIndex.y) <= AStar.AStarRange &&
+                        Mathf.Abs(z - startingChunkIndex.z) <= AStar.AStarRange)
+                    {
+                        loadedAStarChunks.Add(currChunkID);
+                        GenerateAStar(newChunk.GetComponent<Chunk>());
+                    }
                 }
             }
         }
@@ -447,6 +552,11 @@ public class MarchingCubesGenerator : MonoBehaviour
         }
 
         loadedChunks.Clear();
+    }
+
+    public AStarBounds GetAStar()
+    {
+        return AStar;
     }
 }
 
