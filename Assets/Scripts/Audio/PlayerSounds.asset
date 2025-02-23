@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   libraryname: 
   sounds:
-  - soundName: PlayerHurt
+  - soundName: player-hurt
     clip: {fileID: 8300000, guid: 1e241c3241decda4ab4b02498a38adbb, type: 3}
+    priority: 0
+    volume: 0
+  - soundName: player-scan
+    clip: {fileID: 8300000, guid: 5030c78e3fb091e499de150b0c1fbde5, type: 3}
     priority: 0
     volume: 0

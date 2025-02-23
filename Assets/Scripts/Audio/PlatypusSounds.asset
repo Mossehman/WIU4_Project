@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
-  m_Name: CreatureSounds
+  m_Name: PlatypusSounds
   m_EditorClassIdentifier: 
   libraryname: 
   sounds:
   - soundName: platypus-goes
     clip: {fileID: 8300000, guid: 986fa0e562ae66f43836a349a65abd63, type: 3}
-    priority: 64
+    priority: 128
     volume: 1
   - soundName: platypus-rest
     clip: {fileID: 8300000, guid: 22071b7247b34c849ae2f332f09cdae6, type: 3}
-    priority: 64
+    priority: 128
     volume: 1
   - soundName: platypus-hurt
     clip: {fileID: 8300000, guid: 4a3b74d19aeb93c4b9040f844b4cc25b, type: 3}

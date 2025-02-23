@@ -79,6 +79,7 @@ public class AudioManager : MonoBehaviour
 
     private void PlaySoundFromEvent(string soundName, AudioPriority priority, float? volume = null, Vector3? position = null, bool randomPitch = false, float minPitch = 0.95f, float maxPitch = 1.05f)
     {
+        if (string.IsNullOrEmpty(soundName)) return;
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
@@ -112,6 +113,7 @@ public class AudioManager : MonoBehaviour
 
     private void PlayMusicFromEvent(string musicName, float? volume = null)
     {
+        if (string.IsNullOrEmpty(musicName)) return;
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
@@ -146,6 +148,7 @@ public class AudioManager : MonoBehaviour
 
     private void PlayAmbienceFromEvent(string ambienceName, float? volume = null)
     {
+        if (string.IsNullOrEmpty(ambienceName)) return;
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
@@ -188,6 +191,7 @@ public class AudioManager : MonoBehaviour
     /// <returns>The playing AudioSource so that you can modify it later (stop, increase pitch, etc)</returns>
     public AudioSource PlayLoopingSound(string soundName, GameObject targetObject, float? volume = null, float pitch = 1f)
     {
+        if (string.IsNullOrEmpty(soundName)) return null;
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
@@ -240,6 +244,7 @@ public class AudioManager : MonoBehaviour
     /// <param name="maxPitch">(Optional) The maximum random ptich shift</param>
     public void PlayNonSpamAudio(string soundName, ref AudioSource source, float? volume = null, bool is3D = false, float pitch = 1.0f, bool randomPitch = false, float minPitch = 0.95f, float maxPitch = 1.05f)
     {
+        if (string.IsNullOrEmpty(soundName)) return;
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
@@ -289,6 +294,7 @@ public class AudioManager : MonoBehaviour
     /// <param name="maxPitch">(Optional) The maximum random ptich shift</param>
     public void PlayRandomAudio(string libraryName, ref AudioSource source, float? volume = null, bool is3D = false, float pitch = 1.0f, bool randomPitch = false, float minPitch = 0.95f, float maxPitch = 1.05f)
     {
+        if (string.IsNullOrEmpty(libraryName)) return;
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
@@ -328,7 +334,6 @@ public class AudioManager : MonoBehaviour
         source.Play();
     }
 
-    
     private void PlaySFX(AudioClip clip, float volume, AudioPriority priority, Vector3? position, bool randomPitch, float minPitch, float maxPitch)
     {
         if (sfxQueue.Count == 0)

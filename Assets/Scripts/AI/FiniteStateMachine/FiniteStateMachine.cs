@@ -152,14 +152,23 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     {
                         if (currentGroup != null)
                         {
-                            List<CreatureInfo> grp = currentGroup.Members;
-                            foreach (CreatureInfo member in grp)
+                            //List<CreatureInfo> grp = currentGroup.Members;
+                            //foreach (CreatureInfo member in grp)
+                            //{
+                            //    if (member != null)
+                            //    {
+                            //        member.fsm.ForceSwapState("Idle", null);
+                            //    }
+                            //}
+                            List<CreatureInfo> grp = new List<CreatureInfo>(currentGroup.Members);
+                            for (int i = 0; i < grp.Count; i++)
                             {
-                                if (member != null)
+                                if (grp[i] != null)
                                 {
-                                    member.fsm.ForceSwapState("Idle", null);
+                                    grp[i].fsm.ForceSwapState("Idle", null);
                                 }
                             }
+
                         }
                         else
                         {

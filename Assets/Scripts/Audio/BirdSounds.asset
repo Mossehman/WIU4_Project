@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
+  m_Name: BirdSounds
+  m_EditorClassIdentifier: 
+  libraryname: 
+  sounds:
+  - soundName: bird-flap
+    clip: {fileID: 8300000, guid: 84ab7f13f5680eb479b0b4b7f93f6393, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: bird-hurt
+    clip: {fileID: 8300000, guid: b46399cc91b003b43830f425466fe1aa, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: bird-dead
+    clip: {fileID: 8300000, guid: 8706860f3b7ee2244b179907902ec1b5, type: 3}
+    priority: 64
+    volume: 1
