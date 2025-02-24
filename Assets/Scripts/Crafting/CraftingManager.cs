@@ -70,6 +70,11 @@ public class CraftingManager : MonoBehaviour
 
         foreach (RecipeData ingredient in recipe.data)
         {
+            foreach (Transform child in _currentRecipePanel.transform.Find("RequiredMaterials"))
+            {
+                Destroy(child.gameObject);
+            }
+
             BaseItem matchedSO = new BaseItem();
             foreach (BaseItem things in _playerInventory.GetInventory())
             {
@@ -104,6 +109,7 @@ public class CraftingManager : MonoBehaviour
                     matchedSO._quantity -= ingredient.quantity;
                 }
             }
+        }
     }
 
     public bool CanCraft(CraftingRecipe recipe)
