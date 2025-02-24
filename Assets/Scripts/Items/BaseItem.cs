@@ -31,6 +31,8 @@ public class BaseItem : ScriptableObject
     public string getItemDescription() { return _itemDescription; }
     public float getWeight() { return _weight; }
     public Sprite getItemIcon() { return itemIcon; }
+
+    public GameObject getItemModel() { return itemModel;}
 }
 
 [System.Serializable]

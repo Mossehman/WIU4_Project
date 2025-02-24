@@ -5525,6 +5525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxObjectsPerChunk: 10
   objectPlacementChance: 600
+  drawGizmos: 0
   terrainAssets:
   - {fileID: 6921072969651602650, guid: 35e7f3a55f5e1bb4ab5feb127ca85125, type: 3}
   numSamples: 10
@@ -15199,7 +15200,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &727038914
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -15923,7 +15924,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1160907676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15936,13 +15937,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b015f8a060c35146ab377d3d56195c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  positionalIndex: {x: 0, y: 0, z: 0}
   pathData: []
   terrainLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  playerPosition: {fileID: 727038917}
-  timer: 0
+  drawPath: 0
+  startPosition: {fileID: 0}
 --- !u!136 &1160907677
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -1,6 +1,3 @@
-using Player.Inventory;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
@@ -13,7 +10,7 @@ namespace Player.Inventory
     public class Storage : MonoBehaviour
     {
         [Header("Storage Logic")]
-        [SerializeField]            public GameObject[]     _storageItems;
+        [SerializeField]            public BaseItem[]       _storageItems;
         [SerializeField]            public int              _maxItems = 10;
         [SerializeField]            private SortingType     _currentSort;
 
@@ -21,12 +18,12 @@ namespace Player.Inventory
         [SerializeField]            private GameObject      _storage;
         [SerializeField]            private GameObject      _storagePanel;
         [SerializeField]            private GameObject      _storageSlotPrefab;
-        [SerializeField]            private GameObject      _itemPrefab;
+        [SerializeField]            private GameObject       _itemPrefab;
                                     private GameObject[]    _storageSlots;
 
         void Start()
         {
-            _storageItems = new GameObject[_maxItems];
+            _storageItems = new BaseItem[_maxItems];
             _storageSlots = new GameObject[_maxItems];
 
             RenderStorage();
@@ -37,16 +34,16 @@ namespace Player.Inventory
             
         }
 
-        public void AddStorageItem(GameObject newItem)
+        public void AddStorageItem(BaseItem newItem)
         {
             BaseItem temp = newItem.GetComponent<ItemModelScript>().getSO();
             foreach (var item in _storageItems)
             {
                 if (item != null)
                 {
-                    if (item.GetComponent<ItemModelScript>().getSO().getID() == temp.getID())
+                    if (item.getID() == temp.getID())
                     {
-                        item.GetComponent<ItemModelScript>().getSO()._quantity++;
+                        item._quantity++;
                         RenderStorage();
                         return;
                     }
@@ -73,7 +70,7 @@ namespace Player.Inventory
             }
 
             // Sort the storage according to the current sort
-            GameObject[] tempStorage = SortStorage(_currentSort);
+            BaseItem[] tempStorage = SortStorage(_currentSort);
 
             // Instantiate Storage slots
             for (int i = 0; i < _maxItems; i++)
@@ -89,10 +86,10 @@ namespace Player.Inventory
                 if (_storageItems[i] != null)
                 {
                     GameObject item = Instantiate(_itemPrefab, _storageSlots[i].transform);
-                    item.GetComponent<Draggable>()._item = item.GetComponent<ItemModelScript>();
-                    item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = tempStorage[i].GetComponent<ItemModelScript>().getSO().getDisplayName();
-                    item.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = tempStorage[i].GetComponent<ItemModelScript>().getSO()._quantity.ToString();
-                    item.GetComponent<Image>().sprite = tempStorage[i].GetComponent<ItemModelScript>().getSO().getItemIcon();
+                    item.GetComponent<Draggable>()._item = item.GetComponent<ItemModelScript>().getSO();
+                    item.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = tempStorage[i].getDisplayName();
+                    item.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = tempStorage[i]._quantity.ToString();
+                    item.GetComponent<Image>().sprite = tempStorage[i].getItemIcon();
                 }
             }
         }
@@ -104,9 +101,9 @@ namespace Player.Inventory
             RenderStorage();
         }
 
-        private GameObject[] SortStorage(SortingType type)
+        private BaseItem[] SortStorage(SortingType type)
         {
-            GameObject[] temp = _storageItems.Where(item => item != null).ToArray();
+            BaseItem[] temp = _storageItems.Where(item => item != null).ToArray();
 
             if (temp != null)
             {
@@ -117,22 +114,22 @@ namespace Player.Inventory
 
                     case SortingType.ALPHABETICAL:
                         Array.Sort(temp, (a, b) =>
-                            a.GetComponent<ItemModelScript>().getSO().getID().CompareTo(b.GetComponent<ItemModelScript>().getSO().getID()));
+                            a.getID().CompareTo(b.getID()));
                         break;
 
                     case SortingType.HEAVIEST:
                         Array.Sort(temp, (a, b) =>
-                            b.GetComponent<ItemModelScript>().getSO().getWeight().CompareTo(a.GetComponent<ItemModelScript>().getSO().getWeight()));
+                            b.getWeight().CompareTo(a.getWeight()));
                         break;
 
                     case SortingType.LIGHTEST:
                         Array.Sort(temp, (a, b) =>
-                            a.GetComponent<ItemModelScript>().getSO().getWeight().CompareTo(b.GetComponent<ItemModelScript>().getSO().getWeight()));
+                            a.getWeight().CompareTo(b.getWeight()));
                         break;
 
                     case SortingType.QUANTITY:
                         Array.Sort(temp, (a, b) =>
-                            b.GetComponent<ItemModelScript>().getSO()._quantity.CompareTo(a.GetComponent<ItemModelScript>().getSO()._quantity));
+                            b._quantity.CompareTo(a._quantity));
                         break;
                 }
             }
@@ -141,7 +138,7 @@ namespace Player.Inventory
 
         public void OnStorageOpen()
         {
-            if (_storage.active == false)
+            if (_storage.activeInHierarchy == false)
             {
                 _storage.SetActive(true);
                 RenderStorage();

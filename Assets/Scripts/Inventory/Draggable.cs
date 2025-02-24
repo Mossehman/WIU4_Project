@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    [SerializeField] public ItemModelScript _item;
+    [SerializeField] public BaseItem _item;
     public Image image;
     public Transform _parentAfterDrag;
 
