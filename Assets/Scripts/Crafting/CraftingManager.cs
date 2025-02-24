@@ -66,6 +66,7 @@ public class CraftingManager : MonoBehaviour
         _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemName").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
         _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemDesc").GetComponent<TextMeshProUGUI>().text = item.getItemDescription();
         _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemIcon").GetComponent<Image>().sprite = item.getItemIcon();
+        _currentRecipePanel.transform.Find("CraftButton").GetComponent<Button>().onClick.AddListener(() => Craft(item, recipe));
 
         foreach (RecipeData ingredient in recipe.data)
         {
@@ -86,9 +87,23 @@ public class CraftingManager : MonoBehaviour
         }
     }
 
-    public void Craft()
+    public void Craft(BaseItem item, CraftingRecipe recipe)
     {
-
+        if (CanCraft(recipe))
+        {
+            _playerInventory.AddItem(item);
+            foreach (RecipeData ingredient in recipe.data)
+            {
+                foreach (BaseItem things in _playerInventory.GetInventory())
+                {
+                    BaseItem matchedSO = new BaseItem();
+                    if (things.getID() == ingredient.itemID)
+                    {
+                        matchedSO = things;
+                    }
+                    matchedSO._quantity -= ingredient.quantity;
+                }
+            }
     }
 
     public bool CanCraft(CraftingRecipe recipe)
