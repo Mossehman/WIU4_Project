@@ -73,13 +73,17 @@ public class CraftingManager : MonoBehaviour
 
         foreach (RecipeData ingredient in recipe.data)
         {
-            foreach (Transform child in _currentRecipePanel.transform.Find("RequiredMaterials"))
+            foreach (Transform child in _currentRecipePanel.transform.Find("RequiredMaterials").transform.Find("Viewport").transform.Find("Content"))
             {
                 Destroy(child.gameObject);
             }
 
-            BaseItem matchedSO = new BaseItem();
-            foreach (BaseItem things in _playerInventory.GetInventory())
+            GameObject ingredientGO = Instantiate(_ingredientPrefab, _currentRecipePanel.transform.Find("RequiredMaterials").
+                                                                                            transform.Find("Viewport").transform.Find("Content"));
+            ingredientGO.transform.Find("Icon").GetComponent<Image>().sprite = item.getItemIcon();
+
+            BaseItem matchedSO = null;
+            foreach (BaseItem things in _items)
             {
                 if (things.getID() == ingredient.itemID)
                 {
@@ -88,9 +92,7 @@ public class CraftingManager : MonoBehaviour
             }
             if (matchedSO.getID() != null)
             {
-                GameObject ingredientGO = Instantiate(_ingredientPrefab, _currentRecipePanel.transform.Find("RequiredMaterials").
-                                                                                            transform.Find("Viewport").transform.Find("Content"));
-                ingredientGO.GetComponent<Image>().sprite = matchedSO.getItemIcon();
+                ingredientGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = matchedSO.getDisplayName();
                 ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text = matchedSO._quantity.ToString() + " / " + ingredient.quantity.ToString();
             }
         }
@@ -98,6 +100,7 @@ public class CraftingManager : MonoBehaviour
 
     public void Craft(BaseItem item, CraftingRecipe recipe)
     {
+
         if (CanCraft(recipe))
         {
             _playerInventory.AddItem(item);
@@ -105,12 +108,13 @@ public class CraftingManager : MonoBehaviour
             {
                 foreach (BaseItem things in _playerInventory.GetInventory())
                 {
-                    BaseItem matchedSO = new BaseItem();
+                    BaseItem matchedSO = null;
                     if (things.getID() == ingredient.itemID)
                     {
                         matchedSO = things;
                     }
-                    matchedSO._quantity -= ingredient.quantity;
+                    if (matchedSO != null) { matchedSO._quantity -= ingredient.quantity; }
+                    Debug.Log("Sucessful");
                 }
             }
         }
@@ -122,14 +126,18 @@ public class CraftingManager : MonoBehaviour
 
         foreach (RecipeData ingredient in recipe.data)
         {
+            if (ingredient.quantity == 0)
+            {
+                fulfilled++;
+            }
             foreach (BaseItem things in _playerInventory.GetInventory())
             {
-                BaseItem matchedSO = new BaseItem();
+                BaseItem matchedSO = null;
                 if (things.getID() == ingredient.itemID)
                 {
                     matchedSO = things;
                 }
-                if (matchedSO._quantity >= ingredient.quantity)
+                if (matchedSO != null && matchedSO._quantity >= ingredient.quantity)
                 {
                     fulfilled++;
                 }
