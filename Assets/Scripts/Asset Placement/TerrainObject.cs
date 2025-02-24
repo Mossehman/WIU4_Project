@@ -1,18 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class TerrainObject : MonoBehaviour
+[CreateAssetMenu(fileName = "New Terrain Object", menuName = "Marching Cubes/Terrain Object")]
+public class TerrainObject : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("Prefab")]
+    public GameObject terrainObjectPrefab;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("Poisson Sphere")]
+    public float poissonSphereRadius = 1.0f;
+
+    [Header("Spawn configuration")]
+    public float minYLevel;
+    public bool hasMaxYLevel;
+    [ConditionalHide(nameof(hasMaxYLevel), true)]
+    public float maxYLevel;
+    [Range(-1f, 1f)]
+    public float minNormalsThreshold;
+
+    public bool hasMaxNormals;
+    [ConditionalHide(nameof(hasMaxNormals), true)]
+    [Range(-1f, 1f)]
+    public float maxNormalsThreshold;
+
+    [Header("Terrain Sampling")]
+    public uint numTerrainSamples = 5;
+    public float sampleRadius = 4;
+
+    public float heightDifferenceThreshold;
+
+    [Range(-1f, 1f)]
+    public float normalDifferenceThreshold;
 }

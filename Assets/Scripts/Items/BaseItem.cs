@@ -33,6 +33,8 @@ public class BaseItem : ScriptableObject
     public Sprite getItemIcon() { return itemIcon; }
 
     public GameObject getItemModel() { return itemModel;}
+
+    public virtual void Init() { return; }
 }
 
 [System.Serializable]

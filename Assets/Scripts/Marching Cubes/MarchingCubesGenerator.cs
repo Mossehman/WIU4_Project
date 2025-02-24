@@ -157,7 +157,7 @@ public class MarchingCubesGenerator : MonoBehaviour
     /// Tells the chunk to update it's mesh data based on the marching cubes noise
     /// </summary>
     /// <param name="chunk">The chunk to update</param>
-    public void GenerateMesh(Chunk chunk, bool generateObjects = true)
+    public void GenerateMesh(Chunk chunk, bool generateObjects = true, bool reloadMesh = true)
     {
         // Get the number of voxels/cubes we will need to march through in the compute shader
         Vector3Int numVoxelsPerAxis = new Vector3Int(numPointsPerAxis.x - 1, numPointsPerAxis.y - 1, numPointsPerAxis.z - 1);
@@ -189,6 +189,8 @@ public class MarchingCubesGenerator : MonoBehaviour
         marchingCubes.SetBuffer(0, "aStarNodeBuffer", AStarNodeBuffer);
         
         marchingCubes.Dispatch(0, numThreadsPerAxis.x, numThreadsPerAxis.y, numThreadsPerAxis.z);
+
+        if (!reloadMesh) { return; }
 
         ComputeBuffer.CopyCount(trianglesBuffer, triCountBuffer, 0);
         int[] triCountArray = { 0 };
@@ -464,7 +466,7 @@ public class MarchingCubesGenerator : MonoBehaviour
             Vector3Int AStarChunkID = new Vector3Int(chunkData.chunkID.x, 0, chunkData.chunkID.y);
             if (aStarChunks.Contains(AStarChunkID) && !loadedAStarChunks.Contains(AStarChunkID))
             {
-                GenerateMesh(chunkData, false);
+                GenerateMesh(chunkData, false, false);
                 loadedAStarChunks.Add(AStarChunkID);
                 GenerateAStar(chunkData);
                 return;

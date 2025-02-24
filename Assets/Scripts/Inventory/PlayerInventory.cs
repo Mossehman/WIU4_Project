@@ -304,5 +304,7 @@ namespace Player.Inventory
 
             }
         }
+
+        public List<BaseItem> GetInventory() { return _inventoryItems; }
     }
 }
