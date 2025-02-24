@@ -19,6 +19,7 @@ public class CraftingManager : MonoBehaviour
     [SerializeField] private GameObject _catalogPanel;
     [SerializeField] private GameObject _recipePrefab;
     [SerializeField] private GameObject _currentRecipePanel;
+    [SerializeField] private GameObject _ingredientPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -68,7 +69,20 @@ public class CraftingManager : MonoBehaviour
 
         foreach (RecipeData ingredient in recipe.data)
         {
-
+            BaseItem matchedSO = new BaseItem();
+            foreach (BaseItem things in _playerInventory.GetInventory())
+            {
+                if (things.getID() == ingredient.itemID)
+                {
+                    matchedSO = things;
+                }
+            }
+            if (matchedSO.getID() != null)
+            {
+                GameObject ingredientGO = Instantiate(_ingredientPrefab, _currentRecipePanel.transform.Find("RequiredMaterials"));
+                ingredientGO.GetComponent<Image>().sprite = matchedSO.getItemIcon();
+                ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text = matchedSO._quantity.ToString() + " / " + ingredient.quantity.ToString();
+            }
         }
     }
 
@@ -77,8 +91,26 @@ public class CraftingManager : MonoBehaviour
 
     }
 
-    public bool CanCraft()
+    public bool CanCraft(CraftingRecipe recipe)
     {
-        return false;
+        int fulfilled = 0;
+
+        foreach (RecipeData ingredient in recipe.data)
+        {
+            foreach (BaseItem things in _playerInventory.GetInventory())
+            {
+                BaseItem matchedSO = new BaseItem();
+                if (things.getID() == ingredient.itemID)
+                {
+                    matchedSO = things;
+                }
+                if (matchedSO._quantity >= ingredient.quantity)
+                {
+                    fulfilled++;
+                }
+            }
+        }
+
+        return fulfilled == recipe.data.Length;
     }
 }
