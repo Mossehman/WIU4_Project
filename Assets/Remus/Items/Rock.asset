@@ -10,16 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0945d4d5a5e834e84d1b2075b0bf18, type: 3}
-  m_Name: Number2
+  m_Name: Rock
   m_EditorClassIdentifier: 
   itemName: ID2
-  _displayName: Item 2
-  _itemDescription: test description
-  itemIcon: {fileID: 0}
-  itemModel: {fileID: 0}
+  _displayName: Rock
+  _itemDescription: The quintessential material that practically spawns every crafting
+    recipe.
+  itemIcon: {fileID: 21300000, guid: 4351a63b55eaac54094fdc71f8413d97, type: 3}
+  itemModel: {fileID: 595492054557384492, guid: 2d2eb5c82b681164088c45c42cfe62c1, type: 3}
   _weight: 20
-  _quantity: 0
-  recipes:
-  - data:
-    - itemID: ID3
-      quantity: 0
+  _quantity: 1
+  recipes: []

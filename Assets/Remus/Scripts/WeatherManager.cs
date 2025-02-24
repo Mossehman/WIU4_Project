@@ -206,7 +206,7 @@ public class WeatherManager : MonoBehaviour
             activeMaterial = null; // Reset activeMaterial to avoid lingering effects
         }
 
-        Debug.Log($"[WeatherManager] Updating Intensity: {currentIntensity}");
+        //Debug.Log($"[WeatherManager] Updating Intensity: {currentIntensity}");
     }
 
     void ResetMaterial()

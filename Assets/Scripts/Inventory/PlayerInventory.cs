@@ -50,18 +50,35 @@ namespace Player.Inventory
         [Header("Hotbar Logic")]
         [SerializeField]    private BaseItem[]              _hotbarItems;
                             private int                     _maxHotbarItems = 5;
+        [SerializeField]    private int                     _selectedHotbarIndex = -1;
+        [SerializeField]    private Color                   _selectedSlotColor = Color.red;
+        [SerializeField]    private Color                   _defaultSlotColor = Color.white;
 
         [Header("Hotbar UI")]
         [SerializeField]    private GameObject              _hotBarPanel;
         [SerializeField]    private GameObject              _hotBarSlotPrefab;
         [SerializeField]    private GameObject[]            _hotbarSlots;
-        [SerializeField]    private GameObject              _hotbarItemPrefab;
 
+        [SerializeField]    private GameObject              _backgroundPanel;
         [SerializeField]    private GameObject              _vitalsPanel;
         [SerializeField]    private GameObject              _infoPanel;
         [SerializeField]    private GameObject              _mapPanel;
 
+        [Header("Hotbar Transform Settings")]
+        private RectTransform _hotbarRect;
+        private GridLayoutGroup _hotbarGrid;
 
+        // Closed (default) state
+        private Vector2 _closedOffsetMin;
+        private Vector2 _closedOffsetMax;
+        private Vector2 _closedSpacing;
+        private TextAnchor _closedAlignment;
+
+        // Opened state
+        private Vector2 _openedOffsetMin;
+        private Vector2 _openedOffsetMax;
+        private Vector2 _openedSpacing;
+        private TextAnchor _openedAlignment;
 
         void Start()
         {
@@ -79,12 +96,28 @@ namespace Player.Inventory
             {
                 Destroy(child.gameObject);
             }
+
             for (int i = 0; i < _maxHotbarItems; i++)
             {
                 GameObject hotbarItem = Instantiate(_hotBarSlotPrefab, _hotBarPanel.transform);
                 _hotbarSlots[i] = hotbarItem;
                 _hotbarSlots[i].tag = "Hotbar";
             }
+
+            _hotbarRect = _hotBarPanel.GetComponent<RectTransform>();
+            _hotbarGrid = _hotBarPanel.GetComponent<GridLayoutGroup>();
+
+            // Store Closed State (from Image 1)
+            _closedOffsetMin = _hotbarRect.offsetMin; // Left, Bottom
+            _closedOffsetMax = _hotbarRect.offsetMax; // Right, Top
+            _closedSpacing = _hotbarGrid.spacing;
+            _closedAlignment = _hotbarGrid.childAlignment;
+
+            // Store Opened State (from Image 2)
+            _openedOffsetMin = new Vector2(170.9836f, 12.13998f); // Left, Bottom
+            _openedOffsetMax = new Vector2(-518.9836f, -875.54f);  // Right, Top
+            _openedSpacing = new Vector2(-9.4f, 76.81f);
+            _openedAlignment = TextAnchor.UpperCenter;
         }
 
         void Update()
@@ -95,27 +128,81 @@ namespace Player.Inventory
                 ToggleInventory();
             }
 
-            if (Input.GetKeyDown(KeyCode.Y) && _currentlySelected != null)
+            // Detect keys 1-5 to select a hotbar slot
+            for (int i = 0; i < _maxHotbarItems; i++)
             {
-                DropItem(_currentlySelected);
+                if (Input.GetKeyDown(KeyCode.Alpha1 + i))
+                {
+                    _selectedHotbarIndex = i;
+                    Debug.Log($"Hotbar slot {i + 1} selected.");
+                    UpdateHotbarUI();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                TryDropSelectedItem();
             }
 
             SortInventory(_currentSort);
         }
 
-        public void DropItem(BaseItem droppedItem)
+        public void TryDropSelectedItem()
         {
-            if (_inventoryItems.Contains(droppedItem))
+            // Ensure a hotbar slot is selected
+            if (_selectedHotbarIndex == -1)
             {
-                _inventoryItems.Remove(droppedItem);
+                Debug.LogWarning("No hotbar slot selected. Press 1-5 to select a slot.");
+                return;
+            }
 
-                // Instantiate the item model in front of the player
-                GameObject droppedModel = Instantiate(droppedItem.getItemModel(), transform.position + transform.forward, Quaternion.identity);
-                ItemModelScript itemScript = droppedModel.GetComponent<ItemModelScript>();
+            // Ensure there is an item in the selected slot
+            BaseItem itemToDrop = _hotbarItems[_selectedHotbarIndex];
+            if (itemToDrop == null)
+            {
+                Debug.LogWarning($"No item in selected hotbar slot {_selectedHotbarIndex + 1}.");
+                return;
+            }
 
-                if (itemScript != null)
+            Debug.Log($"Dropping item {itemToDrop.getDisplayName()} from hotbar slot {_selectedHotbarIndex + 1}");
+
+            // Remove item from hotbar
+            _hotbarItems[_selectedHotbarIndex] = null;
+
+            // **Destroy the hotbar UI prefab for this slot**
+            Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
+            if (slotTransform.childCount > 0)
+            {
+                Destroy(slotTransform.GetChild(0).gameObject); // Removes item UI
+            }
+
+            // Update hotbar UI after dropping
+            UpdateHotbarUI();
+
+            // Calculate a safe drop position in front of the player
+            Vector3 dropOffset = transform.forward * 2.0f + Vector3.up * 1.0f; // Move 2 units forward, 1 unit up
+            Vector3 dropPosition = transform.position + dropOffset;
+
+            // Instantiate the item model at the offset position
+            GameObject droppedModel = Instantiate(itemToDrop.getItemModel(), dropPosition, Quaternion.identity);
+            ItemModelScript itemScript = droppedModel.GetComponent<ItemModelScript>();
+
+            if (itemScript != null)
+            {
+                itemScript.OnDropItem(itemToDrop, transform.forward, 5.0f); // Apply forward force
+            }
+
+            Debug.Log($"Item {itemToDrop.getDisplayName()} dropped and removed from UI.");
+        }
+
+        private void UpdateHotbarUI()
+        {
+            for (int i = 0; i < _maxHotbarItems; i++)
+            {
+                Image slotImage = _hotbarSlots[i].GetComponent<Image>();
+                if (slotImage != null)
                 {
-                    itemScript.OnDropItem(droppedItem, transform.forward, 5.0f); // Apply force in front
+                    slotImage.color = (i == _selectedHotbarIndex) ? _selectedSlotColor : _defaultSlotColor;
                 }
             }
         }
@@ -153,10 +240,21 @@ namespace Player.Inventory
                 index++;
                 GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
                 itemUI.GetComponent<Draggable>()._item = item;
-                itemUI.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
-                itemUI.GetComponent<Button>().onClick.AddListener(() => ShowItem(item));
+                itemUI.transform.Find("ItemIcon").GetComponent<Image>().sprite = item.getItemIcon();
+
+                Button button = itemUI.GetComponent<Button>();
+
+                if (button == null)
+                {
+                    Debug.LogError("Button component missing from itemUI prefab!");
+                }
+                else
+                {
+                    Debug.Log("Button found on itemUI prefab, adding listener...");
+                    button.onClick.AddListener(() => ShowItem(item));
+                }
+
                 itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item._quantity.ToString();
-                itemUI.GetComponent<Image>().sprite = item.getItemIcon();
                 itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
             }
         }
@@ -164,9 +262,9 @@ namespace Player.Inventory
         public void ShowItem(BaseItem item)
         {
             _currentlySelected = item;
-            _itemDescPanel.transform.Find("Title").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
-            _itemDescPanel.transform.Find("Desc_Scroll").GetComponentInChildren<TextMeshProUGUI>().text = item.getItemDescription();
-            _itemDescPanel.transform.Find("Image").GetComponent<Image>().sprite = item.getItemIcon();
+            _itemDescPanel.transform.Find("ItemName").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
+            _itemDescPanel.transform.Find("ItemFrame/ItemImage").GetComponent<Image>().sprite = item.getItemIcon();
+            _itemDescPanel.transform.Find("DescScroll").GetComponentInChildren<TextMeshProUGUI>().text = item.getItemDescription();
         }
 
         private List<BaseItem> SortInventory(SortingType type)
@@ -233,18 +331,34 @@ namespace Player.Inventory
             {
                 Cursor.lockState = CursorLockMode.Confined;
                 _inventory.SetActive(true);
+                _backgroundPanel.SetActive(false);
                 _vitalsPanel.SetActive(false);
                 _infoPanel.SetActive(false);
                 _mapPanel.SetActive(false);
                 RenderInventory();
+
+                // Apply Opened Hotbar settings (from Image 2)
+                _hotbarRect.offsetMin = _openedOffsetMin; // Adjust Left/Bottom
+                _hotbarRect.offsetMax = _openedOffsetMax; // Adjust Right/Top
+
+                _hotbarGrid.spacing = _openedSpacing;
+                _hotbarGrid.childAlignment = _openedAlignment;
             }
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 _inventory.SetActive(false);
+                _backgroundPanel.SetActive(true);
                 _vitalsPanel.SetActive(true);
                 _infoPanel.SetActive(true);
                 _mapPanel.SetActive(true);
+
+                // Restore Closed Hotbar settings (from Image 1)
+                _hotbarRect.offsetMin = _closedOffsetMin; // Restore Left/Bottom
+                _hotbarRect.offsetMax = _closedOffsetMax; // Restore Right/Top
+
+                _hotbarGrid.spacing = _closedSpacing;
+                _hotbarGrid.childAlignment = _closedAlignment;
             }
         }
 
@@ -259,12 +373,13 @@ namespace Player.Inventory
 
             if (origin == ItemOrigin.INVENTORY)
             {
-                foreach (var invItem in _inventoryItems)
+                for (int i = _inventoryItems.Count - 1; i >= 0; i--)
                 {
-                    if (invItem.getID() == item.GetComponent<Draggable>()._item.getID())
+                    if (_inventoryItems[i].getID() == item.GetComponent<Draggable>()._item.getID())
                     {
-                        matchedSO = invItem;
-                        _inventoryItems.Remove(invItem);
+                        matchedSO = _inventoryItems[i];
+                        _inventoryItems.RemoveAt(i);
+                        break;
                     }
                 }
             }

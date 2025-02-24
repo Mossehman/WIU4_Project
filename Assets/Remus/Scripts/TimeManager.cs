@@ -130,7 +130,7 @@ public class TimeManager : MonoBehaviour
         volumetricFogMaterial.SetFloat("_DensityMultiplier", newDensity);
 
         // Debugging output
-        Debug.Log($"[Fog Update] Time: {hours}:{minutes} | Target Density: {targetFogDensity} | Actual Density: {newDensity}");
+        //Debug.Log($"[Fog Update] Time: {hours}:{minutes} | Target Density: {targetFogDensity} | Actual Density: {newDensity}");
     }
 }
 
