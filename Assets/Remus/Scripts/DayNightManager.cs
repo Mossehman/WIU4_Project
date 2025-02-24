@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class DayNightCycle : MonoBehaviour
 {
@@ -18,26 +18,11 @@ public class DayNightCycle : MonoBehaviour
         // Rotate the sun naturally over time
         sun.transform.Rotate(Vector3.right * (360f / dayLengthInSeconds) * Time.deltaTime);
 
-        // Convert sun rotation to time of day (0° = 8 AM, 360° = next 8 AM)
+        // Convert sun rotation to time of day (0Â° = 8 AM, 360Â° = next 8 AM)
         float normalizedRotation = sun.transform.eulerAngles.x;
         currentTime = (normalizedRotation / 360f) * 24f + startTime;
 
         // Keep time within 0-24 hour range
         if (currentTime >= 24f) currentTime -= 24f;
-
-        // Debug: Show time of day in console
-        //Debug.Log($"Time: {FormatTime(currentTime)}");
-    }
-
-    string FormatTime(float time)
-    {
-        int hours = Mathf.FloorToInt(time);
-        int minutes = Mathf.FloorToInt((time - hours) * 60);
-        string amPm = (hours >= 12) ? "PM" : "AM";
-
-        if (hours > 12) hours -= 12;
-        if (hours == 0) hours = 12;
-
-        return $"{hours:D2}:{minutes:D2} {amPm}";
     }
 }

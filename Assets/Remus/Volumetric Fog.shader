@@ -33,7 +33,7 @@ Shader "Custom/Volumetric Fog"
 
             float4 _Color;
             float _MaxDistance;
-            float _DensityMultiplier;
+            uniform float _DensityMultiplier;
             float _StepSize;
             float _NoiseOffset;
             TEXTURE3D(_FogNoise);

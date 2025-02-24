@@ -61,6 +61,8 @@ namespace Player.Inventory
         [SerializeField]    private GameObject              _infoPanel;
         [SerializeField]    private GameObject              _mapPanel;
 
+
+
         void Start()
         {
             EventManager.Connect("OnItemMove", OnItemMove);
@@ -93,16 +95,27 @@ namespace Player.Inventory
                 ToggleInventory();
             }
 
+            if (Input.GetKeyDown(KeyCode.Y) && _currentlySelected != null)
+            {
+                DropItem(_currentlySelected);
+            }
+
             SortInventory(_currentSort);
         }
 
         public void DropItem(BaseItem droppedItem)
         {
-            foreach (var item in _inventoryItems)
+            if (_inventoryItems.Contains(droppedItem))
             {
-                if (item.getID() == droppedItem.getID())
+                _inventoryItems.Remove(droppedItem);
+
+                // Instantiate the item model in front of the player
+                GameObject droppedModel = Instantiate(droppedItem.getItemModel(), transform.position + transform.forward, Quaternion.identity);
+                ItemModelScript itemScript = droppedModel.GetComponent<ItemModelScript>();
+
+                if (itemScript != null)
                 {
-                    droppedItem.getItemModel().GetComponent<ItemModelScript>().OnDropItem(droppedItem);
+                    itemScript.OnDropItem(droppedItem, transform.forward, 5.0f); // Apply force in front
                 }
             }
         }

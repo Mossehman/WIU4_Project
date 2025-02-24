@@ -52,6 +52,8 @@ public class ItemModelScript : MonoBehaviour
         PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
         if (playerInventory != null && item != null)
         {
+            playerInventory.AddItem(item);
+            Destroy(gameObject); // Remove the 3D model after adding it to inventory
         }
     }
 

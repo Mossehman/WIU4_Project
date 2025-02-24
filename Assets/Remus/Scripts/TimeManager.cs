@@ -17,6 +17,10 @@ public class TimeManager : MonoBehaviour
 
     public TimeOfTheDay timeOfTheDay;
 
+    [SerializeField] private Material volumetricFogMaterial; // Reference to the fog material
+    private float targetFogDensity = 0.02f; // Default day fog density
+    private float fogTransitionSpeed = 1f;  // Speed of fog transitions
+
     private void Start()
     {
         EventManager.CreateEvent("OnHourPassed");
@@ -31,6 +35,8 @@ public class TimeManager : MonoBehaviour
             timeAccumulator -= (secondsPerHour / 60f);
             UpdateTime();
         }
+
+        UpdateFogDensity();
     }
 
     void UpdateTime()
@@ -99,6 +105,32 @@ public class TimeManager : MonoBehaviour
             timeOfTheDay = TimeOfTheDay.Afternoon;
         else
             timeOfTheDay = TimeOfTheDay.Night;
+
+        // Set target fog density based on time of day
+        if (timeOfTheDay == TimeOfTheDay.Night || timeOfTheDay == TimeOfTheDay.Midnight)
+        {
+            targetFogDensity = 0f; // No fog at night
+        }
+        else if (timeOfTheDay == TimeOfTheDay.Morning)
+        {
+            targetFogDensity = Mathf.Lerp(0f, 0.02f, (hours - 6f) / 6f); // Morning transition (6 AM to 12 PM)
+        }
+        else
+        {
+            targetFogDensity = 0.02f; // Default fog during the day
+        }
+    }
+
+    void UpdateFogDensity()
+    {
+        if (volumetricFogMaterial == null) return;
+
+        float currentDensity = volumetricFogMaterial.GetFloat("_DensityMultiplier");
+        float newDensity = Mathf.Lerp(currentDensity, targetFogDensity, Time.deltaTime * fogTransitionSpeed);
+        volumetricFogMaterial.SetFloat("_DensityMultiplier", newDensity);
+
+        // Debugging output
+        Debug.Log($"[Fog Update] Time: {hours}:{minutes} | Target Density: {targetFogDensity} | Actual Density: {newDensity}");
     }
 }
 
