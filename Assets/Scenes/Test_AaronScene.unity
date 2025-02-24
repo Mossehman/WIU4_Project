@@ -5523,20 +5523,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4a1850009de8140a84a8765ec4fd0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxObjectsPerChunk: 10
-  objectPlacementChance: 600
+  maxObjectsPerChunk: 100
+  objectPlacementChance: 40
   drawGizmos: 0
   terrainAssets:
-  - {fileID: 6921072969651602650, guid: 35e7f3a55f5e1bb4ab5feb127ca85125, type: 3}
-  numSamples: 10
-  sampleRadius: 4
+  - {fileID: 11400000, guid: ab18ca85ef503e54ba972f039407d378, type: 2}
+  - {fileID: 11400000, guid: 05fdd35a5b611bb439b060208df68b10, type: 2}
+  - {fileID: 11400000, guid: 8af2b6f912f92aa4e84dde80d1bf2a22, type: 2}
+  - {fileID: 11400000, guid: bb3f147639d6fde4aa7a1177c21bbbdb, type: 2}
+  - {fileID: 11400000, guid: cd26d00b3bf038b429d3ca6c57a6f6db, type: 2}
+  - {fileID: 11400000, guid: adb0d2cf85fd8bd49b5412c26e257454, type: 2}
+  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
+  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
+  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
+  placementData: []
   terrainLayerMask:
     serializedVersion: 2
     m_Bits: 256
   raycastYOffset: 5
   raycastLength: 100
-  differenceInHeightThreshold: 9.5
-  differenceInNormalsThreshold: 0.51
 --- !u!114 &568084514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25783,6 +25788,12 @@ MonoBehaviour:
   Gravity: -1.49
   mouseSensitivity: 10
   cinemachineVirtualCamera: {fileID: 507487328}
+  firstPersonCamera: {fileID: 0}
+  thirdPersonCamera: {fileID: 0}
+  thirdPersonAnchor: {fileID: 0}
+  bobFrequency: 6
+  bobAmplitude: 0.1
+  bobSmoothing: 5
 --- !u!143 &1857863185
 CharacterController:
   m_ObjectHideFlags: 0
