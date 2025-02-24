@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleCamera();
 
+        CheckShelter();
+
         // Toggle between first-person and third-person view when "V" is pressed
         if (Keyboard.current.vKey.wasPressedThisFrame)
         {
@@ -162,6 +164,42 @@ public class PlayerController : MonoBehaviour
             bobTimer = 0;
             cameraOffset.m_Offset = Vector3.Lerp(cameraOffset.m_Offset, defaultOffset, Time.deltaTime * bobSmoothing);
         }
+    }
+
+    // Weather
+    private void CheckShelter()
+    {
+        Vector3 rayStart = transform.position + Vector3.up * 0.1f; // Slightly above the player to avoid ground collision
+        Vector3 rayDirection = Vector3.up;
+        float rayDistance = 1000f;
+
+        RaycastHit hit;
+        bool isSheltered = Physics.Raycast(rayStart, rayDirection, out hit, rayDistance);
+
+        // Draw the debug ray
+        Color rayColor = isSheltered ? Color.green : Color.red;
+        Debug.DrawRay(rayStart, rayDirection * rayDistance, rayColor);
+
+        // Debugging logs
+        if (isSheltered)
+        {
+            Debug.Log($"[PlayerController] Player is UNDER SHELTER. Hit: {hit.collider.gameObject.name}");
+        }
+        else
+        {
+            Debug.Log("[PlayerController] Player is EXPOSED to weather.");
+        }
+    }
+
+    // Public method for WeatherManager
+    public bool IsUnderShelter()
+    {
+        Vector3 rayStart = transform.position + Vector3.up * 0.1f;
+        Vector3 rayDirection = Vector3.up;
+        float rayDistance = 1000f;
+
+        RaycastHit hit;
+        return Physics.Raycast(rayStart, rayDirection, out hit, rayDistance);
     }
 
     // Input Callbacks

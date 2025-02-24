@@ -14,7 +14,7 @@ public static class EventManager
     /// </summary>
     private static Dictionary<string, List<Action<object[]>>> eventDictionary = new();
 
-    private static bool debugMode = true; // Enables or disables debugging logs for event tracking.
+    private static bool debugMode = false; // Enables or disables debugging logs for event tracking.
 
     /// <summary>
     /// Creates a new event if it does not already exist.
@@ -25,7 +25,7 @@ public static class EventManager
         if (!eventDictionary.ContainsKey(eventName))
         {
             eventDictionary[eventName] = new List<Action<object[]>>();
-            if (debugMode) Debug.Log($"[EventBus] Created event: {eventName}");
+            if (debugMode) Debug.Log($"[EventManager] Created event: {eventName}");
         }
     }
 
@@ -43,7 +43,7 @@ public static class EventManager
         if (!eventDictionary[eventName].Contains(callback))
         {
             eventDictionary[eventName].Add(callback);
-            if (debugMode) Debug.Log($"[EventBus] Listener added to event: {eventName} (Total: {eventDictionary[eventName].Count})");
+            if (debugMode) Debug.Log($"[EventManager] Listener added to event: {eventName} (Total: {eventDictionary[eventName].Count})");
         }
     }
 
@@ -58,7 +58,7 @@ public static class EventManager
         {
             List<Action<object[]>> listeners = new List<Action<object[]>>(eventDictionary[eventName]);
 
-            if (debugMode) Debug.Log($"[EventBus] Firing event: {eventName} (Listeners: {listeners.Count})");
+            if (debugMode) Debug.Log($"[EventManager] Firing event: {eventName} (Listeners: {listeners.Count})");
 
             foreach (var listener in listeners)
             {
@@ -67,7 +67,7 @@ public static class EventManager
         }
         else if (debugMode)
         {
-            Debug.LogWarning($"[EventBus] Attempted to fire non-existent event: {eventName}");
+            Debug.LogWarning($"[EventManager] Attempted to fire non-existent event: {eventName}");
         }
     }
 
@@ -82,12 +82,12 @@ public static class EventManager
         if (eventDictionary.ContainsKey(eventName))
         {
             eventDictionary[eventName].Remove(callback);
-            if (debugMode) Debug.Log($"[EventBus] Listener removed from event: {eventName} (Remaining: {eventDictionary[eventName].Count})");
+            if (debugMode) Debug.Log($"[EventManager] Listener removed from event: {eventName} (Remaining: {eventDictionary[eventName].Count})");
 
             if (eventDictionary[eventName].Count == 0)
             {
                 eventDictionary.Remove(eventName);
-                if (debugMode) Debug.Log($"[EventBus] Removed empty event: {eventName}");
+                if (debugMode) Debug.Log($"[EventManager] Removed empty event: {eventName}");
             }
         }
     }
@@ -99,7 +99,7 @@ public static class EventManager
     public static void ClearAllEvents()
     {
         eventDictionary.Clear();
-        if (debugMode) Debug.Log("[EventBus] All events cleared.");
+        if (debugMode) Debug.Log("[EventManager] All events cleared.");
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ public static class EventManager
     /// </summary>
     public static void DebugAllEvents()
     {
-        Debug.Log("======= [EventBus] Registered Events =======");
+        Debug.Log("======= [EventManager] Registered Events =======");
         foreach (var entry in eventDictionary)
         {
             Debug.Log($"Event: {entry.Key} | Listeners: {entry.Value.Count}");
@@ -142,6 +142,6 @@ public static class EventManager
     public static void EnableDebugging(bool enable)
     {
         debugMode = enable;
-        Debug.Log($"[EventBus] Debugging {(debugMode ? "Enabled" : "Disabled")}");
+        Debug.Log($"[EventManager] Debugging {(debugMode ? "Enabled" : "Disabled")}");
     }
 }

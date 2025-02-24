@@ -25,8 +25,16 @@ public class WeatherManager : MonoBehaviour
     private float currentIntensity = 0f;
     private Material activeMaterial; // Track current material
 
+    private PlayerController playerController;
+
     void Start()
     {
+        playerController = FindObjectOfType<PlayerController>(); // Cache player once
+        if (playerController == null)
+        {
+            Debug.LogError("[WeatherManager] PlayerController not found in the scene!");
+        }
+
         EventManager.Connect("OnHourPassed", HandleHourlyUpdate);
         temperature = baseTemperature;
         ResetMaterial(); // Ensure the effect starts disabled
@@ -35,20 +43,35 @@ public class WeatherManager : MonoBehaviour
 
     void HandleHourlyUpdate(object[] args)
     {
-        if (eventDuration > 0)
+        if (playerController == null) return; // Ensure player is found
+        bool isSheltered = playerController.IsUnderShelter();
+
+        // Stop the event if the player is under shelter
+        if (isSheltered)
         {
-            eventDuration--;
-            if (eventDuration == 0)
-            {
-                currentWeather = WeatherType.None;
-                Debug.Log("[WeatherManager] Weather event ended.");
-                targetIntensity = 0f; // Start fading out effect
-                if (AcidRainParticles != null) AcidRainParticles.Stop();
-            }
+            Debug.Log("[WeatherManager] Player entered shelter. Stopping weather event.");
+            currentWeather = WeatherType.None; // Clear weather
+            eventDuration = 0; // Forcefully end the event
+            targetIntensity = 0f; // Disable effects
+            if (AcidRainParticles != null) AcidRainParticles.Stop();
         }
         else
         {
-            TryStartWeatherEvent();
+            if (eventDuration > 0)
+            {
+                eventDuration--;
+                if (eventDuration == 0)
+                {
+                    currentWeather = WeatherType.None;
+                    Debug.Log("[WeatherManager] Weather event ended.");
+                    targetIntensity = 0f; // Fade out effect
+                    if (AcidRainParticles != null) AcidRainParticles.Stop();
+                }
+            }
+            else
+            {
+                TryStartWeatherEvent();
+            }
         }
 
         AdjustTemperature();
@@ -84,6 +107,12 @@ public class WeatherManager : MonoBehaviour
 
     void AdjustTemperature()
     {
+        if (playerController != null && playerController.IsUnderShelter())
+        {
+            temperature = Mathf.MoveTowards(temperature, Random.Range(40f, 50f), 500f * Time.deltaTime);
+            return; // Stop further adjustments
+        }
+
         float targetTemperature = baseTemperature; // Default normal temp (40-50°C)
 
         if (eventDuration > 0) // Weather event is active
@@ -91,13 +120,13 @@ public class WeatherManager : MonoBehaviour
             switch (currentWeather)
             {
                 case WeatherType.Blizzard:
-                    targetTemperature = Random.Range(-150f, -200f); // Drastic drop
+                    targetTemperature = Random.Range(-150f, -200f);
                     break;
                 case WeatherType.Snowstorm:
                     targetTemperature = Random.Range(-50f, -100f);
                     break;
                 case WeatherType.Heatwave:
-                    targetTemperature = Random.Range(300f, 500f); // Drastic increase
+                    targetTemperature = Random.Range(300f, 500f);
                     break;
                 case WeatherType.Sandstorm:
                     targetTemperature = Random.Range(100f, 250f);
@@ -108,19 +137,26 @@ public class WeatherManager : MonoBehaviour
             }
         }
 
-        // If event ends, smoothly return to normal temp range (40-50°C)
-        if (eventDuration == 0)
-        {
-            targetTemperature = Random.Range(40f, 50f);
-        }
-
-        float changeSpeed = (eventDuration > 0) ? 500f : 50f; // Faster change when event happens
+        float changeSpeed = (eventDuration > 0) ? 500f : 50f;
         temperature = Mathf.MoveTowards(temperature, targetTemperature, changeSpeed * Time.deltaTime);
     }
 
     void UpdateWeatherEffects()
     {
-        if (FullScreenFeature == null) return;
+        if (FullScreenFeature == null || playerController == null) return;
+
+        bool isSheltered = playerController.IsUnderShelter();
+
+        if (isSheltered)
+        {
+            Debug.Log("[WeatherManager] Disabling weather effects because player is under shelter.");
+            targetIntensity = 0f;
+            if (AcidRainParticles != null) AcidRainParticles.Stop();
+            FullScreenFeature.passMaterial = null; // Remove shader effects
+            return;
+        }
+
+        Debug.Log($"[WeatherManager] Applying Weather Effect: {currentWeather}");
 
         switch (currentWeather)
         {
@@ -128,31 +164,26 @@ public class WeatherManager : MonoBehaviour
                 activeMaterial = BlizzardMaterial;
                 targetIntensity = 4f;
                 break;
-
             case WeatherType.Snowstorm:
                 activeMaterial = SnowstormMaterial;
                 targetIntensity = 2f;
                 break;
-
             case WeatherType.Sandstorm:
                 activeMaterial = SandstormMaterial;
                 targetIntensity = 3f;
                 break;
-
             case WeatherType.Heatwave:
                 activeMaterial = HeatwaveMaterial;
                 targetIntensity = 3.5f;
                 break;
-
             case WeatherType.AcidRain:
                 activeMaterial = AcidRainMaterial;
                 targetIntensity = 2f;
-                if (AcidRainParticles != null) AcidRainParticles.Play(); // Start rain particles
+                if (AcidRainParticles != null) AcidRainParticles.Play();
                 break;
-
             default:
                 targetIntensity = 0f;
-                if (AcidRainParticles != null) AcidRainParticles.Stop(); // Stop rain particles
+                if (AcidRainParticles != null) AcidRainParticles.Stop();
                 break;
         }
 
@@ -167,7 +198,14 @@ public class WeatherManager : MonoBehaviour
         currentIntensity = Mathf.Lerp(currentIntensity, targetIntensity, Time.deltaTime * 5f);
         activeMaterial.SetFloat("_VignetteIntensity", currentIntensity);
 
-        // Debugging output
+        // If targetIntensity is 0, fully remove the effect
+        if (Mathf.Approximately(targetIntensity, 0f))
+        {
+            Debug.Log("[WeatherManager] Removing weather effect completely.");
+            FullScreenFeature.passMaterial = null; // Remove the effect
+            activeMaterial = null; // Reset activeMaterial to avoid lingering effects
+        }
+
         Debug.Log($"[WeatherManager] Updating Intensity: {currentIntensity}");
     }
 
@@ -182,15 +220,10 @@ public class WeatherManager : MonoBehaviour
 
     void UpdateWeatherText()
     {
+        if (WeatherText == null) return; // Prevent errors
+
         string weatherStatus = currentWeather == WeatherType.None ? "Clear Skies" : currentWeather.ToString();
         if (currentWeather == WeatherType.AcidRain) { weatherStatus = "Acid Rain"; }
         WeatherText.text = $"{weatherStatus} {temperature:F1}°C";
-    }
-
-    bool IsPlayerUnderShelter()
-    {
-        Transform player = GameObject.FindWithTag("Player").transform;
-        RaycastHit2D hit = Physics2D.Raycast(player.position, Vector2.up, 10f)
-        return hit.collider != null;
     }
 }
