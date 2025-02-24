@@ -19,4 +19,7 @@ MonoBehaviour:
   itemModel: {fileID: 0}
   _weight: 20
   _quantity: 0
-  recipes: []
+  recipes:
+  - data:
+    - itemID: ID3
+      quantity: 0

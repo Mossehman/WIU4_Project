@@ -33,6 +33,8 @@ public class CraftingManager : MonoBehaviour
                 _recipes.Add(recipe);
             }
         }
+
+        RenderRecipes();
     }
 
     // Update is called once per frame
@@ -64,7 +66,8 @@ public class CraftingManager : MonoBehaviour
     {
         _currentRecipe = recipe;
         _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemName").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
-        _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemDesc").GetComponent<TextMeshProUGUI>().text = item.getItemDescription();
+        _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemDesc").
+                            transform.Find("Viewport").transform.Find("Content").GetComponent<TextMeshProUGUI>().text = item.getItemDescription();
         _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemIcon").GetComponent<Image>().sprite = item.getItemIcon();
         _currentRecipePanel.transform.Find("CraftButton").GetComponent<Button>().onClick.AddListener(() => Craft(item, recipe));
 
@@ -85,7 +88,8 @@ public class CraftingManager : MonoBehaviour
             }
             if (matchedSO.getID() != null)
             {
-                GameObject ingredientGO = Instantiate(_ingredientPrefab, _currentRecipePanel.transform.Find("RequiredMaterials"));
+                GameObject ingredientGO = Instantiate(_ingredientPrefab, _currentRecipePanel.transform.Find("RequiredMaterials").
+                                                                                            transform.Find("Viewport").transform.Find("Content"));
                 ingredientGO.GetComponent<Image>().sprite = matchedSO.getItemIcon();
                 ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text = matchedSO._quantity.ToString() + " / " + ingredient.quantity.ToString();
             }
