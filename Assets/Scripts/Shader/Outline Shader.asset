@@ -17,6 +17,7 @@ MonoBehaviour:
   toProfile: 0
   outlineColor: {r: 0, g: 0, b: 0, a: 0}
   outlineScale: 1
+  normalBuffer: {fileID: 0}
   depthThreshold: 1.5
   depthNormalThreshold: 0.5
   depthNormalThresholdScale: 7

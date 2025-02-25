@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 2404836287284317060}
   - component: {fileID: 2971399500059962608}
   - component: {fileID: 282229235524459923}
-  m_Layer: 0
+  - component: {fileID: -9120984955812008043}
+  m_Layer: 25
   m_Name: Cactus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,6 +72,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.0238953, y: 0.31893206, z: 5.2423077}
   m_Center: {x: 0.09957123, y: 0.2542503, z: 2.1211538}
+--- !u!114 &-9120984955812008043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478388737408944165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17ff387705490a54282583e04a8fe3b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  health: 0
+  lootTable:
+  - itemDropList:
+    - {fileID: 1603469099823119648, guid: a40b5aae186233b46854709a7c548c1b, type: 3}
+    - {fileID: 1603469099823119648, guid: a40b5aae186233b46854709a7c548c1b, type: 3}
+  - itemDropList:
+    - {fileID: 1603469099823119648, guid: a40b5aae186233b46854709a7c548c1b, type: 3}
 --- !u!1001 &1509741956864435985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -139,6 +160,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Catcus
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 126b4f4a62cb3d447a8b30bc9d486638, type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -162,6 +187,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2404836287284317060}
     m_Modifications:
+    - target: {fileID: 113916206264112503, guid: d5c6d1b47b6a5ab4e9d90606e072b371, type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 779933292414892656, guid: d5c6d1b47b6a5ab4e9d90606e072b371, type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 4709879005014521657, guid: d5c6d1b47b6a5ab4e9d90606e072b371, type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 4709914530705142259, guid: d5c6d1b47b6a5ab4e9d90606e072b371, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.3
@@ -210,9 +247,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7400851804026958755, guid: d5c6d1b47b6a5ab4e9d90606e072b371, type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 8708259251645793091, guid: d5c6d1b47b6a5ab4e9d90606e072b371, type: 3}
       propertyPath: m_Name
       value: Cactus_Imposter
+      objectReference: {fileID: 0}
+    - target: {fileID: 8708259251645793091, guid: d5c6d1b47b6a5ab4e9d90606e072b371, type: 3}
+      propertyPath: m_Layer
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -32,7 +32,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8348406ff29047a4fb0434c408a532e9, type: 3}
   m_Name: TemplateRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   postShaders:
   - {fileID: 11400000, guid: 1053c27aeb15fa8438c6d5fc03fd9fcf, type: 2}
 --- !u!114 &11400000

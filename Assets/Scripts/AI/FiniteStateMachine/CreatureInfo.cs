@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Assets.Scripts.AI.FiniteStateMachine
 {
     // Storage for entity stats
-    public class CreatureInfo : MonoBehaviour
+    public class CreatureInfo : MonoBehaviour, IDamageable
     {
         [Header("Basic Info")]
         private float maxhealth;
@@ -97,6 +97,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     AudioEventSystem.PlaySound(dead.name, default, 1, transform.position);
                     fsm.enabled = false;
                     if (animator != null) animator.SetBool("isMoving", false);
+                    OnDeath();
                     isDead = true;
                 }
             };
@@ -298,6 +299,17 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             Gizmos.DrawCube(transform.position + new Vector3(0, 4, 0), new Vector3(1, 1, 1));
             Gizmos.color = new Color(0, 0, 1, 0.25f);
             Gizmos.DrawLine(transform.position, (transform.position + transform.forward * 5f));
+        }
+
+        public void Damage(int damageValue)
+        {
+            Health -= damageValue;
+        }
+
+        public void OnDeath()
+        {
+            Debug.Log("OnDeath called!!!");
+            return;
         }
     }
     [Serializable]
