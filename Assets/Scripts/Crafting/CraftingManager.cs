@@ -54,7 +54,7 @@ public class CraftingManager : MonoBehaviour
             foreach (CraftingRecipe recipe in item.recipes)
             {
                 GameObject newRecipe = Instantiate(_recipePrefab, _catalogPanel.transform);
-                newRecipe.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
+                newRecipe.transform.Find("NameText").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
                 newRecipe.transform.Find("Icon").GetComponent<Image>().sprite = item.getItemIcon();
                 newRecipe.GetComponent<Button>().onClick.AddListener(() => ShowRecipe(item, recipe));
             }
@@ -65,21 +65,23 @@ public class CraftingManager : MonoBehaviour
     public void ShowRecipe(BaseItem item, CraftingRecipe recipe)
     {
         _currentRecipe = recipe;
-        _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemName").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
-        _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemDesc").
+        _currentRecipePanel.transform.Find("InfoPanel").transform.Find("InfoName").GetComponent<TextMeshProUGUI>().text = item.getDisplayName();
+        _currentRecipePanel.transform.Find("InfoPanel").transform.Find("InfoDesc").
                             transform.Find("Viewport").transform.Find("Content").GetComponent<TextMeshProUGUI>().text = item.getItemDescription();
-        _currentRecipePanel.transform.Find("ItemInfo").transform.Find("ItemIcon").GetComponent<Image>().sprite = item.getItemIcon();
-        _currentRecipePanel.transform.Find("CraftButton").GetComponent<Button>().onClick.AddListener(() => Craft(item, recipe));
+        _currentRecipePanel.transform.Find("InfoPanel").transform.Find("InfoIcon").GetComponent<Image>().sprite = item.getItemIcon();
+        _currentRecipePanel.transform.Find("CraftPanel").transform.Find("CraftBtn").GetComponent<Button>().onClick.AddListener(() => Craft(item, recipe));
+
+        Transform materialsContent = _currentRecipePanel.transform.Find("MaterialsPanel").Find("Viewport").Find("Content");
+
+        // **Clear the previous ingredients before adding new ones**
+        foreach (Transform child in materialsContent)
+        {
+            Destroy(child.gameObject);
+        }
 
         foreach (RecipeData ingredient in recipe.data)
         {
-            foreach (Transform child in _currentRecipePanel.transform.Find("RequiredMaterials").transform.Find("Viewport").transform.Find("Content"))
-            {
-                Destroy(child.gameObject);
-            }
-
-            GameObject ingredientGO = Instantiate(_ingredientPrefab, _currentRecipePanel.transform.Find("RequiredMaterials").
-                                                                                            transform.Find("Viewport").transform.Find("Content"));
+            GameObject ingredientGO = Instantiate(_ingredientPrefab, materialsContent);
             ingredientGO.transform.Find("Icon").GetComponent<Image>().sprite = item.getItemIcon();
 
             BaseItem matchedSO = null;
@@ -88,19 +90,25 @@ public class CraftingManager : MonoBehaviour
                 if (things.getID() == ingredient.itemID)
                 {
                     matchedSO = things;
+                    break;
                 }
             }
-            if (matchedSO.getID() != null)
+
+            if (matchedSO != null)
             {
                 ingredientGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = matchedSO.getDisplayName();
-                ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text = matchedSO._quantity.ToString() + " / " + ingredient.quantity.ToString();
+                ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text =
+                    $"{matchedSO._quantity} / {ingredient.quantity}";
+            }
+            else
+            {
+                Debug.LogWarning($"Ingredient with ID {ingredient.itemID} not found!");
             }
         }
     }
 
     public void Craft(BaseItem item, CraftingRecipe recipe)
     {
-
         if (CanCraft(recipe))
         {
             _playerInventory.AddItem(item);

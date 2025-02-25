@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0945d4d5a5e834e84d1b2075b0bf18, type: 3}
-  m_Name: Leaf
+  m_Name: Stone
   m_EditorClassIdentifier: 
-  itemName: ID20
-  _displayName: Leaf
+  itemName: ID4
+  _displayName: Stone
   _itemDescription: E
   itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
-  itemModel: {fileID: 1603469099823119648, guid: a40b5aae186233b46854709a7c548c1b, type: 3}
+  itemModel: {fileID: 595492054557384492, guid: 2d2eb5c82b681164088c45c42cfe62c1, type: 3}
   _weight: 1
   _quantity: 0
   recipes: []

@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
 
         // Get the CinemachineCameraOffset component
         cameraOffset = cinemachineVirtualCamera.GetComponent<CinemachineCameraOffset>();
