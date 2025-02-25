@@ -54,12 +54,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public bool isDead = false;
 
         [Header("Audio Info")]
-        //public string goes = string.Empty;
-        //public string walk = string.Empty;
-        //public string rest = string.Empty;
-        //public string hurt = string.Empty;
-        //public string dead = string.Empty;
-        //public string attk = string.Empty;
         public SoundInfo goes;
         public SoundInfo walk;
         public SoundInfo rest;
@@ -150,13 +144,21 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 if (currentRawMoveDirection.sqrMagnitude > 0)
                 {
                     animator.SetBool("isMoving", true);
-                    //AudioManager.Instance.PlayNonSpamAudio(walk, ref sfxSource, default, true, Mathf.Pow(currentRawMoveDirection.sqrMagnitude, audioPitchAmp) , true);
                     AudioEventSystem.PlaySoundSmart(walk, ref sfxSource, default, default, true, true, Mathf.Pow(currentRawMoveDirection.sqrMagnitude, audioPitchAmp), true);
                 }
                 else
                     animator.SetBool("isMoving", false);
             }
             currentRawMoveDirection = Vector3.zero;
+
+            if (PlayerStats.Instance != null)
+            {
+                if ((PlayerStats.Instance.transform.position - transform.position).sqrMagnitude >= 150f * 150f ||
+                    transform.position.y <= -30f)
+                {
+                    Destroy(gameObject);
+                }
+            }
         }
         private void UpdateFlockingBehaviour()
         {
