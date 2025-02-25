@@ -31,6 +31,7 @@ struct Node {
 float surfaceLevel;     // the defined value to determine our marching cubes configuration based on which 8 points in the cube are above or below the surface level
 int3 numPointsPerAxis;  // the number of marching cube sample points along each X Y and Z axis
 float3 chunkCenter;
+float3 voxelSize;
 
 //struct ObjectPlacementData {
 //    int3 voxelCellIndex;
@@ -66,10 +67,22 @@ int indexFromCoord(int3 pos) {
     return pos.z * numPointsPerAxis.z * numPointsPerAxis.y + pos.y * numPointsPerAxis.x + pos.x;
 }
 
-int2 createVertexID(int3 positionA, int3 positionB)
+int2 createVertexID(float3 positionA, float3 positionB)
 {
-    int indexA = indexFromCoord(positionA + int3(chunkCenter));
-    int indexB = indexFromCoord(positionB + int3(chunkCenter));
+// Quantize positions to the voxel grid
+    float3 quantPosA = round(positionA / voxelSize) * voxelSize;
+    float3 quantPosB = round(positionB / voxelSize) * voxelSize;
+
+    // Convert the quantized positions to integer grid coordinates
+    int3 intPosA = int3(round(quantPosA.x / voxelSize.x),
+                        round(quantPosA.y / voxelSize.y),
+                        round(quantPosA.z / voxelSize.z));
+    int3 intPosB = int3(round(quantPosB.x / voxelSize.x),
+                        round(quantPosB.y / voxelSize.y),
+                        round(quantPosB.z / voxelSize.z));
+
+    int indexA = indexFromCoord(intPosA);
+    int indexB = indexFromCoord(intPosB);
 
     return int2(min(indexA, indexB), max(indexA, indexB));
 }
@@ -79,6 +92,8 @@ int2 createVertexID(int3 positionA, int3 positionB)
 void MarchingCubes (int3 id : SV_DispatchThreadID)             //id represents the thread coordinate that is handling this specific dataset in the numthreads group
 {
     if (id.x >= numPointsPerAxis.x - 1 || id.y >= numPointsPerAxis.y - 1 || id.z >= numPointsPerAxis.z - 1) { return; } //each cube includes it's neighbouring points, so we do not check those
+
+
 
     float4 cubeCorners[8] = {
         cubePoints[indexFromCoord(id.x, id.y, id.z)],

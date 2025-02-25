@@ -133,13 +133,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447040605833934019}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: -0.1, z: 0.14}
-  m_LocalScale: {x: 1, y: 1, z: 0.47}
+  m_LocalRotation: {x: -0, y: 0.86884236, z: 0.495089, w: 0}
+  m_LocalPosition: {x: 0, y: -0.10000547, z: 0.14001489}
+  m_LocalScale: {x: 1.12, y: 1, z: 0.68}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8088236373916649264}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: -59.351, y: 180, z: 0}
 --- !u!33 &6102349454273335010
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -155,7 +155,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1447040605833934019}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -507,7 +507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highDetailMesh: {fileID: 8528698827391351446}
   lowDetailMesh: {fileID: 5976814273549729240}
-  distanceThreshold: 150
+  distanceThreshold: 50
 --- !u!1001 &8835340864583534535
 PrefabInstance:
   m_ObjectHideFlags: 0

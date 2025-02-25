@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1472926747619563161}
+  - component: {fileID: 3695282688378090866}
   m_Layer: 0
   m_Name: Rock4
   m_TagString: Untagged
@@ -32,6 +33,21 @@ Transform:
   - {fileID: 1315373718654717619}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3695282688378090866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006392862834217419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad6760832667a8941a98f71ed8d02eeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highDetailMesh: {fileID: 1804524810361689097}
+  lowDetailMesh: {fileID: 0}
+  distanceThreshold: 50
 --- !u!1001 &1570520491661322584
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84,6 +100,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock04_Model
       objectReference: {fileID: 0}
+    - target: {fileID: 3550674622187927972, guid: 04495688776eeaf4db3c87ce9c0db02a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1adcac65859b84249925e182e1d5bd39, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -92,5 +112,10 @@ PrefabInstance:
 --- !u!4 &1315373718654717619 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 04495688776eeaf4db3c87ce9c0db02a, type: 3}
+  m_PrefabInstance: {fileID: 1570520491661322584}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1804524810361689097 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 04495688776eeaf4db3c87ce9c0db02a, type: 3}
   m_PrefabInstance: {fileID: 1570520491661322584}
   m_PrefabAsset: {fileID: 0}

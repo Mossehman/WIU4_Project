@@ -13,12 +13,19 @@ public class MeshLOD : MonoBehaviour
         if (distToCamera > distanceThreshold * distanceThreshold)
         {
             highDetailMesh.SetActive(false);
-            lowDetailMesh.SetActive(true);
+
+            if (lowDetailMesh != null)
+            {
+                lowDetailMesh.SetActive(true);
+            }
         }
         else
         {
             highDetailMesh.SetActive(true);
-            lowDetailMesh.SetActive(false);
+            if (lowDetailMesh != null)
+            {
+                lowDetailMesh.SetActive(false);
+            }
         }
     }
 }

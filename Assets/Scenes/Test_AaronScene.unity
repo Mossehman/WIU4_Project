@@ -506,6 +506,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 705882094}
+  - {fileID: 1038644327}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &251251902
@@ -556,14 +557,70 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7700013520692240199, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: -7217877379597140344, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: -7179298692728363021, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: -6444965544435181472, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: -1453839977911274838, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: -1226680077662712447, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
     - target: {fileID: 919132149155446097, guid: f1694a831083dff438968c1e87a70b73, type: 3}
       propertyPath: m_Name
       value: grasshoppper_walk
       objectReference: {fileID: 0}
+    - target: {fileID: 1961451181069450730, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: 1994890359852157490, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: 2864460411980455820, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: 2959050291967743534, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: 3586865038219781304, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: 5585128554328450773, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
+    - target: {fileID: 5749837728474905931, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
     - target: {fileID: 5866666021909216657, guid: f1694a831083dff438968c1e87a70b73, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 0e7123f791dc95a4ea22aaf64159f46b, type: 2}
+    - target: {fileID: 9076382010676957703, guid: f1694a831083dff438968c1e87a70b73, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f75f5f177d64fe445add3204f060e8cf, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5502,14 +5559,14 @@ MonoBehaviour:
   placementScript: {fileID: 568084513}
   marchingCubes: {fileID: 7200000, guid: 4ecfb4dfb5a23514e854485642bd77d2, type: 3}
   surfaceLevel: 0.4
-  numPointsPerAxis: {x: 30, y: 90, z: 30}
+  numPointsPerAxis: {x: 15, y: 90, z: 15}
   bounds: {x: 20, y: 60, z: 20}
   center: {x: 1, y: 1, z: 1}
   offset: {x: 0, y: 0, z: 0}
   mat: {fileID: 0}
   chunkPrefab: {fileID: 4771254396308166945, guid: 00fb46ff2a8c5584e888c0fda1ef4151, type: 3}
   player: {fileID: 963194228}
-  chunkRenderDistance: {x: 10, y: 0, z: 10}
+  chunkRenderDistance: {x: 5, y: 0, z: 5}
   AStar: {fileID: 0}
 --- !u!114 &568084513
 MonoBehaviour:
@@ -5523,8 +5580,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4a1850009de8140a84a8765ec4fd0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxObjectsPerChunk: 100
-  objectPlacementChance: 40
+  maxObjectsPerChunk: 50
+  objectPlacementChance: 80
   drawGizmos: 0
   terrainAssets:
   - {fileID: 11400000, guid: ab18ca85ef503e54ba972f039407d378, type: 2}
@@ -15668,13 +15725,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038644326}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -89.73852, y: 6.671287, z: 34.80654}
-  m_LocalScale: {x: 20, y: 20, z: 20}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -13.02688, y: -1.7594999, z: -9.492705}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 895230566}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 204603446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1040315780
 GameObject:
@@ -28551,7 +28608,6 @@ SceneRoots:
   - {fileID: 160751066}
   - {fileID: 1576110143}
   - {fileID: 1857863188}
-  - {fileID: 1038644327}
   - {fileID: 204603446}
   - {fileID: 316683370}
   - {fileID: 1529901193}

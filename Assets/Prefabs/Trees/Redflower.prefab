@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highDetailMesh: {fileID: 4166660878433272414}
   lowDetailMesh: {fileID: 6999579483538846069}
-  distanceThreshold: 70
+  distanceThreshold: 50
 --- !u!1001 &3824570038753787663
 PrefabInstance:
   m_ObjectHideFlags: 0

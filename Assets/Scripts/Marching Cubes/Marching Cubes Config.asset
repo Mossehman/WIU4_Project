@@ -17,9 +17,10 @@ MonoBehaviour:
   lacunarity: 0.4
   persistence: 4.44
   noiseScale: 6.94
+  noiseWeight: 0.89
   sealTop: 1
   floorOffset: 6.7
-  weightMultiplier: 1.87
+  weightMultiplier: 1.67
   hardFloorHeight: 18.4
-  hardFloorWeight: 18.4
+  hardFloorWeight: 15.6
   shaderParams: {x: 1, y: 0, z: 0, w: 0}

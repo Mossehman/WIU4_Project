@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -54,8 +54,6 @@ public class MarchingCubesGenerator : MonoBehaviour
     private ComputeBuffer AStarBufferCount;
 
     //private Dictionary<Vector2Int, Chunk> unloadedChunks = new Dictionary<Vector2Int, Chunk>(); // When player render distance is on the edge of an existing chunk, set it to inactive instead of destroying it
-
-    bool updated = false;
 
 
     public void InitialiseNoiseData()
@@ -184,6 +182,12 @@ public class MarchingCubesGenerator : MonoBehaviour
         marchingCubes.SetInts("numPointsPerAxis", numPointsPerAxis.x, numPointsPerAxis.y, numPointsPerAxis.z);
         marchingCubes.SetFloat("surfaceLevel", surfaceLevel);
         marchingCubes.SetVector("chunkCenter", chunk.meshOffset);
+
+        Vector3 voxelSize = new Vector3(bounds.x / (numPointsPerAxis.x - 1),
+                           bounds.y / (numPointsPerAxis.y - 1),
+                           bounds.z / (numPointsPerAxis.z - 1));
+
+        marchingCubes.SetVector("voxelSize", voxelSize);
 
         AStarNodeBuffer.SetCounterValue(0);
         marchingCubes.SetBuffer(0, "aStarNodeBuffer", AStarNodeBuffer);
@@ -352,13 +356,6 @@ public class MarchingCubesGenerator : MonoBehaviour
             AStarNodeBuffer = new ComputeBuffer(numVoxels, stride, ComputeBufferType.Append);
             AStarBufferCount = new ComputeBuffer(1, sizeof(int), ComputeBufferType.Raw);
         }
-    }
-
-    private void OnValidate()
-    {
-        // Do not update the mesh when inspector data changes if we in play mode
-        if (!Application.isPlaying) return;
-        updated = true;
     }
 
     void ReleaseBuffers()

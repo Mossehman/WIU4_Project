@@ -35,10 +35,18 @@ public class Chunk : MonoBehaviour
         if (meshRenderer.enabled && !FrustumCull(bounds))
         {
             meshRenderer.enabled = false;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
         }
         else if (!meshRenderer.enabled && FrustumCull(bounds))
         {
             meshRenderer.enabled = true;
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(true);
+            }
         }
     }
 

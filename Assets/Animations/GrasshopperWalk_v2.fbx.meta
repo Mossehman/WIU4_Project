@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fe1b9b3a125350c42bc589306ea126d5
+guid: e86c51f825245cc4390318ec66ddb234
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -23,7 +23,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    importConstraints: 0
+    importConstraints: 1
     animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Grasshopper_run
+      name: Take 001
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0
-      lastFrame: 44
+      lastFrame: 36
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -124,7 +124,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 816afb2bdd788064cb2b0d83ab342d51, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: d0afb2beac35c7040a625ffc3399df70, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1

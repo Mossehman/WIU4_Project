@@ -34,6 +34,10 @@ public class BaseItem : ScriptableObject
 
     public GameObject getItemModel() { return itemModel;}
 
+    public virtual void OnItemHeld(GameObject holder) { return; }
+    public virtual void OnItemRightClick(GameObject holder) { return; } 
+    public virtual void OnItemLeftClick(GameObject holder) { return; } 
+
     public virtual void Init() { return; }
 }
 
