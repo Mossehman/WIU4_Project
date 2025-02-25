@@ -11596,6 +11596,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 251275612}
   m_CullTransparentMesh: 1
+--- !u!1 &259623425 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
+  m_PrefabInstance: {fileID: 2120184402}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &285993807
 GameObject:
   m_ObjectHideFlags: 0
@@ -25524,6 +25529,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
   m_PrefabInstance: {fileID: 2120184402}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &864178703
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259623425}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
+  m_Controller: {fileID: 9100000, guid: f8d968b9b5f473841b167e9a438d0065, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &865491677
 GameObject:
   m_ObjectHideFlags: 0
@@ -59217,13 +59243,22 @@ MonoBehaviour:
   drawGizmos: 0
   terrainAssets:
   - {fileID: 11400000, guid: ab18ca85ef503e54ba972f039407d378, type: 2}
-  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
   - {fileID: 11400000, guid: 05fdd35a5b611bb439b060208df68b10, type: 2}
   - {fileID: 11400000, guid: 8af2b6f912f92aa4e84dde80d1bf2a22, type: 2}
   - {fileID: 11400000, guid: bb3f147639d6fde4aa7a1177c21bbbdb, type: 2}
   - {fileID: 11400000, guid: cd26d00b3bf038b429d3ca6c57a6f6db, type: 2}
   - {fileID: 11400000, guid: adb0d2cf85fd8bd49b5412c26e257454, type: 2}
-  - {fileID: 11400000, guid: 4a0c0f0caf97cc847be54362f9a5e6e7, type: 2}
+  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
+  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
+  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
+  - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
+  - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
+  - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
+  - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
+  - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
+  - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
+  - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
+  - {fileID: 11400000, guid: 88ea5e871ca40e244b1c6ce32443c1eb, type: 2}
   placementData: []
   terrainLayerMask:
     serializedVersion: 2
@@ -64639,10 +64674,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8285882725250237189, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fb0760f4e3dc1aa49ba651235f68fa50, type: 2}
     - target: {fileID: 919132149155446097, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
       propertyPath: m_Name
       value: MC_RiggedModel_v4
       objectReference: {fileID: 0}
+    - target: {fileID: 2054708792091998333, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c1cac85e49408d84fa692d0d6e0564d9, type: 2}
     - target: {fileID: 5866666021909216657, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
       propertyPath: m_Controller
       value: 
@@ -64650,7 +64693,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 864178703}
   m_SourcePrefab: {fileID: 100100000, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
 --- !u!1 &2123446101
 GameObject:
