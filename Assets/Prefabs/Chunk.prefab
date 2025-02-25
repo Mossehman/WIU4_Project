@@ -103,7 +103,7 @@ MonoBehaviour:
   meshRenderer: {fileID: 4336600961799076949}
   meshCollider: {fileID: 1966218751267333945}
   meshOffset: {x: 0, y: 0, z: 0}
-  drawNodes: 1
+  drawNodes: 0
   AStarIndexes: []
   AStarPositions: []
 --- !u!64 &1966218751267333945

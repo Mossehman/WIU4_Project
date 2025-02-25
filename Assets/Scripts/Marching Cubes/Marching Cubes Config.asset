@@ -22,5 +22,5 @@ MonoBehaviour:
   floorOffset: 6.7
   weightMultiplier: 1.67
   hardFloorHeight: 18.4
-  hardFloorWeight: 15.6
+  hardFloorWeight: 18.6
   shaderParams: {x: 1, y: 0, z: 0, w: 0}
