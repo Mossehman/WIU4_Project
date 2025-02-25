@@ -11,20 +11,20 @@ public enum questStatus
 
 public class Quest : ScriptableObject
 {
-    [SerializeField] private string _questID;
-    [SerializeField] private string _questName;
-    [SerializeField] private List<Quest> _requriedQuests;
-    [SerializeField] private List<SubQuest> _subquests;
-    [SerializeField] private questStatus questStatus;
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]    private string              _questID;
+    [SerializeField]    private string              _questName;
+    [SerializeField]    private List<Quest>         _requriedQuests;
+    [SerializeField]    private List<SubQuest>      _subquests;
+    [SerializeField]    private questStatus         _questStatus;
+
+    private void OnValidate()
     {
-        
+        _questID = this.name;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string GetID() { return _questID; }
+    public string GetName() { return _questName; }
+    public List<Quest> GetRequriedQuests() { return _requriedQuests; }
+    public List <SubQuest> GetSubquests() { return _subquests; }
+    public questStatus GetQuestStatus() { return _questStatus; }
 }
