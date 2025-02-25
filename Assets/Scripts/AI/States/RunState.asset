@@ -18,6 +18,6 @@ MonoBehaviour:
   wallDetectionDistance: 10
   wallLayer:
     serializedVersion: 2
-    m_Bits: 131072
+    m_Bits: 131328
   turnSmoothness: 0.1
   runAwayRange: 55

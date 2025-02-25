@@ -83,7 +83,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 else
                 {
                     currentdirection = Vector3.Slerp(currentdirection, dir.normalized, 0.1f);
-                    stats.Move(speedmod * currentdirection);
+                    stats.Move(currentdirection, speedmod);
                 }
                 // Handle attack logic
                 if (currentattacktime > 0) currentattacktime -= Time.deltaTime;
@@ -95,6 +95,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     if (stats.target.TryGetComponent<CreatureInfo>(out var creaturestats))
                     {
                         creaturestats.Health -= damage;
+                        creaturestats.fsm.ForceSwapState("Run", stats.gameObject);
                         if (creaturestats.Health <= 0f)
                         {
                             stats.hunger += creaturestats.hunger * hungerGainMultiplier;

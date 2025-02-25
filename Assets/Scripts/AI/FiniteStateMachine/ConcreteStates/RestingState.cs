@@ -41,7 +41,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             {
                 Vector3 dir = stats.assignedHome.transform.position - stats.transform.position;
                 if (dir.sqrMagnitude >= shelterDetectionRange * shelterDetectionRange)
-                    stats.Move(dir.normalized * moveSpeedToShelter);
+                    stats.Move(dir.normalized, moveSpeedToShelter);
                 else
                     AudioEventSystem.PlaySoundSmart(stats.rest, ref stats.voiceSource, default, default, true, true, 1);
             }
