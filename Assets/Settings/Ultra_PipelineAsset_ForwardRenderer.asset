@@ -16,10 +16,25 @@ MonoBehaviour:
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 0
-  passMaterial: {fileID: 2100000, guid: bb1f631b449da1a47a119d3b4f1f185f, type: 2}
+  passMaterial: {fileID: 2100000, guid: 050e72fda87917346975b1250ed68bfb, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
+--- !u!114 &-3842426463039737114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8348406ff29047a4fb0434c408a532e9, type: 3}
+  m_Name: TemplateRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  postShaders:
+  - {fileID: 11400000, guid: 1053c27aeb15fa8438c6d5fc03fd9fcf, type: 2}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38,7 +53,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -9055223975590722860}
   - {fileID: 2810600014419442337}
-  m_RendererFeatureMap: d4825055c5615582a1ba2d69d2410127
+  - {fileID: -3842426463039737114}
+  m_RendererFeatureMap: d4825055c5615582a1ba2d69d2410127e6b2f46a7df5acca
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -72,7 +88,7 @@ MonoBehaviour:
     failOperation: 0
     zFailOperation: 0
   m_ShadowTransparentReceive: 1
-  m_RenderingMode: 0
+  m_RenderingMode: 1
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0

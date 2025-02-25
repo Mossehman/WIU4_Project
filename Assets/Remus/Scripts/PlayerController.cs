@@ -181,14 +181,14 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(rayStart, rayDirection * rayDistance, rayColor);
 
         // Debugging logs
-        if (isSheltered)
-        {
-            Debug.Log($"[PlayerController] Player is UNDER SHELTER. Hit: {hit.collider.gameObject.name}");
-        }
-        else
-        {
-            Debug.Log("[PlayerController] Player is EXPOSED to weather.");
-        }
+        //if (isSheltered)
+        //{
+        //    Debug.Log($"[PlayerController] Player is UNDER SHELTER. Hit: {hit.collider.gameObject.name}");
+        //}
+        //else
+        //{
+        //    Debug.Log("[PlayerController] Player is EXPOSED to weather.");
+        //}
     }
 
     // Public method for WeatherManager

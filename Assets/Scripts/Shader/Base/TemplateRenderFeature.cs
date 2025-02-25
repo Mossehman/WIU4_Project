@@ -27,10 +27,23 @@ public class TemplateRenderFeature : ScriptableRendererFeature
 
     public override void SetupRenderPasses(ScriptableRenderer renderer, in RenderingData renderingData)
     {
+        if (!IsMainCamera(renderingData.cameraData)) return;
+
         foreach (var shader in postShaders)
         {
             if (shader == null) { continue; }
             shader.GetPass().SetTarget(renderer.cameraColorTargetHandle);   // set our input target to the camera's color texture
         }
+    }
+
+    private bool IsMainCamera(CameraData cameraData)
+    {
+#if UNITY_EDITOR
+        // Handle scene view camera
+        if (cameraData.cameraType == CameraType.SceneView) return false;
+#endif
+
+        return cameraData.camera.CompareTag("MainCamera") ||
+               cameraData.camera == Camera.main;
     }
 }

@@ -21,4 +21,4 @@ MonoBehaviour:
   hungerGainMultiplier: 0.25
   speedmod: 1.2
   usesPathfinder: 1
-  pathUpdateCooldown: 1
+  pathUpdateCooldown: 5
