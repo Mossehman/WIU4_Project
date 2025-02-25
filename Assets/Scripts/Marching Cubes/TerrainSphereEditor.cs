@@ -49,5 +49,7 @@ public class TerrainSphereEditor : MonoBehaviour
                 }
             }
         }
+
+        Destroy(gameObject);
     }
 }

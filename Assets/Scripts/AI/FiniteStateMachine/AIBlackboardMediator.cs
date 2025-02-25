@@ -31,7 +31,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
             if (AITypeCounts.ContainsKey(layer) && AITypeCounts[layer] >= MaxAICountPerType)
             {
-                Debug.Log($"AI limit reached for layer {layer}. Cannot register more AIs.");
+                //Debug.Log($"AI limit reached for layer {layer}. Cannot register more AIs.");
                 Destroy(owner);
                 return;
             }

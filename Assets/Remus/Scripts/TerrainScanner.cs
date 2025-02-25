@@ -73,15 +73,21 @@ public class TerrainScanner : MonoBehaviour
 
     void ScanForObject()
     {
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        RaycastHit hit;
+        //Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        //RaycastHit hit;
+        //
+        //if (Physics.Raycast(ray, out hit, scanDistance, scannableLayer))
+        //{
+        //    if (hit.collider.CompareTag("Scannable"))
+        //    {
+        //        ShowScanPanel(hit.transform);
+        //    }
+        //}
 
-        if (Physics.Raycast(ray, out hit, scanDistance, scannableLayer))
+        Collider[] scannables = Physics.OverlapSphere(playerCamera.transform.position, scanDistance, scannableLayer);
+        foreach (Collider scannable in scannables)
         {
-            if (hit.collider.CompareTag("Scannable"))
-            {
-                ShowScanPanel(hit.transform);
-            }
+            ShowScanPanel(scannable.transform);
         }
     }
 

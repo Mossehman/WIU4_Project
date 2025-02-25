@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7ae79099f6134d44ac069f716d7fe5d, type: 3}
+  m_Name: Iron Spear (temp)
+  m_EditorClassIdentifier: 
+  itemName: ID16
+  _displayName: Ironite Spear
+  _itemDescription: Spear made of iron, does more damage to entites when thrown
+  itemIcon: {fileID: 21300000, guid: 8e61b22b19ce3d5459decceb777fbf72, type: 3}
+  itemModel: {fileID: 588426268175082474, guid: a97e2150f065dac44a3a96a919ca8d7c, type: 3}
+  _weight: 1
+  _quantity: 0
+  recipes:
+  - data:
+    - itemID: ID13
+      quantity: 3
+    - itemID: ID5
+      quantity: 2
+  damage: 5
+  reach: 8
+  range: 2
+  useCooldown: 0.4
+  holdToUse: 0
+  toolEffectorLayers:
+    serializedVersion: 2
+    m_Bits: 33554432
+  worldLayers:
+    serializedVersion: 2
+    m_Bits: 238945151

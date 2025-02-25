@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2375bc35afcc0b84f8e501d1df28fec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 5
-  weightModifier: -70
+  radius: 2
+  weightModifier: -50

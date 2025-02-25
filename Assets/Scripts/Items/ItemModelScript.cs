@@ -8,15 +8,28 @@ using UnityEngine;
 public class ItemModelScript : MonoBehaviour
 {
     [SerializeField] /// TODO: Remove SerializeField once system has been verified to work
+    private BaseItem itemData = null; // Stores a reference to our base item, that way we can instantiate it back into our list/inventory when picked up
     private BaseItem item = null; // Stores a reference to our base item, that way we can instantiate it back into our list/inventory when picked up
 
-    Rigidbody modelRB = null;    // Stores a reference to our Rigidbody for when we drop the item
-    Collider modelCollider = null;    // Stores a reference to our Collider for when we drop the item
+    public bool isDropped = true;
+
+    [HideInInspector] public Rigidbody modelRB = null;    // Stores a reference to our Rigidbody for when we drop the item
+    [HideInInspector] public Collider modelCollider = null;    // Stores a reference to our Collider for when we drop the item
 
     private void Awake()
     {
-        this.modelRB = GetComponent<Rigidbody>();
-        this.modelCollider = GetComponent<Collider>();
+        modelRB = GetComponent<Rigidbody>();
+        modelCollider = GetComponent<Collider>();
+    }
+
+    private void Start()
+    {
+        if (itemData != null)
+        {
+            BaseItem itemInstance = Instantiate(itemData);
+            itemInstance.Init();
+            item = itemInstance;
+        }
     }
 
     /// <summary>
@@ -31,6 +44,7 @@ public class ItemModelScript : MonoBehaviour
         this.item = item;
         modelRB.isKinematic = false;
         modelCollider.isTrigger = false;
+        isDropped = true;
 
         modelRB.AddForce(dropDirection * dropForce);
     }
@@ -45,10 +59,13 @@ public class ItemModelScript : MonoBehaviour
         this.item = item;
         modelRB.isKinematic = false;
         modelCollider.isTrigger = false;
+        isDropped = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!isDropped) { return; }
+
         PlayerInventory playerInventory = other.GetComponent<PlayerInventory>();
         if (playerInventory != null && item != null)
         {
@@ -56,6 +73,18 @@ public class ItemModelScript : MonoBehaviour
             Destroy(gameObject); // Remove the 3D model after adding it to inventory
         }
     }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (!isDropped) { return; }
+    //
+    //    PlayerInventory playerInventory = collision.gameObject.GetComponent<PlayerInventory>();
+    //    if (playerInventory != null && item != null)
+    //    {
+    //        playerInventory.AddItem(item);
+    //        Destroy(gameObject); // Remove the 3D model after adding it to inventory
+    //    }
+    //}
 
     public BaseItem getSO()
     {

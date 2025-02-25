@@ -126,7 +126,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     if (currentStateName == "Resting") return;
                     if (gameObject.layer != LayerMask.NameToLayer("Passive"))
                     {
-                        Debug.Log("Not passive skipping");
+                        //Debug.Log("Not passive skipping");
                         return;
                     }
                     GameObject hunter = data[0] as GameObject;
@@ -145,7 +145,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                         else
                         {
                             ForceSwapState("Run", hunter);
-                            Debug.Log(currentStateName);
+                            //Debug.Log(currentStateName);
                         }
                     }
                     break;

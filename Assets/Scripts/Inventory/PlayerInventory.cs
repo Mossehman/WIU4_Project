@@ -31,7 +31,8 @@ namespace Player.Inventory
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Inventory Logic")]
-        [SerializeField]    private List<BaseItem>          _inventoryItems;
+        [SerializeField]    private BaseItem[]              _startingItems;
+                            private List<BaseItem>          _inventoryItems;
         [SerializeField]    public float                    _baseWeight = 0.0f;
         [SerializeField]    public float                    _baseMaxWeight = 10.0f;
         [SerializeField]    private float                   _currentWeight;
@@ -50,7 +51,7 @@ namespace Player.Inventory
         [Header("Hotbar Logic")]
         [SerializeField]    private BaseItem[]              _hotbarItems;
                             private int                     _maxHotbarItems = 5;
-        [SerializeField]    private int                     _selectedHotbarIndex = -1;
+        [SerializeField]    private int                     _selectedHotbarIndex = 0;
         [SerializeField]    private Color                   _selectedSlotColor = Color.red;
         [SerializeField]    private Color                   _defaultSlotColor = Color.white;
 
@@ -71,6 +72,9 @@ namespace Player.Inventory
         [Header("Hotbar Transform Settings")]
         private RectTransform _hotbarRect;
         private GridLayoutGroup _hotbarGrid;
+
+        [Header("Item Visuals")]
+        [SerializeField]    private Transform               _playerHand;
 
         // Closed (default) state
         private Vector2 _closedOffsetMin;
@@ -165,6 +169,18 @@ namespace Player.Inventory
 
             // INVENTORY
             _inventoryItems = new List<BaseItem>();
+
+            if (_startingItems != null && _startingItems.Length > 0)
+            {
+                foreach (var item in _startingItems)
+                {
+                    if (item == null) continue;
+                    BaseItem itemInstance = Instantiate(item);
+                    itemInstance.Init();
+                    _inventoryItems.Add(itemInstance);
+                }
+            }
+
             _isLocked = new List<bool>();
             _currentWeight = _baseWeight;
 
@@ -199,6 +215,22 @@ namespace Player.Inventory
             _openedAlignment = TextAnchor.UpperCenter;
         }
 
+        private void DisplayItem(BaseItem item)
+        {
+            for (int i = 0; i < _playerHand.transform.childCount; i++)
+            {
+                Destroy(_playerHand.GetChild(i).gameObject);
+            }
+            if (_playerHand == null || item == null || item.getItemModel() == null) { return; }
+            GameObject itemToDisplay = Instantiate(item.getItemModel(), _playerHand.transform);
+            if (itemToDisplay.TryGetComponent(out ItemModelScript itemData))
+            {
+                itemData.isDropped = false;
+                itemData.modelRB.isKinematic = true;
+                itemData.modelCollider.isTrigger = true;
+            }
+        }
+
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.I))
@@ -215,6 +247,11 @@ namespace Player.Inventory
                     _selectedHotbarIndex = i;
                     Debug.Log($"Hotbar slot {i + 1} selected.");
                     UpdateHotbarUI();
+
+                    if (_hotbarItems[i] != null)
+                    {
+                        DisplayItem(_hotbarItems[i]);
+                    }
                 }
             }
 
@@ -229,6 +266,14 @@ namespace Player.Inventory
                 else if (Input.GetMouseButton(1))
                 {
                     _hotbarItems[_selectedHotbarIndex].OnItemRightClick(gameObject);
+                }
+                else if (Input.GetMouseButtonUp(0))
+                {
+                    _hotbarItems[_selectedHotbarIndex].OnItemLeftUp(gameObject);
+                }
+                else if (Input.GetMouseButtonUp(1))
+                {
+                    _hotbarItems[_selectedHotbarIndex].OnItemRightUp(gameObject);
                 }
             }
 
@@ -276,6 +321,14 @@ namespace Player.Inventory
             // Remove item from hotbar
             _hotbarItems[_selectedHotbarIndex] = null;
 
+            if (_playerHand != null)
+            {
+                for (int i = 0; i < _playerHand.transform.childCount; i++)
+                {
+                    Destroy(_playerHand.GetChild(i).gameObject);
+                }
+            }
+
             // **Destroy the hotbar UI prefab for this slot**
             Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
             if (slotTransform.childCount > 0)
@@ -312,30 +365,54 @@ namespace Player.Inventory
                     slotImage.color = (i == _selectedHotbarIndex) ? _selectedSlotColor : _defaultSlotColor;
                 }
             }
-        }
 
-        public void AddItem(BaseItem newItem)
-        {
-            foreach (BaseItem item in _inventoryItems)
+            if (_selectedHotbarIndex != -1)
             {
-                if (item.getID() == newItem.getID())
-                {
-                    Debug.Log($"Item {item.getDisplayName()} already exists in inventory. Increasing quantity.");
-
-                    item._quantity += newItem._quantity; // Fix: Increment based on newItem's quantity
-                    _currentWeight += newItem.getWeight() * newItem._quantity;
-                    return;
-                }
+                DisplayItem(_hotbarItems[_selectedHotbarIndex]);
             }
-
-            // Fix: Ensure newItem starts with quantity 1 if it's being added for the first time
-            newItem._quantity = Mathf.Max(newItem._quantity, 1);
-            _inventoryItems.Add(newItem);
-            _isLocked.Add(false);
-            _currentWeight += newItem.getWeight() * newItem._quantity;
-
-            Debug.Log($"Added new item: {newItem.getDisplayName()} with quantity {newItem._quantity}");
         }
+
+		public void AddItem(BaseItem newItem)
+		{
+			// Try to add to hotbar first
+			for (int i = 0; i < _maxHotbarItems; i++)
+			{
+				if (_hotbarItems[i] != null && _hotbarItems[i].getID() == newItem.getID())
+				{
+					_hotbarItems[i]._quantity += newItem._quantity;
+					_currentWeight += newItem.getWeight() * newItem._quantity;
+					return;
+				}
+
+				if (_hotbarItems[i] == null)
+				{
+					_hotbarItems[i] = newItem;
+					_isLocked.Add(false);
+					_currentWeight += newItem.getWeight() * newItem._quantity;
+					return;
+				}
+			}
+
+			// If hotbar is full, try adding to inventory
+			foreach (var item in _inventoryItems)
+			{
+				if (item.getID() == newItem.getID())
+				{
+					Debug.Log($"Item {item.getDisplayName()} already exists in inventory. Increasing quantity.");
+					item._quantity += newItem._quantity;
+					_currentWeight += newItem.getWeight() * newItem._quantity;
+					return;
+				}
+			}
+
+			// Ensure newItem starts with quantity 1 if it's being added for the first time
+			newItem._quantity = Mathf.Max(newItem._quantity, 1);
+			_inventoryItems.Add(newItem);
+			_isLocked.Add(false);
+			_currentWeight += newItem.getWeight() * newItem._quantity;
+
+			Debug.Log($"Added new item: {newItem.getDisplayName()} with quantity {newItem._quantity}");
+		}
 
         private void RenderInventory()
         {
@@ -547,6 +624,7 @@ namespace Player.Inventory
             GameObject item = args[0] as GameObject;
             ItemOrigin origin = (ItemOrigin)args[1];
             ItemDestination destination = (ItemDestination)args[2];
+            PlacableSlot slot = (PlacableSlot)args[3];
 
             BaseItem matchedSO;
 
@@ -566,7 +644,8 @@ namespace Player.Inventory
             {
                 for (int i = 0; i < _maxHotbarItems; i++)
                 {
-                    if (_hotbarItems[i].getID() == item.GetComponent<Draggable>()._item.getID())
+                    if (_hotbarItems[i] == null) { continue; }
+                    if (_hotbarItems[i] == item.GetComponent<Draggable>()._item)
                     {
                         _hotbarItems[i] = null;
                         break;
@@ -584,10 +663,11 @@ namespace Player.Inventory
             }
             else if (destination == ItemDestination.HOTBAR)
             {
-                for (int i = 0; i < _maxHotbarItems; i++)
+                for (int i = 0; i < _hotBarPanel.transform.childCount; i++)
                 {
-                    if (_hotbarItems[i] == null)
+                    if (_hotBarPanel.transform.GetChild(i).TryGetComponent<PlacableSlot>(out PlacableSlot slotData))
                     {
+                        if (slotData != slot) { continue; }
                         _hotbarItems[i] = item.GetComponent<Draggable>()._item;
                         break;
                     }
@@ -595,7 +675,12 @@ namespace Player.Inventory
             }
             else if (destination == ItemDestination.STORAGE)
             {
+            
+            }
 
+            if (_selectedHotbarIndex != -1)
+            {
+                DisplayItem(_hotbarItems[_selectedHotbarIndex]);
             }
         }
 
