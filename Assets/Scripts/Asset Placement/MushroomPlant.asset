@@ -20,7 +20,7 @@ MonoBehaviour:
   minNormalsThreshold: 0.7
   hasMaxNormals: 0
   maxNormalsThreshold: 0
-  numTerrainSamples: 5
-  sampleRadius: 4
+  numTerrainSamples: 10
+  sampleRadius: 6
   heightDifferenceThreshold: 12.79
-  normalDifferenceThreshold: -0.4
+  normalDifferenceThreshold: -0.3

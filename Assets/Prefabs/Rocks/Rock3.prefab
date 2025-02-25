@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2880679104923386787}
   - component: {fileID: -6158311838080118785}
+  - component: {fileID: 5428516730939632208}
   m_Layer: 0
   m_Name: Rock3
   m_TagString: Untagged
@@ -48,6 +49,27 @@ MonoBehaviour:
   highDetailMesh: {fileID: 1587096135249786178}
   lowDetailMesh: {fileID: 0}
   distanceThreshold: 50
+--- !u!65 &5428516730939632208
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384115437653816173}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.02452247, y: 0.025591297, z: 0.016463552}
+  m_Center: {x: 0, y: 0.0006882582, z: 0.0072156712}
 --- !u!1001 &1929535529644738579
 PrefabInstance:
   m_ObjectHideFlags: 0
