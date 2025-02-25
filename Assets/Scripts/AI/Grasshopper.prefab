@@ -105,6 +105,7 @@ MonoBehaviour:
   segs: {fileID: 68349615528311788, guid: a4d77473a22460d43b39286f17f85802, type: 3}
   fsm: {fileID: 0}
   FlockDirection: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
   FlockSpeed: 2
   FlockTightness: 1
   MaxFlockDistance: 5
@@ -113,6 +114,7 @@ MonoBehaviour:
   assignedHome: {fileID: 0}
   isSheltered: 0
   isDead: 0
+  isJumping: 0
   goes:
     name: GrasshopperCroaks
     isLibrary: 1
@@ -132,7 +134,7 @@ MonoBehaviour:
     name: grasshopper-attk
     isLibrary: 0
   voiceSource: {fileID: 0}
-  audioPitchAmp: 1
+  audioPitchAmp: 0.7
   animationSpeedAmp: 0.5
   animator: {fileID: 0}
 --- !u!114 &8243850050991039858

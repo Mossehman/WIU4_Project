@@ -30,9 +30,11 @@ public class CustomSRP : ScriptableRenderPass
     public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
     {
         var CameraData = renderingData.cameraData;
+        var camera = renderingData.cameraData.camera;
+
 
         // we only want our post processor to be applied in the game view
-        if (CameraData.camera.cameraType != CameraType.Game)
+        if (CameraData.camera.cameraType != CameraType.Game || !renderingData.cameraData.postProcessEnabled)
         {
             return;
         }

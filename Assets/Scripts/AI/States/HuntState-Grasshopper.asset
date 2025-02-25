@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HuntState-Grasshopper
   m_EditorClassIdentifier: 
   statetime: 20
-  attacktime: 0.8
+  attacktime: 1.8
   attackRange: 4
   huntRange: 45
   damage: 20
@@ -21,4 +21,4 @@ MonoBehaviour:
   hungerGainMultiplier: 0.25
   speedmod: 8
   usesPathfinder: 1
-  pathUpdateCooldown: 1
+  pathUpdateCooldown: 5

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7ae79099f6134d44ac069f716d7fe5d, type: 3}
+  m_Name: Test Tool
+  m_EditorClassIdentifier: 
+  itemName: New Tool
+  _displayName: Goober
+  _itemDescription: Testing tool
+  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemModel: {fileID: 4656003854231050838, guid: fa43291b43d6cb949a64290e6abebd70, type: 3}
+  _weight: 0
+  _quantity: 0
+  recipes: []
+  damage: 5
+  reach: 5
+  range: 2
+  useCooldown: 0.5
+  holdToUse: 0
+  toolEffectorLayers:
+    serializedVersion: 2
+    m_Bits: 33554432
+  worldLayers:
+    serializedVersion: 2
+    m_Bits: 238945151

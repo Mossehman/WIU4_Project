@@ -139,10 +139,38 @@ namespace Player.Inventory
                 }
             }
 
+            if (_selectedHotbarIndex >= 0 && _hotbarItems[_selectedHotbarIndex] != null)
+            {
+                _hotbarItems[_selectedHotbarIndex].OnItemHeld(gameObject); 
+
+                if (Input.GetMouseButton(0))
+                {
+                    _hotbarItems[_selectedHotbarIndex].OnItemLeftClick(gameObject);
+                }
+                else if (Input.GetMouseButton(1))
+                {
+                    _hotbarItems[_selectedHotbarIndex].OnItemRightClick(gameObject);
+                }
+            }
+
+            foreach (var item in _inventoryItems)
+            {
+                if (item == null) continue;
+                item.Update();
+            }
+
+            foreach (var item in _hotbarItems)
+            {
+                if (item == null) continue;
+                item.Update();
+            }
+
             if (Input.GetKeyDown(KeyCode.Y))
             {
                 TryDropSelectedItem();
             }
+
+            
 
             SortInventory(_currentSort);
         }

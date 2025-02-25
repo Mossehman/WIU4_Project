@@ -13,7 +13,9 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
         public static AIBlackboardMediator Instance { get; private set; }
 
-        public Dictionary<LayerMask, int> AITypeCounts = new Dictionary<LayerMask, int>();
+        public Dictionary<int, int> AITypeCounts = new Dictionary<int, int>();
+        public int MaxAICountPerType = 12;
+
         private void Awake()
         {
             if (Instance == null) Instance = this;
@@ -21,17 +23,27 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         }
 
         /// <summary>
-        /// Registers an FSM with the mediator
+        /// Registers an FSM with the mediator, enforcing AI limits
         /// </summary>
         public void RegisterFSM(GameObject owner, FiniteStateMachine fsm)
         {
+            int layer = owner.layer;
+
+            if (AITypeCounts.ContainsKey(layer) && AITypeCounts[layer] >= MaxAICountPerType)
+            {
+                Debug.Log($"AI limit reached for layer {layer}. Cannot register more AIs.");
+                Destroy(owner);
+                return;
+            }
+
             if (!registeredFSMs.ContainsKey(owner))
             {
                 registeredFSMs.Add(owner, fsm);
-                if (AITypeCounts.ContainsKey(owner.layer))
-                    AITypeCounts[owner.layer]++;
+
+                if (AITypeCounts.ContainsKey(layer))
+                    AITypeCounts[layer]++;
                 else
-                    AITypeCounts.Add(owner.layer, 1);
+                    AITypeCounts[layer] = 1;
             }
         }
 
@@ -40,10 +52,14 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         /// </summary>
         public void UnregisterFSM(GameObject owner)
         {
+            int layer = owner.layer;
+
             if (registeredFSMs.ContainsKey(owner))
             {
                 registeredFSMs.Remove(owner);
-                AITypeCounts[owner.layer]--;
+
+                if (AITypeCounts.ContainsKey(layer) && AITypeCounts[layer] > 0)
+                    AITypeCounts[layer]--;
             }
         }
 
@@ -61,5 +77,4 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
         }
     }
-
 }

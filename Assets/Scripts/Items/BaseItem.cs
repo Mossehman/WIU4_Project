@@ -39,6 +39,7 @@ public class BaseItem : ScriptableObject
     public virtual void OnItemLeftClick(GameObject holder) { return; } 
 
     public virtual void Init() { return; }
+    public virtual void Update() { return; }
 }
 
 [System.Serializable]

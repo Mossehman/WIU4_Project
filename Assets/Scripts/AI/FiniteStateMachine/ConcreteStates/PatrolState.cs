@@ -93,7 +93,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             if (currenttime > 0)
             {
                 float moveSpeed = stats.hunger <= 0 ? 0f : 1.0f;
-                stats.Move(moveSpeed * speedmod * movedirection.normalized);
+                stats.Move(movedirection.normalized, moveSpeed * speedmod);
                 currenttime -= Time.deltaTime;
             }
             else if (stats.hunger <= 50)

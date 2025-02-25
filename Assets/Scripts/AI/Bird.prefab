@@ -81,6 +81,7 @@ MonoBehaviour:
   segs: {fileID: 4785928013559400574}
   fsm: {fileID: 0}
   FlockDirection: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
   FlockSpeed: 2
   FlockTightness: 0.7
   MaxFlockDistance: 10
@@ -89,6 +90,7 @@ MonoBehaviour:
   assignedHome: {fileID: 0}
   isSheltered: 0
   isDead: 0
+  isJumping: 0
   goes:
     name: BirdChirps
     isLibrary: 1
@@ -108,7 +110,7 @@ MonoBehaviour:
     name: 
     isLibrary: 0
   voiceSource: {fileID: 0}
-  audioPitchAmp: 2
+  audioPitchAmp: 1
   animationSpeedAmp: 0.4
   animator: {fileID: 0}
 --- !u!114 &5417390940849655653
