@@ -57430,6 +57430,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2014219191}
   - component: {fileID: 2014219190}
+  - component: {fileID: 2014219193}
+  - component: {fileID: 2014219192}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -57467,14 +57469,14 @@ MonoBehaviour:
   placementScript: {fileID: 1411004916}
   marchingCubes: {fileID: 7200000, guid: 4ecfb4dfb5a23514e854485642bd77d2, type: 3}
   surfaceLevel: 0.4
-  numPointsPerAxis: {x: 30, y: 120, z: 30}
-  bounds: {x: 20, y: 80, z: 20}
+  numPointsPerAxis: {x: 15, y: 90, z: 15}
+  bounds: {x: 20, y: 60, z: 20}
   center: {x: 1, y: 1, z: 1}
   offset: {x: 0, y: 0, z: 0}
   mat: {fileID: 0}
   chunkPrefab: {fileID: 4771254396308166945, guid: 00fb46ff2a8c5584e888c0fda1ef4151, type: 3}
   player: {fileID: 1001476409}
-  chunkRenderDistance: {x: 4, y: 0, z: 4}
+  chunkRenderDistance: {x: 5, y: 0, z: 5}
   AStar: {fileID: 0}
 --- !u!4 &2014219191
 Transform:
@@ -57491,6 +57493,49 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2014219192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014219189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af91b526146002f4388786a9e1b10eed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AStarRange: 2
+--- !u!114 &2014219193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2014219189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4a1850009de8140a84a8765ec4fd0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxObjectsPerChunk: 50
+  objectPlacementChance: 80
+  drawGizmos: 0
+  terrainAssets:
+  - {fileID: 11400000, guid: ab18ca85ef503e54ba972f039407d378, type: 2}
+  - {fileID: 11400000, guid: 225b68502a3902f4aa1c0061b64f461e, type: 2}
+  - {fileID: 11400000, guid: 05fdd35a5b611bb439b060208df68b10, type: 2}
+  - {fileID: 11400000, guid: 8af2b6f912f92aa4e84dde80d1bf2a22, type: 2}
+  - {fileID: 11400000, guid: bb3f147639d6fde4aa7a1177c21bbbdb, type: 2}
+  - {fileID: 11400000, guid: cd26d00b3bf038b429d3ca6c57a6f6db, type: 2}
+  - {fileID: 11400000, guid: adb0d2cf85fd8bd49b5412c26e257454, type: 2}
+  - {fileID: 11400000, guid: 4a0c0f0caf97cc847be54362f9a5e6e7, type: 2}
+  placementData: []
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  raycastYOffset: 5
+  raycastLength: 100
 --- !u!1 &2017383090
 GameObject:
   m_ObjectHideFlags: 0
