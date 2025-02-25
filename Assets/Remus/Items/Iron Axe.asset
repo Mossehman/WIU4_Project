@@ -10,24 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7ae79099f6134d44ac069f716d7fe5d, type: 3}
-  m_Name: Knife
+  m_Name: Iron Axe
   m_EditorClassIdentifier: 
-  itemName: ID1
-  _displayName: Dull Knife
-  _itemDescription: Allows you to harvest cactus, does barely any damage
-  itemIcon: {fileID: 21300000, guid: d6c3a8d70264d484baa02fb4495007a9, type: 3}
-  itemModel: {fileID: 2765399171251465763, guid: 9686bf07c94c1004ea064f5a3c4b0921, type: 3}
+  itemName: ID14
+  _displayName: Ironite Axe
+  _itemDescription: Axe made of iron, cuts down foliage faster
+  itemIcon: {fileID: 21300000, guid: b676974fb2028aa4bbcce2c677692b48, type: 3}
+  itemModel: {fileID: 113951859308317000, guid: c799a5ad0af8b314e9105146660a6d2b, type: 3}
   _weight: 1
   _quantity: 0
-  recipes: []
-  damage: 1
-  reach: 2
+  recipes:
+  - data:
+    - itemID: ID13
+      quantity: 1
+    - itemID: ID5
+      quantity: 2
+  damage: 10
+  reach: 4
   range: 2
-  useCooldown: 0.5
-  holdToUse: 1
+  useCooldown: 0.9
+  holdToUse: 0
   toolEffectorLayers:
     serializedVersion: 2
-    m_Bits: 34340864
+    m_Bits: 33554432
   worldLayers:
     serializedVersion: 2
     m_Bits: 238945151

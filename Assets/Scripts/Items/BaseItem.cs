@@ -9,7 +9,7 @@ public class BaseItem : ScriptableObject
     [SerializeField, Tooltip("Item's Display name")]
     protected string _displayName;
 
-    [SerializeField, Tooltip("Item Description")]
+    [SerializeField, Tooltip("Item Description"), TextArea]
     protected string _itemDescription;
 
     [SerializeField, Tooltip("The 2D sprite for our item, use this when displaying the item in UI")]

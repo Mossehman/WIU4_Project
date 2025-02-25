@@ -69,6 +69,9 @@ namespace Player.Inventory
         private RectTransform _hotbarRect;
         private GridLayoutGroup _hotbarGrid;
 
+        [Header("Item Visuals")]
+        [SerializeField]    private Transform               _playerHand;
+
         // Closed (default) state
         private Vector2 _closedOffsetMin;
         private Vector2 _closedOffsetMax;
@@ -133,6 +136,22 @@ namespace Player.Inventory
             _openedAlignment = TextAnchor.UpperCenter;
         }
 
+        private void DisplayItem(BaseItem item)
+        {
+            for (int i = 0; i < _playerHand.transform.childCount; i++)
+            {
+                Destroy(_playerHand.GetChild(i).gameObject);
+            }
+            if (_playerHand == null || item == null || item.getItemModel() == null) { return; }
+            GameObject itemToDisplay = Instantiate(item.getItemModel(), _playerHand.transform);
+            if (itemToDisplay.TryGetComponent(out ItemModelScript itemData))
+            {
+                itemData.isDropped = false;
+                itemData.modelRB.isKinematic = true;
+                itemData.modelCollider.isTrigger = true;
+            }
+        }
+
         void Update()
         {
             if (Input.GetKeyDown(KeyCode.I))
@@ -149,6 +168,11 @@ namespace Player.Inventory
                     _selectedHotbarIndex = i;
                     Debug.Log($"Hotbar slot {i + 1} selected.");
                     UpdateHotbarUI();
+
+                    if (_hotbarItems[i] != null)
+                    {
+                        DisplayItem(_hotbarItems[i]);
+                    }
                 }
             }
 
@@ -218,6 +242,14 @@ namespace Player.Inventory
             // Remove item from hotbar
             _hotbarItems[_selectedHotbarIndex] = null;
 
+            if (_playerHand != null)
+            {
+                for (int i = 0; i < _playerHand.transform.childCount; i++)
+                {
+                    Destroy(_playerHand.GetChild(i).gameObject);
+                }
+            }
+
             // **Destroy the hotbar UI prefab for this slot**
             Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
             if (slotTransform.childCount > 0)
@@ -253,6 +285,11 @@ namespace Player.Inventory
                 {
                     slotImage.color = (i == _selectedHotbarIndex) ? _selectedSlotColor : _defaultSlotColor;
                 }
+            }
+
+            if (_selectedHotbarIndex != -1)
+            {
+                DisplayItem(_hotbarItems[_selectedHotbarIndex]);
             }
         }
 
@@ -435,6 +472,7 @@ namespace Player.Inventory
             GameObject item = args[0] as GameObject;
             ItemOrigin origin = (ItemOrigin)args[1];
             ItemDestination destination = (ItemDestination)args[2];
+            PlacableSlot slot = (PlacableSlot)args[3];
 
             BaseItem matchedSO;
 
@@ -454,7 +492,8 @@ namespace Player.Inventory
             {
                 for (int i = 0; i < _maxHotbarItems; i++)
                 {
-                    if (_hotbarItems[i].getID() == item.GetComponent<Draggable>()._item.getID())
+                    if (_hotbarItems[i] == null) { continue; }
+                    if (_hotbarItems[i] == item.GetComponent<Draggable>()._item)
                     {
                         _hotbarItems[i] = null;
                         break;
@@ -472,10 +511,11 @@ namespace Player.Inventory
             }
             else if (destination == ItemDestination.HOTBAR)
             {
-                for (int i = 0; i < _maxHotbarItems; i++)
+                for (int i = 0; i < _hotBarPanel.transform.childCount; i++)
                 {
-                    if (_hotbarItems[i] == null)
+                    if (_hotBarPanel.transform.GetChild(i).TryGetComponent<PlacableSlot>(out PlacableSlot slotData))
                     {
+                        if (slotData != slot) { continue; }
                         _hotbarItems[i] = item.GetComponent<Draggable>()._item;
                         break;
                     }
@@ -483,7 +523,12 @@ namespace Player.Inventory
             }
             else if (destination == ItemDestination.STORAGE)
             {
+            
+            }
 
+            if (_selectedHotbarIndex != -1)
+            {
+                DisplayItem(_hotbarItems[_selectedHotbarIndex]);
             }
         }
 

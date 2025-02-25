@@ -10,24 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7ae79099f6134d44ac069f716d7fe5d, type: 3}
-  m_Name: Knife
+  m_Name: Iron Spear (temp)
   m_EditorClassIdentifier: 
-  itemName: ID1
-  _displayName: Dull Knife
-  _itemDescription: Allows you to harvest cactus, does barely any damage
-  itemIcon: {fileID: 21300000, guid: d6c3a8d70264d484baa02fb4495007a9, type: 3}
-  itemModel: {fileID: 2765399171251465763, guid: 9686bf07c94c1004ea064f5a3c4b0921, type: 3}
+  itemName: ID16
+  _displayName: Ironite Spear
+  _itemDescription: Spear made of iron, does more damage to entites when thrown
+  itemIcon: {fileID: 21300000, guid: 8e61b22b19ce3d5459decceb777fbf72, type: 3}
+  itemModel: {fileID: 588426268175082474, guid: a97e2150f065dac44a3a96a919ca8d7c, type: 3}
   _weight: 1
   _quantity: 0
-  recipes: []
-  damage: 1
-  reach: 2
+  recipes:
+  - data:
+    - itemID: ID13
+      quantity: 3
+    - itemID: ID5
+      quantity: 2
+  damage: 5
+  reach: 8
   range: 2
-  useCooldown: 0.5
-  holdToUse: 1
+  useCooldown: 0.4
+  holdToUse: 0
   toolEffectorLayers:
     serializedVersion: 2
-    m_Bits: 34340864
+    m_Bits: 33554432
   worldLayers:
     serializedVersion: 2
     m_Bits: 238945151
