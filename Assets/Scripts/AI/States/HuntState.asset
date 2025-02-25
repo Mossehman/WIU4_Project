@@ -14,4 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statetime: 20
   attacktime: 0.8
+  attackRange: 2
+  huntRange: 35
+  damage: 20
+  hungerGainOnKill: 15
+  hungerGainMultiplier: 0.25
   speedmod: 1.2
+  usesPathfinder: 1
+  pathUpdateCooldown: 1

@@ -6,13 +6,18 @@ namespace Assets.Scripts.AI.FiniteStateMachine
     [CreateAssetMenu(fileName = "PatrolState", menuName = "AI/PatrolState")]
     public class PatrolState : BaseState
     {
-        [SerializeField] float statetime = 1.0f;
-        [SerializeField] float hungerdrain = 10f;
-        private float currenttime;
-        [SerializeField] int numOfWalkDirections = 8;
-        CreatureInfo stats;
+        [SerializeField] float statetime = 1.0f; // Time before switching to another state
+        [SerializeField] float hungerdrain = 10f; // Hunger drained per patrol cycle
+        [SerializeField] int numOfWalkDirections = 8; // Number of possible walk directions
+        [SerializeField] float shelterBiasChance = 0.6f; // Chance to move towards a shelter
+        [SerializeField] float awayFromShelterBiasChance = 0.7f; // Chance to move away from a shelter
+        [SerializeField] float patrolRadius = 50f; // Radius for searching shelters
+        [SerializeField] float speedmod = 1.0f; // Speed multiplier while patrolling
 
-        Vector3 movedirection;
+        private float currenttime;
+        private CreatureInfo stats;
+        private Vector3 movedirection;
+
         public override void OnInit(FiniteStateMachine fsm)
         {
             base.OnInit(fsm);
@@ -36,7 +41,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             if (stats.assignedHome == null)
             {
                 // Look for the nearest home within a 50-unit radius
-                Collider[] nearbyShelters = Physics.OverlapSphere(fsm.transform.position, 50f, LayerMask.GetMask("Shelter"));
+                Collider[] nearbyShelters = Physics.OverlapSphere(fsm.transform.position, patrolRadius, LayerMask.GetMask("Shelter"));
                 Collider closestShelter = null;
                 float minDistance = float.MaxValue;
 
@@ -52,8 +57,8 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
                 if (closestShelter != null)
                 {
-                    // Bias movement towards the nearest shelter (60% chance)
-                    if (Random.value < 0.6f)
+                    // Bias movement towards the nearest shelter
+                    if (Random.value < shelterBiasChance)
                     {
                         movedirection = (closestShelter.transform.position - fsm.transform.position).normalized;
                         return;
@@ -62,8 +67,8 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
             else
             {
-                // If the creature has a home, bias movement AWAY from it (70% chance)
-                if (Random.value < 0.7f)
+                // If the creature has a home, bias movement away from it
+                if (Random.value < awayFromShelterBiasChance)
                 {
                     movedirection = (fsm.transform.position - stats.assignedHome.transform.position).normalized;
                     return;
@@ -88,7 +93,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             if (currenttime > 0)
             {
                 float moveSpeed = stats.hunger <= 0 ? 0f : 1.0f;
-                stats.Move(moveSpeed * movedirection.normalized);
+                stats.Move(moveSpeed * speedmod * movedirection.normalized);
                 currenttime -= Time.deltaTime;
             }
             else if (stats.hunger <= 50)

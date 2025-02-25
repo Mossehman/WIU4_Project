@@ -23,6 +23,8 @@ public class TimeManager : MonoBehaviour
 
     private void Start()
     {
+        if (Instance == null)
+            Instance = this;
         EventManager.CreateEvent("OnHourPassed");
     }
 

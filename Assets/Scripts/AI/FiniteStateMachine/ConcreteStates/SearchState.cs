@@ -7,12 +7,14 @@ namespace Assets.Scripts.AI.FiniteStateMachine
     [CreateAssetMenu(fileName = "SearchState", menuName = "AI/SearchState")]
     public class SearchState : BaseState
     {
-        [SerializeField] float statetime = 1.0f;
-        [SerializeField] float searchradius = 1.0f;
-        [SerializeField] string[] food;
+        [SerializeField] float statetime = 1.0f; // Time before switching to another state
+        [SerializeField] float searchradius = 35.0f; // Radius for searching food
+        [SerializeField] string[] food; // Layers or tags for food objects
+
         private float currenttime;
-        Collider[] foodobjects;
-        CreatureInfo stats;
+        private Collider[] foodobjects;
+        private CreatureInfo stats;
+
         public override void OnInit(FiniteStateMachine fsm)
         {
             base.OnInit(fsm);
@@ -66,6 +68,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 if (target != null)
                 {
                     stats.target = target.gameObject;
+                    //Debug.Log($"Target: {target.name}, Layer: {target.gameObject.layer}, Expected: {LayerMask.NameToLayer("Passive")}");
 
                     if (target.gameObject.layer == LayerMask.NameToLayer("Passive"))
                     {

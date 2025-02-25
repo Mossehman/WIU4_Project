@@ -45,16 +45,8 @@ public class AudioManager : MonoBehaviour
         AudioEventSystem.PlayMusicEvent += PlayMusicFromEvent;
         AudioEventSystem.PlayAmbienceEvent += PlayAmbienceFromEvent;
 
-        //AudioSource source = gameObject.AddComponent<AudioSource>();
-        //source.clip = BackgroundAmbience.clip;
-        //source.volume = BackgroundAmbience.volume;
-        //source.pitch = BackgroundAmbience.pitch;
-        //source.loop = BackgroundAmbience.loop;
-
         BackgroundAmbience = gameObject.AddComponent<AudioSource>();
         BackgroundMusic = gameObject.AddComponent<AudioSource>();
-
-        //source.Play();
     }
 
     private void InitializePool()
@@ -244,7 +236,11 @@ public class AudioManager : MonoBehaviour
     /// <param name="maxPitch">(Optional) The maximum random ptich shift</param>
     public void PlayNonSpamAudio(string soundName, ref AudioSource source, float? volume = null, bool is3D = false, float pitch = 1.0f, bool randomPitch = false, float minPitch = 0.95f, float maxPitch = 1.05f)
     {
-        if (string.IsNullOrEmpty(soundName)) return;
+        if (string.IsNullOrEmpty(soundName))
+        {
+            //Debug.LogWarning("Name is empty or null"); 
+            return;
+        }
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
@@ -342,9 +338,20 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
+        // Dequeue the next AudioSource
         AudioSource source = sfxQueue.Dequeue();
-        sfxQueue.Enqueue(source); // Recycle the source
 
+        // Check if the AudioSource is null or destroyed
+        if (source == null || source.gameObject == null)
+        {
+            Debug.LogWarning("AudioSource is null or destroyed, skipping...");
+            return; // Skip this source
+        }
+
+        // Recycle the source
+        sfxQueue.Enqueue(source);
+
+        // Configure and play the sound
         source.clip = clip;
         source.volume = volume;
         source.priority = (int)priority;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
@@ -122,10 +123,14 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             switch (eventType)
             {
                 case "Im gonna kill you rahh":
-                    if (currentStateName == "Resting" || gameObject.layer != LayerMask.NameToLayer("Passive")) return;
-
+                    if (currentStateName == "Resting") return;
+                    if (gameObject.layer != LayerMask.NameToLayer("Passive"))
+                    {
+                        Debug.Log("Not passive skipping");
+                        return;
+                    }
                     GameObject hunter = data[0] as GameObject;
-                    if (hunter != null && Vector3.Distance(transform.position, hunter.transform.position) <= 55f)
+                    if (hunter != null && Vector3.Distance(transform.position, hunter.transform.position) <= 50f)
                     {
                         if (currentGroup != null)
                         {
@@ -140,6 +145,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                         else
                         {
                             ForceSwapState("Run", hunter);
+                            Debug.Log(currentStateName);
                         }
                     }
                     break;
@@ -152,14 +158,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     {
                         if (currentGroup != null)
                         {
-                            //List<CreatureInfo> grp = currentGroup.Members;
-                            //foreach (CreatureInfo member in grp)
-                            //{
-                            //    if (member != null)
-                            //    {
-                            //        member.fsm.ForceSwapState("Idle", null);
-                            //    }
-                            //}
                             List<CreatureInfo> grp = new List<CreatureInfo>(currentGroup.Members);
                             for (int i = 0; i < grp.Count; i++)
                             {

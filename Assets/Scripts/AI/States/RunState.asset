@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: RunState
   m_EditorClassIdentifier: 
   statetime: 30
-  hungerdrain: 5
-  speedmod: 1.8
+  hungerdrain: 0.5
+  speedmod: 2
   wallDetectionDistance: 10
   wallLayer:
     serializedVersion: 2
     m_Bits: 131072
+  turnSmoothness: 0.1
+  runAwayRange: 55

@@ -15,3 +15,7 @@ MonoBehaviour:
   statetime: 2
   hungerdrain: 10
   numOfWalkDirections: 16
+  shelterBiasChance: 0.6
+  awayFromShelterBiasChance: 0.7
+  patrolRadius: 50
+  speedmod: 1

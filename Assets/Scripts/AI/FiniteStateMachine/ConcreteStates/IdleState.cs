@@ -7,12 +7,17 @@ namespace Assets.Scripts.AI.FiniteStateMachine
     [CreateAssetMenu(fileName = "IdleState", menuName = "AI/IdleState")]
     public class IdleState : BaseState
     {
-        [SerializeField] float statetime = 1.0f;
-        [SerializeField] string[] food;
+        [SerializeField] float statetime = 1.0f; // Time before making a decision
+        [SerializeField] string[] food; // Layers or tags for food objects
+        [SerializeField] float groupFormationRadius = 10f; // Radius for group formation
+        [SerializeField] float shelterSearchRadius = 30f; // Radius for searching shelters
+        [SerializeField] MinMaxEnum<TimeOfTheDay> awaketime; // Time period when the creature is active
+
         private float currenttime;
-        CreatureInfo stats;
-        Collider[] foodobjects;
-        [SerializeField] private MinMaxEnum<TimeOfTheDay> awaketime;
+        private CreatureInfo stats;
+        private Collider[] foodobjects;
+        private int maxGroupSize = 5; // Maximum number of members in a group
+
         public override void OnInit(FiniteStateMachine fsm)
         {
             base.OnInit(fsm);
@@ -32,49 +37,54 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
 
             // Check for nearby creatures to form a group
-            if (stats.gameObject.layer == LayerMask.NameToLayer("Passive"))
+            if (groupFormationRadius > 0)
             {
-                Collider[] nearbyCreatures = Physics.OverlapSphere(fsm.transform.position, 10f, LayerMask.GetMask("Passive"));
-                foreach (Collider creature in nearbyCreatures)
+                if (stats.gameObject.layer == LayerMask.NameToLayer("Passive"))
                 {
-                    CreatureInfo otherStats = creature.GetComponent<CreatureInfo>();
-
-                    if (otherStats == null || otherStats == stats) continue;
-
-                    if (otherStats.CurrentGroup != null)
+                    Collider[] nearbyCreatures = Physics.OverlapSphere(fsm.transform.position, groupFormationRadius, LayerMask.GetMask("Passive"));
+                    foreach (Collider creature in nearbyCreatures)
                     {
-                        // If the other creature has a group, try to merge
-                        if (stats.CurrentGroup != null && stats.CurrentGroup.CanMerge(otherStats.CurrentGroup))
-                        {
-                            stats.CurrentGroup.Merge(otherStats.CurrentGroup);
-                        }
-                        else if (stats.CurrentGroup == null && otherStats.CurrentGroup.Members.Count < 5)
-                        {
-                            otherStats.CurrentGroup.AddMember(stats);
-                        }
-                    }
-                    else
-                    {
-                        // Neither has a group, form a new one
-                        stats.CurrentGroup ??= new Group(stats);
+                        CreatureInfo otherStats = creature.GetComponent<CreatureInfo>();
 
-                        stats.CurrentGroup.AddMember(otherStats);
+                        if (otherStats == null || otherStats == stats) continue;
+
+                        if (otherStats.CurrentGroup != null)
+                        {
+                            // If the other creature has a group, try to merge
+                            if (stats.CurrentGroup != null && stats.CurrentGroup.CanMerge(otherStats.CurrentGroup))
+                            {
+                                stats.CurrentGroup.Merge(otherStats.CurrentGroup);
+                            }
+                            else if (stats.CurrentGroup == null && otherStats.CurrentGroup.Members.Count < maxGroupSize)
+                            {
+                                otherStats.CurrentGroup.AddMember(stats);
+                            }
+                        }
+                        else
+                        {
+                            // Neither has a group, form a new one
+                            stats.CurrentGroup ??= new Group(stats);
+
+                            stats.CurrentGroup.AddMember(otherStats);
+                        }
                     }
                 }
             }
-
             // Find a home if there is none
-            if (stats.assignedHome == null)
+            if (shelterSearchRadius > 0)
             {
-                Collider[] nearbyShelters = Physics.OverlapSphere(fsm.transform.position, 30f, LayerMask.GetMask("Shelter"));
-                foreach (Collider c in nearbyShelters)
+                if (stats.assignedHome == null)
                 {
-                    CreatureShelter shelter = c.GetComponent<CreatureShelter>();
-                    if (shelter.numOfRegisteredCreatures >= shelter.maxHousingSpace) continue;
-                    if (((1 << stats.gameObject.layer) & shelter.creatureHome) != 0)
+                    Collider[] nearbyShelters = Physics.OverlapSphere(fsm.transform.position, shelterSearchRadius, LayerMask.GetMask("Shelter"));
+                    foreach (Collider c in nearbyShelters)
                     {
-                        stats.assignedHome = shelter;
-                        shelter.numOfRegisteredCreatures++;
+                        CreatureShelter shelter = c.GetComponent<CreatureShelter>();
+                        if (shelter.numOfRegisteredCreatures >= shelter.maxHousingSpace) continue;
+                        if (((1 << stats.gameObject.layer) & shelter.creatureHome) != 0)
+                        {
+                            stats.assignedHome = shelter;
+                            shelter.numOfRegisteredCreatures++;
+                        }
                     }
                 }
             }
@@ -94,14 +104,15 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
             else
             {
-                AudioManager.Instance.PlayNonSpamAudio(stats.goes, ref stats.voiceSource, default, true, 1, true);
+                //AudioManager.Instance.PlayNonSpamAudio(stats.goes, ref stats.voiceSource, default, true, 1, true);
+                AudioEventSystem.PlaySoundSmart(stats.goes, ref stats.voiceSource, default, default, true, true, 1, true);
                 if (!TimeManager.Instance.IsWithinCurrentTimePeriod(awaketime))
                 {
                     fsm.SwapState("Resting");
                 }
                 else if (foodobjects.Length > 0)
                 {
-                    fsm.SwapState("Hunt");
+                    fsm.SwapState("Search");
                 }
                 else
                 {

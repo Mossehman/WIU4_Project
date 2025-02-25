@@ -1,5 +1,7 @@
+using Assets.Scripts.AI.FiniteStateMachine;
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AudioEventSystem : MonoBehaviour
 {
@@ -47,5 +49,31 @@ public class AudioEventSystem : MonoBehaviour
     public static void PlayAmbience(string ambienceName, float? volume = null)
     {
         PlayAmbienceEvent?.Invoke(ambienceName, volume);
+    }
+
+    public static void PlaySoundSmart(
+        SoundInfo soundInfo,
+        ref AudioSource source,
+        AudioPriority priority = AudioPriority.Medium,
+        float? volume = null, 
+        bool is3D = false, 
+        bool isNonSpammable = false, 
+        float pitch = 1.0f,
+        bool randomPitch = false, 
+        float minPitch = 0.95f, 
+        float maxPitch = 1.05f)
+    {
+        if (soundInfo.isLibrary)
+        {
+            AudioManager.Instance.PlayRandomAudio(soundInfo.name, ref source, volume, is3D, pitch, randomPitch, minPitch, maxPitch);
+            return;
+        }
+        if (isNonSpammable)
+        {
+            AudioManager.Instance.PlayNonSpamAudio(soundInfo.name, ref source, volume, is3D, pitch, randomPitch, minPitch, maxPitch);
+            return;
+        }
+
+        PlaySoundEvent?.Invoke(soundInfo.name, priority, volume, source.transform.position, randomPitch, minPitch, maxPitch);
     }
 }

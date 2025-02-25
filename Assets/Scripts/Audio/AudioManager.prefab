@@ -62,6 +62,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80456b8d8e2d5c643916860ccf676057, type: 2}
   maxSFXSources: 20
   audioSettings:
-    RolloffMode: 0
+    RolloffMode: 1
     MinimumRolloffDistance: 10
-    MaximumRolloffDistance: 100
+    MaximumRolloffDistance: 30
