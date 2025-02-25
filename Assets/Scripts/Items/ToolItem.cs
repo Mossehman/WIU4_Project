@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Items/Tool  ")]
+[CreateAssetMenu(fileName = "New Tool", menuName = "Items/Tool")]
 public class ToolItem : BaseItem
 {
     [Header("Tools")]
@@ -11,8 +11,8 @@ public class ToolItem : BaseItem
     public float useCooldown = 0.5f;
     public bool holdToUse = false;
 
-    private bool isUsingItem = false;
-    private float useCooldownTimer = 0.0f;
+    protected bool isUsingItem = false;
+    protected float useCooldownTimer = 0.0f;
 
     public LayerMask toolEffectorLayers;    // this should be the layers that the tool can affect
     public LayerMask worldLayers;           // this should basically be every layer besides the player's layer
@@ -23,10 +23,23 @@ public class ToolItem : BaseItem
     public override void OnItemRightClick(GameObject holder) { 
         return; 
     }
-    public override void OnItemLeftClick(GameObject holder) {
-        Debug.Log("Hello!");
 
-        if (isUsingItem && holdToUse) { return; }
+    public override void Update()
+    {
+        if (useCooldownTimer > 0) {
+            useCooldownTimer -= Time.deltaTime;
+        }
+
+    }
+
+    public override void OnItemLeftUp(GameObject holder)
+    {
+        isUsingItem = false;
+    }
+
+    public override void OnItemLeftClick(GameObject holder) {
+        if ((isUsingItem && !holdToUse) || useCooldownTimer > 0) { return; }
+
 
         RaycastHit hit;
         if (Physics.Raycast(holder.transform.position, holder.transform.forward, out hit, reach, worldLayers))
@@ -39,12 +52,12 @@ public class ToolItem : BaseItem
                 if (damageable == null) continue;
 
                 damageable.Damage(damage);
-
                 ///TODO: Play a sfx for when the weapon is used, maybe make it do different damage depending on which layermask was hit
                 return;
             }
         }
-
+        isUsingItem = true;
+        useCooldownTimer = useCooldown;
         return; 
     }
 

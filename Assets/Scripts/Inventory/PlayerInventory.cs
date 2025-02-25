@@ -31,7 +31,8 @@ namespace Player.Inventory
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Inventory Logic")]
-        [SerializeField]    private List<BaseItem>          _inventoryItems;
+        [SerializeField]    private BaseItem[]              _startingItems;
+                            private List<BaseItem>          _inventoryItems;
         [SerializeField]    public float                    _baseWeight = 0.0f;
         [SerializeField]    public float                    _baseMaxWeight = 10.0f;
         [SerializeField]    private float                   _currentWeight;
@@ -50,7 +51,7 @@ namespace Player.Inventory
         [Header("Hotbar Logic")]
         [SerializeField]    private BaseItem[]              _hotbarItems;
                             private int                     _maxHotbarItems = 5;
-        [SerializeField]    private int                     _selectedHotbarIndex = -1;
+        [SerializeField]    private int                     _selectedHotbarIndex = 0;
         [SerializeField]    private Color                   _selectedSlotColor = Color.red;
         [SerializeField]    private Color                   _defaultSlotColor = Color.white;
 
@@ -86,6 +87,18 @@ namespace Player.Inventory
 
             // INVENTORY
             _inventoryItems = new List<BaseItem>();
+
+            if (_startingItems != null && _startingItems.Length > 0)
+            {
+                foreach (var item in _startingItems)
+                {
+                    if (item == null) continue;
+                    BaseItem itemInstance = Instantiate(item);
+                    itemInstance.Init();
+                    _inventoryItems.Add(itemInstance);
+                }
+            }
+
             _isLocked = new List<bool>();
             _currentWeight = _baseWeight;
 
@@ -150,6 +163,14 @@ namespace Player.Inventory
                 else if (Input.GetMouseButton(1))
                 {
                     _hotbarItems[_selectedHotbarIndex].OnItemRightClick(gameObject);
+                }
+                else if (Input.GetMouseButtonUp(0))
+                {
+                    _hotbarItems[_selectedHotbarIndex].OnItemLeftUp(gameObject);
+                }
+                else if (Input.GetMouseButtonUp(1))
+                {
+                    _hotbarItems[_selectedHotbarIndex].OnItemRightUp(gameObject);
                 }
             }
 
@@ -237,6 +258,24 @@ namespace Player.Inventory
 
         public void AddItem(BaseItem newItem)
         {
+            //// try to add to hotbar first
+            //for (int i = 0; i < _maxHotbarItems; i++)
+            //{
+            //    if (_hotbarItems[i] != null && _hotbarItems[i].getID() == newItem.getID())
+            //    {
+            //        _hotbarItems[i]._quantity++;
+            //        _currentWeight += newItem.getWeight() * newItem._quantity;
+            //        return;
+            //    }
+            //
+            //    if (_hotbarItems[i] != null) continue;
+            //    _hotbarItems[i] = newItem;
+            //    _isLocked.Add(false);
+            //    _currentWeight += newItem.getWeight() * newItem._quantity;
+            //    return;
+            //}
+
+            // if hotbar is full, try adding to inventory
             foreach (var item in _inventoryItems)
             {
                 if (item.getID() == newItem.getID())

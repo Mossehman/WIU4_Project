@@ -61,7 +61,7 @@ public class Chunk : MonoBehaviour
     {
         if (!drawNodes) { return; }
         Gizmos.color = Color.blue;
-        foreach (var pos in AStarPositions)
+        foreach (var pos in AStarIndexes)
         {
             Gizmos.DrawWireCube(pos, new Vector3(0.5f, 0.5f, 0.5f));
         }

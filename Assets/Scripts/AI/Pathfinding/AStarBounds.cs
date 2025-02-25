@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -189,6 +190,11 @@ public class AStarBounds : MonoBehaviour
 
         nodes.TryAdd(index, newNode); // add our pathfinding node to the list of existing nodes
     }
+
+    //private void Update()
+    //{
+    //    Debug.Log("Node Size: " + nodes.Count);
+    //}
 
     //private void OnDrawGizmos()
     //{

@@ -46,12 +46,14 @@ public class MarchingCubesGenerator : MonoBehaviour
     [SerializeField] private Vector3Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
     public Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>();    // Maintains a list of all active chunks to unrender and destroy them accordingly
     private HashSet<Vector3Int> loadedAStarChunks = new HashSet<Vector3Int>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
+    public uint maxTerrainEdits = 500;
 
     public List<SphereEditor> terrainEdits = new List<SphereEditor>();
     private Stack<Chunk> chunksToEdit = new Stack<Chunk>();
 
     public void RequestChunkUpdate(Chunk chunk)
     {
+        if (chunksToEdit.Contains(chunk)) return;
         chunksToEdit.Push(chunk);
     }
 
@@ -104,7 +106,10 @@ public class MarchingCubesGenerator : MonoBehaviour
         if (chunk.AStarIndexes.Count <= 0) { return; }
         foreach (var voxelIndex in chunk.AStarIndexes)
         {
-            AStar.nodes.Remove(voxelIndex);
+            if (AStar.nodes.ContainsKey(voxelIndex))
+            {
+                AStar.nodes.Remove(voxelIndex); 
+            }
         }
         chunk.AStarIndexes.Clear();
     }
@@ -154,8 +159,9 @@ public class MarchingCubesGenerator : MonoBehaviour
                 localVoxelIndex.z * spacing.z
             );
 
-            AStar.GenerateNode(globalVoxelIndex, nodePosition, true);
             chunk.AStarPositions.Add(nodePosition);
+            chunk.AStarIndexes.Add(globalVoxelIndex);
+            AStar.GenerateNode(globalVoxelIndex, nodePosition, true);
         }
     }
 
@@ -542,10 +548,23 @@ public class MarchingCubesGenerator : MonoBehaviour
 
         GenerateChunks();
 
+        if (terrainEdits.Count > maxTerrainEdits)
+        {
+            terrainEdits.RemoveAt(0);
+            return;
+        }
+
         if (chunksToEdit.Count > 0)
         {
             GenerateMesh(chunksToEdit.Peek(), false);
-            GenerateAStar(chunksToEdit.Peek());
+            Vector3Int startingChunkIndex = PosToChunkIndex(player.position);
+            Vector2Int chunkID = chunksToEdit.Peek().chunkID;
+            if (Mathf.Abs(chunkID.x - startingChunkIndex.x) <= AStar.AStarRange && Mathf.Abs(chunkID.y - startingChunkIndex.z) <= AStar.AStarRange)
+            {
+                GenerateAStar(chunksToEdit.Peek());
+            }
+
+
             chunksToEdit.Pop();
         }
 

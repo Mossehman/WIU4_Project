@@ -4,22 +4,22 @@ using UnityEngine;
 public class BaseItem : ScriptableObject
 {
     [SerializeField, Tooltip("This item ID")]
-    private string itemName;
+    protected string itemName;
 
     [SerializeField, Tooltip("Item's Display name")]
-    private string _displayName;
+    protected string _displayName;
 
     [SerializeField, Tooltip("Item Description")]
-    private string _itemDescription;
+    protected string _itemDescription;
 
     [SerializeField, Tooltip("The 2D sprite for our item, use this when displaying the item in UI")]
-    private Sprite itemIcon;
+    protected Sprite itemIcon;
 
     [SerializeField, Tooltip("The 3D model for our item that the player will hold/interact with")]
-    private GameObject itemModel;
+    protected GameObject itemModel;
 
     [SerializeField, Tooltip("Weight of item")]
-    private float _weight;
+    protected float _weight;
 
     [SerializeField]
     public int _quantity;
@@ -35,8 +35,14 @@ public class BaseItem : ScriptableObject
     public GameObject getItemModel() { return itemModel;}
 
     public virtual void OnItemHeld(GameObject holder) { return; }
+
+
     public virtual void OnItemRightClick(GameObject holder) { return; } 
     public virtual void OnItemLeftClick(GameObject holder) { return; } 
+    
+    public virtual void OnItemLeftUp(GameObject holder) { return; } 
+    public virtual void OnItemRightUp(GameObject holder) { return; } 
+
 
     public virtual void Init() { return; }
     public virtual void Update() { return; }

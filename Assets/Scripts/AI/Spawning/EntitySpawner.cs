@@ -1,18 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public EntitySpawnData[] spawnData;
+
+    private void Start()
     {
-        
+        if (spawnData != null && spawnData.Length > 0)
+        {
+            int spawnIndex = Random.Range(0, spawnData.Length);
+            EntitySpawnData data = spawnData[spawnIndex];
+
+            int randomSpawnCount = Random.Range((int)data.minSpawn, (int)data.maxSpawn);
+            for (int i = 0; i < randomSpawnCount; i++)
+            {
+                Instantiate(data.entityPrefab, transform.position, Quaternion.identity);
+            }
+        }
+
+        Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
