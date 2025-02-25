@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1472926747619563161}
   - component: {fileID: 3695282688378090866}
+  - component: {fileID: 2765025882534160175}
   m_Layer: 0
   m_Name: Rock4
   m_TagString: Untagged
@@ -48,6 +49,27 @@ MonoBehaviour:
   highDetailMesh: {fileID: 1804524810361689097}
   lowDetailMesh: {fileID: 0}
   distanceThreshold: 50
+--- !u!65 &2765025882534160175
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7006392862834217419}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.03512381, y: 0.02737887, z: 0.013294407}
+  m_Center: {x: -0.0019606154, y: 0.00057603174, z: 0.0016471894}
 --- !u!1001 &1570520491661322584
 PrefabInstance:
   m_ObjectHideFlags: 0

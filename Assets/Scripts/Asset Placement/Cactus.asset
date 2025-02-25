@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6b1de190f6db0940bce8fa87dd7f051, type: 3}
-  m_Name: MushroomPlant
+  m_Name: Cactus
   m_EditorClassIdentifier: 
-  terrainObjectPrefab: {fileID: 6921072969651602650, guid: 35e7f3a55f5e1bb4ab5feb127ca85125, type: 3}
+  terrainObjectPrefab: {fileID: 7478388737408944165, guid: b8ec3ea8b93dab34f8ee3fa8a9998897, type: 3}
   poissonSphereRadius: 1
   minYLevel: 13
   hasMaxYLevel: 0
   maxYLevel: 0
-  minNormalsThreshold: 0.7
+  minNormalsThreshold: 0.85
   hasMaxNormals: 0
   maxNormalsThreshold: 0
   numTerrainSamples: 10
-  sampleRadius: 6
+  sampleRadius: 4
   heightDifferenceThreshold: 12.79
-  normalDifferenceThreshold: -0.3
+  normalDifferenceThreshold: -0.15
