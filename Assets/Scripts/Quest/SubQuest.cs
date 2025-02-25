@@ -13,9 +13,14 @@ public abstract class SubQuest : MonoBehaviour
 
     private bool _isCompleted;
     private string _subquestID;
-    private string _questDescription;
+    private string _questName;
     private subquestType _type;
-    // Start is called before the first frame update
+
+    public virtual void Init()
+    {
+
+    }
+
     void Start()
     {
         
