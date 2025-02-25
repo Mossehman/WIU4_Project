@@ -44,8 +44,16 @@ public class MarchingCubesGenerator : MonoBehaviour
     [SerializeField] private GameObject chunkPrefab;
     [SerializeField] private Transform player;                                                  // This is the position the chunks will use to see if they should be generated, unrendered or destroyed
     [SerializeField] private Vector3Int chunkRenderDistance;                                    // The number of chunks that will be rendered based on the camera's position
-    private Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
+    public Dictionary<Vector3Int, Chunk> loadedChunks = new Dictionary<Vector3Int, Chunk>();    // Maintains a list of all active chunks to unrender and destroy them accordingly
     private HashSet<Vector3Int> loadedAStarChunks = new HashSet<Vector3Int>();   // Maintains a list of all active chunks to unrender and destroy them accordingly
+
+    public List<SphereEditor> terrainEdits = new List<SphereEditor>();
+    private Stack<Chunk> chunksToEdit = new Stack<Chunk>();
+
+    public void RequestChunkUpdate(Chunk chunk)
+    {
+        chunksToEdit.Push(chunk);
+    }
 
 
     [Header("AStar")]
@@ -163,15 +171,17 @@ public class MarchingCubesGenerator : MonoBehaviour
         Vector3 spacing = new Vector3(bounds.x / numVoxelsPerAxis.x, bounds.y / numVoxelsPerAxis.y, bounds.z / numVoxelsPerAxis.z);
 
         Vector3 worldBounds = bounds;
-        TerrainSphereEditor[] spheres = FindObjectsOfType<TerrainSphereEditor>();
-        SphereEditor[] sphereEdits = new SphereEditor[spheres.Length];
-        for (int i = 0; i < spheres.Length; i++)
+        
+        SphereEditor[] sphereEdits = new SphereEditor[terrainEdits.Count];
+        for (int i = 0; i < terrainEdits.Count; i++)
         {
             sphereEdits[i] = new SphereEditor();
-            sphereEdits[i].position = spheres[i].gameObject.transform.position;
-            sphereEdits[i].radius = spheres[i].radius;
-            sphereEdits[i].noiseModifier = spheres[i].weightModifier;
+            sphereEdits[i].position = terrainEdits[i].position;
+            sphereEdits[i].radius = terrainEdits[i].radius;
+            sphereEdits[i].noiseModifier = terrainEdits[i].noiseModifier;
         }
+
+
         marchingCubesNoise.spheres = sphereEdits;
 
         marchingCubesNoise.GenerateNoise(pointsBuffer, numPointsPerAxis, bounds, worldBounds, center, chunk.meshOffset, spacing);
@@ -512,7 +522,7 @@ public class MarchingCubesGenerator : MonoBehaviour
         UnityEngine.Random.InitState((int)Time.time);
     }
 
-    private Vector3Int PosToChunkIndex(Vector3 position)
+    public Vector3Int PosToChunkIndex(Vector3 position)
     {
         int x = Mathf.RoundToInt(position.x / bounds.x);
         int y = Mathf.RoundToInt(transform.position.y / bounds.y);
@@ -531,6 +541,13 @@ public class MarchingCubesGenerator : MonoBehaviour
         //}
 
         GenerateChunks();
+
+        if (chunksToEdit.Count > 0)
+        {
+            GenerateMesh(chunksToEdit.Peek(), false);
+            GenerateAStar(chunksToEdit.Peek());
+            chunksToEdit.Pop();
+        }
 
         //if (!updated && !Application.isPlaying) return;
         //updated = false;
