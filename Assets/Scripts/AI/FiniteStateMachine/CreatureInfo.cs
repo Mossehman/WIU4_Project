@@ -81,7 +81,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             voiceSource = gameObject.AddComponent<AudioSource>(); 
 
             if (transform.childCount > 0) animator = transform.GetChild(0).GetComponent<Animator>();
-            
+            velocity = gravity;
             maxhealth = health;
             ProductionDuration = ProductionCooldown;
             OnEntityHurt += (CreatureInfo _) =>
@@ -210,7 +210,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     Jump();
                 }
 
-                velocity = speedMod * moveDirection;
+                velocity = speedMod * moveDirection + new Vector3(0, velocity.y, 0);
             }
 
             // Check if we reached the target node
@@ -278,7 +278,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             else
             {    
                 velocity.y = gravity.y * Time.deltaTime * 50f;
-                //velocity.y += gravity.y * Time.deltaTime;
             }
 
         }

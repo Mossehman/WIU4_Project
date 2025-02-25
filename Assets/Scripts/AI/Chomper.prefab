@@ -58,7 +58,7 @@ CharacterController:
   m_Radius: 1
   m_SlopeLimit: 85
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 2, z: 0}
 --- !u!114 &6846642652541648668
@@ -84,6 +84,8 @@ MonoBehaviour:
     stateData: {fileID: 11400000, guid: 5ddee9daddb7e5048a6dff2f0602563e, type: 2}
   - stateID: Resting
     stateData: {fileID: 11400000, guid: 191d34d2e9d1f5a45aff9058dab05fc0, type: 2}
+  - stateID: Lure
+    stateData: {fileID: 11400000, guid: bdd5498d5ad92f74883145bb0734c58d, type: 2}
   currentStateName: 
   previousStateName: 
 --- !u!114 &12608416898655750
@@ -104,6 +106,7 @@ MonoBehaviour:
   segs: {fileID: 68349615528311788}
   fsm: {fileID: 0}
   FlockDirection: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
   FlockSpeed: 2
   FlockTightness: 1
   MaxFlockDistance: 5
@@ -112,6 +115,7 @@ MonoBehaviour:
   assignedHome: {fileID: 0}
   isSheltered: 0
   isDead: 0
+  isJumping: 0
   goes:
     name: ChomperGrunts
     isLibrary: 1

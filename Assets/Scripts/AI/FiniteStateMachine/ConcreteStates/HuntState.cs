@@ -95,7 +95,8 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     if (stats.target.TryGetComponent<CreatureInfo>(out var creaturestats))
                     {
                         creaturestats.Health -= damage;
-                        creaturestats.fsm.ForceSwapState("Run", stats.gameObject);
+                        //creaturestats.fsm.ForceSwapState("Run", stats.gameObject);
+                        AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Im gonna kill you rahh", new object[] { fsm.gameObject });
                         if (creaturestats.Health <= 0f)
                         {
                             stats.hunger += creaturestats.hunger * hungerGainMultiplier;
