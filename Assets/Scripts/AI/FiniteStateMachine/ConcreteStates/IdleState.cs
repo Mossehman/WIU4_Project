@@ -104,7 +104,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
             else
             {
-                //AudioManager.Instance.PlayNonSpamAudio(stats.goes, ref stats.voiceSource, default, true, 1, true);
                 AudioEventSystem.PlaySoundSmart(stats.goes, ref stats.voiceSource, default, default, true, true, 1, true);
                 if (!TimeManager.Instance.IsWithinCurrentTimePeriod(awaketime))
                 {

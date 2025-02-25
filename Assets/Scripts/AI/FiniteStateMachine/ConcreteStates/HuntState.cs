@@ -91,7 +91,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 {
                     currentattacktime = attacktime;
                     if (hasAttackParam) stats.animator.SetTrigger("Attack");
-                    //AudioEventSystem.PlaySound(stats.attk, default, default, stats.transform.position, true);
                     AudioEventSystem.PlaySoundSmart(stats.attk, ref stats.voiceSource, default, default, true, true, 1, true);
                     if (stats.target.TryGetComponent<CreatureInfo>(out var creaturestats))
                     {

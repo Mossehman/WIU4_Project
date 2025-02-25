@@ -44,11 +44,9 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     stats.Move(dir.normalized * moveSpeedToShelter);
                 else
                     AudioEventSystem.PlaySoundSmart(stats.rest, ref stats.voiceSource, default, default, true, true, 1);
-                //AudioManager.Instance.PlayNonSpamAudio(stats.rest, ref stats.voiceSource, default, true, 1);
             }
             else
             {
-                //AudioManager.Instance.PlayNonSpamAudio(stats.rest, ref stats.voiceSource, default, true, 1);
                 AudioEventSystem.PlaySoundSmart(stats.rest, ref stats.voiceSource, default, default, true, true, 1);
                 stats.hunger += Time.deltaTime * hungerRecoveryRate;
                 stats.Health += Time.deltaTime * healthRecoveryRate;
