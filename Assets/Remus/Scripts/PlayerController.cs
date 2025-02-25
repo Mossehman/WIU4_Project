@@ -66,9 +66,12 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
 
     [SerializeField] private OrbAI orbieAI;
+    private Animator animator;
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
+
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -109,6 +112,17 @@ public class PlayerController : MonoBehaviour
         {
             ToggleCameraView();
         }
+
+        speed = Mathf.Clamp(moveInput.magnitude, 0f, 1f);
+        speed = Mathf.SmoothDamp(animator.GetFloat("Speed"), speed, ref velocitySmoothing, 0.1f);
+        animator.SetFloat("Speed", speed);
+
+        // Animation: Update Fall State
+        bool isFalling = !IsGrounded() && velocity.y < 0;
+        animator.SetBool("IsGrounded", IsGrounded());
+        animator.SetFloat("VelocityY", velocity.y);
+
+        HandleKeyAnimations();
     }
 
     private void HandleThirdMovement()
@@ -129,6 +143,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveVelocity = targetDirection.normalized * moveSpeed;
 
         characterController.Move(moveVelocity * Time.deltaTime + gravityVelocity * Time.deltaTime);
+
 
         if (targetDirection.magnitude > 0.1f)
         {
@@ -301,11 +316,35 @@ public class PlayerController : MonoBehaviour
         if (context.performed && IsGrounded())
         {
             jumpPressed = true;
+            animator.SetTrigger("Jump");
         }
     }
 
     public void OnSprint(InputAction.CallbackContext context)
     {
         isSprinting = context.performed;
+    }
+
+    private void HandleKeyAnimations()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            animator.SetTrigger("Interact");
+        }
+
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            animator.SetTrigger("Consume");
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            animator.SetTrigger("Attack");
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            animator.SetTrigger("Mine");
+        }
     }
 }

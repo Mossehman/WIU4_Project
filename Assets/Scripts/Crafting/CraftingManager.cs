@@ -105,51 +105,128 @@ public class CraftingManager : MonoBehaviour
         }
     }
 
-    public void Craft(BaseItem item, CraftingRecipe recipe)
-    {
-        if (CanCraft(recipe))
-        {
-            _playerInventory.AddItem(item);
-            foreach (RecipeData ingredient in recipe.data)
-            {
-                foreach (BaseItem things in _playerInventory.GetInventory())
-                {
-                    BaseItem matchedSO = null;
-                    if (things.getID() == ingredient.itemID)
-                    {
-                        matchedSO = things;
-                    }
-                    if (matchedSO != null) { matchedSO._quantity -= ingredient.quantity; }
-                    Debug.Log("Sucessful");
-                }
-            }
-        }
-    }
-
     public bool CanCraft(CraftingRecipe recipe)
     {
         int fulfilled = 0;
 
         foreach (RecipeData ingredient in recipe.data)
         {
-            if (ingredient.quantity == 0)
+            int totalQuantity = 0;
+
+            // Get inventory and hotbar items
+            List<BaseItem> inventoryItems = _playerInventory.GetInventory();
+            BaseItem[] hotbarItems = _playerInventory.GetHotbar();
+
+            // Count inventory items
+            foreach (BaseItem inventoryItem in inventoryItems)
+            {
+                if (inventoryItem.getID() == ingredient.itemID)
+                {
+                    totalQuantity += inventoryItem._quantity;
+                }
+            }
+
+            // Count hotbar items
+            foreach (BaseItem hotbarItem in hotbarItems)
+            {
+                if (hotbarItem != null && hotbarItem.getID() == ingredient.itemID)
+                {
+                    totalQuantity += hotbarItem._quantity;
+                }
+            }
+
+            Debug.Log($"Checking ingredient: {ingredient.itemID} | Required: {ingredient.quantity} | Available: {totalQuantity}");
+
+            if (totalQuantity >= ingredient.quantity)
             {
                 fulfilled++;
             }
-            foreach (BaseItem things in _playerInventory.GetInventory())
-            {
-                BaseItem matchedSO = null;
-                if (things.getID() == ingredient.itemID)
-                {
-                    matchedSO = things;
-                }
-                if (matchedSO != null && matchedSO._quantity >= ingredient.quantity)
-                {
-                    fulfilled++;
-                }
-            }
         }
 
+        Debug.Log($"Crafting check result: {fulfilled}/{recipe.data.Length} ingredients fulfilled.");
         return fulfilled == recipe.data.Length;
+    }
+
+    public void Craft(BaseItem item, CraftingRecipe recipe)
+    {
+        if (CanCraft(recipe))
+        {
+            Debug.Log($"Crafting {item.getDisplayName()}...");
+
+            _playerInventory.AddItem(item); // Add crafted item to inventory
+
+            // Get inventory and hotbar items
+            List<BaseItem> inventoryItems = _playerInventory.GetInventory();
+            BaseItem[] hotbarItems = _playerInventory.GetHotbar();
+
+            foreach (RecipeData ingredient in recipe.data)
+            {
+                int remainingToRemove = ingredient.quantity;
+
+                // Remove from HOTBAR first
+                for (int i = 0; i < hotbarItems.Length; i++)
+                {
+                    if (hotbarItems[i] != null && hotbarItems[i].getID() == ingredient.itemID)
+                    {
+                        int removeAmount = Mathf.Min(remainingToRemove, hotbarItems[i]._quantity);
+                        hotbarItems[i]._quantity -= removeAmount;
+                        remainingToRemove -= removeAmount;
+
+                        Debug.Log($"Removed {removeAmount} {ingredient.itemID} from HOTBAR. Remaining: {remainingToRemove}");
+
+                        // If item is completely used, clear the hotbar slot
+                        if (hotbarItems[i]._quantity <= 0)
+                        {
+                            hotbarItems[i] = null;
+                        }
+
+                        if (remainingToRemove <= 0) break; // Stop if we removed enough
+                    }
+                }
+
+                // If still need to remove, remove from INVENTORY
+                for (int i = 0; i < inventoryItems.Count && remainingToRemove > 0; i++)
+                {
+                    if (inventoryItems[i].getID() == ingredient.itemID)
+                    {
+                        int removeAmount = Mathf.Min(remainingToRemove, inventoryItems[i]._quantity);
+                        inventoryItems[i]._quantity -= removeAmount;
+                        remainingToRemove -= removeAmount;
+
+                        Debug.Log($"Removed {removeAmount} {ingredient.itemID} from INVENTORY. Remaining: {remainingToRemove}");
+
+                        // If inventory item is completely used, remove it
+                        if (inventoryItems[i]._quantity <= 0)
+                        {
+                            inventoryItems.RemoveAt(i);
+                            i--; // Adjust index after removing item
+                        }
+
+                        if (remainingToRemove <= 0) break; // Stop if we removed enough
+                    }
+                }
+            }
+
+            Debug.Log("Crafting successful!");
+
+            // Update UI immediately
+            _playerInventory.RefreshInventoryUI(); // Ensure inventory updates after crafting
+            _playerInventory.RefreshHotbarUI();   // Ensure hotbar updates after crafting
+            ShowRecipe(item, recipe);            // Refresh crafting UI to update ingredient amounts
+
+        }
+        else
+        {
+            Debug.Log("Not enough ingredients to craft!");
+        }
+    }
+
+    private void PrintInventory()
+    {
+        Debug.Log("Current Inventory:");
+        foreach (BaseItem inventoryItem in _playerInventory.GetInventory())
+        {
+            Debug.Log($"Item: {inventoryItem.getDisplayName()} | Quantity: {inventoryItem._quantity} | ID: {inventoryItem.getID()}");
+        }
     }
 }

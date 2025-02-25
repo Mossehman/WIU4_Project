@@ -1,6 +1,6 @@
 public class WaterTankInteraction : InteractionObject
 {
-    public float waterAmount = 50f; // Remaining water
+    public float waterAmount = 50f;
 
     public override string GetCustomDescription()
     {
