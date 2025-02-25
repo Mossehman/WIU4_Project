@@ -47,8 +47,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _FirstCaveTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _FirstTerrainTexture:
-        m_Texture: {fileID: 2800000, guid: 30931d08bd695de4d968d5aa118dfab7, type: 3}
+        m_Texture: {fileID: 2800000, guid: 42a224db841ce564d80e5a8037e03896, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -67,16 +71,28 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SecondCaveTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SecondTerrainTexture:
-        m_Texture: {fileID: 2800000, guid: c3df16848c8a8bd4cb13b0e0b8a84bc0, type: 3}
+        m_Texture: {fileID: 2800000, guid: f78196130ab15034192eb77c00fddb02, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2D:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ThirdCaveTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ThirdTerrainTexture:
-        m_Texture: {fileID: 2800000, guid: c3df16848c8a8bd4cb13b0e0b8a84bc0, type: 3}
+        m_Texture: {fileID: 2800000, guid: f946346c7672bc1499b865682aeb0a22, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -98,6 +114,8 @@ Material:
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _CaveYBlend: 1
+    - _CaveYThreshold: 13
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2

@@ -30,7 +30,7 @@ public class ToolItem : BaseItem
 
         RaycastHit hit;
         if (Physics.Raycast(holder.transform.position, holder.transform.forward, out hit, reach, worldLayers))
-        {
+        {   
             if (((1 << hit.collider.gameObject.layer) & toolEffectorLayers) == 0) { return; }
             var components = hit.collider.gameObject.GetComponents<MonoBehaviour>();
             foreach (var component in components)

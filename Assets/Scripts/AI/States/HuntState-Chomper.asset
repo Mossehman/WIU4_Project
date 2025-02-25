@@ -16,9 +16,9 @@ MonoBehaviour:
   attacktime: 0.8
   attackRange: 4
   huntRange: 35
-  damage: 35
+  damage: 65
   hungerGainOnKill: 15
   hungerGainMultiplier: 0.25
+  speedmod: 0
   usesPathfinder: 0
   pathUpdateCooldown: 1
-  speedmod: 0

@@ -115,6 +115,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 }
                 else
                 {
+                    if (!fsm.SwapState("Lure"))
                     fsm.SwapState("Patrol");
                 }
             }

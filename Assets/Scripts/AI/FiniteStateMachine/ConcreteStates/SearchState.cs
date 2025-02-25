@@ -72,7 +72,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
                     if (target.gameObject.layer == LayerMask.NameToLayer("Passive"))
                     {
-                        AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Im gonna kill you rahh", new object[]{ fsm.gameObject });
+                        //AIBlackboardMediator.Instance.Notify(fsm.gameObject, "Im gonna kill you rahh", new object[]{ fsm.gameObject });
                     }
                     if (stats.CurrentGroup != null)
                     {

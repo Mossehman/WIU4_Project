@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
@@ -41,6 +40,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         [Header("Advanced Info")]
         public Group CurrentGroup;
         public Vector3 FlockDirection = Vector3.zero;
+        public Vector3 velocity = Vector3.zero;
         private Vector3 currentFlockDirection = Vector3.zero;
         public float FlockSpeed = 0.05f;
         public float FlockTightness = 1.0f;
@@ -48,11 +48,12 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public float ProductionCooldown = 30.0f;
         public Pathfinder pathfinder;
         private float ProductionDuration = 30.0f;
+        private Vector3 gravity = new Vector3(0, -9.81f, 0);
 
         public CreatureShelter assignedHome;
         public bool isSheltered = false;
         public bool isDead = false;
-
+        public bool isJumping = false;
         [Header("Audio Info")]
         public SoundInfo goes;
         public SoundInfo walk;
@@ -80,12 +81,12 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             voiceSource = gameObject.AddComponent<AudioSource>(); 
 
             if (transform.childCount > 0) animator = transform.GetChild(0).GetComponent<Animator>();
-            
+            velocity = gravity;
             maxhealth = health;
             ProductionDuration = ProductionCooldown;
             OnEntityHurt += (CreatureInfo _) =>
             {
-                Debug.Log("Hurt");
+                //Debug.Log("Hurt");
                 AudioEventSystem.PlaySound(hurt.name, default, 1, transform.position);
             };
 
@@ -93,7 +94,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             {
                 if (!isDead)
                 {
-                    Debug.Log("Dead");
+                    //Debug.Log("Dead");
                     AudioEventSystem.PlaySound(dead.name, default, 1, transform.position);
                     fsm.enabled = false;
                     if (animator != null) animator.SetBool("isMoving", false);
@@ -132,20 +133,20 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     {
                         currentFlockDirection = (CurrentGroup != null ?
                            (CurrentGroup.Leader == this ? Vector3.zero : FlockDirection * FlockSpeed)
-                           : Vector3.zero) * 0.01f;
+                           : Vector3.zero);
                         if (currentFlockDirection.sqrMagnitude > 0)
-                            characterController.Move(currentFlockDirection);
+                            characterController.Move(currentFlockDirection * Time.deltaTime);
                     }
                 }
             }
 
             if (animator != null)
             {
-                animator.SetFloat("speedMod", currentRawMoveDirection.sqrMagnitude * animationSpeedAmp);
+                animator.SetFloat("speedMod", currentRawMoveDirection.magnitude * animationSpeedAmp);
                 if (currentRawMoveDirection.sqrMagnitude > 0)
                 {
                     animator.SetBool("isMoving", true);
-                    AudioEventSystem.PlaySoundSmart(walk, ref sfxSource, default, default, true, true, Mathf.Pow(currentRawMoveDirection.sqrMagnitude, audioPitchAmp), true);
+                    AudioEventSystem.PlaySoundSmart(walk, ref sfxSource, default, default, true, true, currentRawMoveDirection.magnitude * audioPitchAmp, true);
                 }
                 else
                     animator.SetBool("isMoving", false);
@@ -160,6 +161,8 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     Destroy(gameObject);
                 }
             }
+            characterController.Move(velocity * Time.deltaTime);
+            velocity = new Vector3(0, velocity.y, 0);
         }
         private void UpdateFlockingBehaviour()
         {
@@ -183,6 +186,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
 
             FlockDirection = (cohesion + separation).normalized;
+            currentRawMoveDirection += FlockDirection;
         }
 
         public void Move(float speedMod)
@@ -198,9 +202,15 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             currentRawMoveDirection = moveDirection * speedMod;
             if (moveDirection.sqrMagnitude > 0)
             {
-                AlignToSurface();  // Align entity to the terrain normal
-                RotateTowardsMovement(moveDirection); // Rotate in the movement direction
-                characterController.Move(0.01f * speedMod * moveDirection); // Adjust speed as needed
+                AlignToSurface();
+                RotateTowardsMovement(moveDirection);
+
+                if (Physics.Raycast(transform.position, moveDirection, out RaycastHit hit, 2f, LayerMask.GetMask("Terrain")))
+                {
+                    Jump();
+                }
+
+                velocity = speedMod * moveDirection + new Vector3(0, velocity.y, 0);
             }
 
             // Check if we reached the target node
@@ -211,7 +221,16 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             }
         }
 
+        public void Move(Vector3 dir, float speedMod)
+        {
+            if (isDead) return;
+            currentRawMoveDirection = dir * speedMod;
+            RotateTowardsMovement(dir.normalized);
 
+            if (Physics.Raycast(transform.position, dir.normalized, out RaycastHit hit, 2f, LayerMask.GetMask("Terrain")))
+                Jump();
+            velocity = dir * speedMod;
+        }
         private void AlignToSurface()
         {
             RaycastHit hit;
@@ -223,27 +242,44 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         }
         private void RotateTowardsMovement(Vector3 direction)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(direction, transform.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f); // Smooth rotation
+            if (direction.sqrMagnitude > 0f)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction, transform.up);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f); // Smooth rotation
+            }
         }
 
-        public void Move(Vector3 dir)
+        private void Jump()
         {
-            if (isDead) return;
-            currentRawMoveDirection = dir;
-
-            if (dir.sqrMagnitude > 0)
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(dir, Vector3.up), 0.01f);
-            characterController.Move(dir * 0.01f);
+            if (characterController.isGrounded)
+            {
+                isJumping = true;
+            }
         }
 
         private void LateUpdate()
         {
             if (isDead) return;
 
-            characterController.Move(Vector3.down * 0.05f);
             if (currentFlockDirection.sqrMagnitude > 0)
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(currentFlockDirection, Vector3.up), 0.01f);
+
+            if (characterController.isGrounded)
+            {
+                if (velocity.y < 0)
+                    velocity.y = -9.81f;
+
+                if (isJumping)
+                {
+                    velocity.y = 120f;
+                    isJumping = false;
+                }
+            }
+            else
+            {    
+                velocity.y = gravity.y * Time.deltaTime * 50f;
+            }
+
         }
 
         private void OnDestroy()
@@ -299,6 +335,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             Gizmos.DrawCube(transform.position + new Vector3(0, 4, 0), new Vector3(1, 1, 1));
             Gizmos.color = new Color(0, 0, 1, 0.25f);
             Gizmos.DrawLine(transform.position, (transform.position + transform.forward * 5f));
+            Gizmos.DrawLine(transform.position, transform.position + currentRawMoveDirection);
         }
 
         public void Damage(int damageValue)
