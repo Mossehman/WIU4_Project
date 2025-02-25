@@ -1,6 +1,8 @@
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
+using UnityEngine.TextCore.Text;
 
 public class PlayerController : MonoBehaviour
 {
@@ -36,7 +38,6 @@ public class PlayerController : MonoBehaviour
 
     private bool isThirdPerson = false;
 
-
     // Camera bobbing parameters
     [SerializeField] private float bobFrequency = 6f; // Speed of bobbing
     [SerializeField] private float bobAmplitude = 0.1f; // Intensity of bobbing
@@ -46,10 +47,30 @@ public class PlayerController : MonoBehaviour
     private float bobTimer = 0f;
     private Vector3 defaultOffset;
 
+
+    public float playerSpeed = 5.0f;
+    public float sprintSpeed = 7.0f;
+    public float crouchSpeed = 2.0f;
+    public float jumpHeight = 0.8f;
+    public float gravityMultiplier = 2f;
+    public float gravityValue = -9.81f;
+
+    private Transform cameraTransform;
+
+    private Vector3 gravityVelocity;
+    private Vector3 targetDirection;
+
+    private float speed;
+    private float velocitySmoothing = 0.1f;
+
+    private bool isGrounded;
+
+    [SerializeField] private OrbAI orbieAI;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
 
         // Get the CinemachineCameraOffset component
         cameraOffset = cinemachineVirtualCamera.GetComponent<CinemachineCameraOffset>();
@@ -60,10 +81,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        cameraTransform = Camera.main.transform;
+
+        gravityValue *= gravityMultiplier;
+    }
+
     private void Update()
     {
-        HandleMovement();
-        HandleCamera();
+        if (!isThirdPerson)
+        {
+            HandleMovement();
+            HandleCamera();
+            orbieAI.DeactivateThirdPersonMode();
+        }
+        else
+        {
+            HandleThirdMovement();
+            orbieAI.ActivateThirdPersonMode();
+        }
 
         CheckShelter();
 
@@ -71,6 +108,52 @@ public class PlayerController : MonoBehaviour
         if (Keyboard.current.vKey.wasPressedThisFrame)
         {
             ToggleCameraView();
+        }
+    }
+
+    private void HandleThirdMovement()
+    {
+        isGrounded = characterController.isGrounded;
+
+        if (isGrounded && gravityVelocity.y < 0)
+        {
+            gravityVelocity.y = 0f;
+        }
+
+        Vector3 forward = cameraTransform.forward;
+        forward.y = 0;
+        Vector3 right = cameraTransform.right;
+        targetDirection = moveInput.x * right + moveInput.y * forward;
+
+        float moveSpeed = isSprinting ? sprintSpeed : playerSpeed;
+        Vector3 moveVelocity = targetDirection.normalized * moveSpeed;
+
+        characterController.Move(moveVelocity * Time.deltaTime + gravityVelocity * Time.deltaTime);
+
+        if (targetDirection.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                Time.deltaTime * 5f
+            );
+        }
+
+        // Jump
+        if (jumpPressed && isGrounded)
+        {
+            gravityVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravityValue);
+            jumpPressed = false;
+        }
+
+        // Gravity
+        gravityVelocity.y += gravityValue * Time.deltaTime;
+
+        // Sprinting Reset
+        if (moveInput.magnitude == 0)
+        {
+            isSprinting = false;
         }
     }
 
@@ -84,8 +167,8 @@ public class PlayerController : MonoBehaviour
             thirdPersonCamera.Priority = 10; // Higher priority (active)
 
             // Ensure thirdPersonCamera follows the anchor correctly
-            thirdPersonCamera.Follow = thirdPersonAnchor;
-            thirdPersonCamera.LookAt = transform;
+            //thirdPersonCamera.Follow = thirdPersonAnchor;
+            //thirdPersonCamera.LookAt = transform;
         }
         else
         {

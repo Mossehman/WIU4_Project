@@ -1,4 +1,5 @@
 using UnityEngine;
+using Cinemachine;
 
 public class OrbAI : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class OrbAI : MonoBehaviour
     public Transform cameraTransform; // The player's camera
     public Transform chargingBay;     // The charging station
     public Renderer orbRenderer;      // Orb's material for emissive glow
+    public CinemachineVirtualCamera thirdPersonCam; // Reference to the Cinemachine third-person camera
 
     [Header("Movement Settings")]
     public Vector3 baseOffset = new Vector3(1.5f, 1.8f, -1f); // Default offset from the player
@@ -27,6 +29,7 @@ public class OrbAI : MonoBehaviour
     private float floatTimer;
     private bool isCharging = false;  // Is the orb at the charging bay?
     private Vector3 dynamicOffset; // Adjusted offset considering camera movement
+    private bool isThirdPersonMode = false; // Tracks whether third-person mode is active
 
     void Start()
     {
@@ -38,7 +41,11 @@ public class OrbAI : MonoBehaviour
     {
         if (player == null || cameraTransform == null || chargingBay == null) return;
 
-        if (isCharging)
+        if (isThirdPersonMode)
+        {
+            FacePlayerFromCamera();
+        }
+        else if (isCharging)
         {
             RechargeBattery();
         }
@@ -85,6 +92,26 @@ public class OrbAI : MonoBehaviour
         // Floating animation
         floatTimer += Time.deltaTime * floatSpeed;
         transform.position += new Vector3(0, Mathf.Sin(floatTimer) * floatAmplitude * Time.deltaTime, 0);
+    }
+
+    // Face the Player from Third-Person Camera Position
+    void FacePlayerFromCamera()
+    {
+        if (thirdPersonCam == null) return;
+
+        // Get the position of the third-person camera
+        Vector3 camPosition = thirdPersonCam.transform.position;
+
+        // Position the orb slightly to the side of the camera's view for better visibility
+        Vector3 newOrbPosition = camPosition + thirdPersonCam.transform.forward * -1.5f; // Move slightly behind the camera
+        newOrbPosition.y = player.position.y + 1.5f; // Keep the orb at a floating height
+
+        // Smooth transition to this position
+        transform.position = Vector3.Lerp(transform.position, newOrbPosition, Time.deltaTime * followSpeed);
+
+        // Rotate to always face the player
+        Vector3 lookDirection = (player.position - transform.position).normalized;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * rotationSpeed);
     }
 
     // Orb Returns to Charging Bay
@@ -141,5 +168,17 @@ public class OrbAI : MonoBehaviour
     public float GetBatteryLevel()
     {
         return battery;
+    }
+
+    // Enable Third-Person Mode (Stops Moving and Faces Player)
+    public void ActivateThirdPersonMode()
+    {
+        isThirdPersonMode = true;
+    }
+
+    // Disable Third-Person Mode (Resumes Movement)
+    public void DeactivateThirdPersonMode()
+    {
+        isThirdPersonMode = false;
     }
 }
