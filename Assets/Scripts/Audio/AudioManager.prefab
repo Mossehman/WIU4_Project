@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8785993860881556281}
   - component: {fileID: 7204188402395627519}
+  - component: {fileID: 1469498740745679397}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -67,3 +68,16 @@ MonoBehaviour:
     RolloffMode: 1
     MinimumRolloffDistance: 10
     MaximumRolloffDistance: 30
+--- !u!114 &1469498740745679397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3743202204434670995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de43189a86f9bb84ebf63f6f0593f5e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicplaylist: {fileID: 11400000, guid: 242995f5115bb9745a1bd24107697cf3, type: 2}

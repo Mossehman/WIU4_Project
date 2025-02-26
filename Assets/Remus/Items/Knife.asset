@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID1
   _displayName: Dull Knife
   _itemDescription: Allows you to harvest cactus, does barely any damage
-  itemIcon: {fileID: 21300000, guid: d6c3a8d70264d484baa02fb4495007a9, type: 3}
+  itemIcon: {fileID: 21300000, guid: 6b79e220592e0b74583c7e8888b16701, type: 3}
   itemModel: {fileID: 2765399171251465763, guid: 9686bf07c94c1004ea064f5a3c4b0921, type: 3}
   _weight: 1
   _quantity: 0

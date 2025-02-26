@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID14
   _displayName: Ironite Axe
   _itemDescription: Axe made of iron, cuts down foliage faster
-  itemIcon: {fileID: 21300000, guid: b676974fb2028aa4bbcce2c677692b48, type: 3}
+  itemIcon: {fileID: 21300000, guid: 74d523639e8678e4fb23408810fb8a35, type: 3}
   itemModel: {fileID: 113951859308317000, guid: c799a5ad0af8b314e9105146660a6d2b, type: 3}
   _weight: 1
   _quantity: 0

@@ -229,7 +229,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
 
             if (Physics.Raycast(transform.position, dir.normalized, out RaycastHit hit, 2f, LayerMask.GetMask("Terrain")))
                 Jump();
-            velocity = dir * speedMod;
+            velocity = dir * speedMod + new Vector3(0, velocity.y, 0);
         }
         private void AlignToSurface()
         {

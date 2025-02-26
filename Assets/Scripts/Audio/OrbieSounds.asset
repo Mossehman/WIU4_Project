@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: OrbieSounds
   m_EditorClassIdentifier: 
   libraryname: 
-  sounds: []
+  sounds:
+  - soundName: orbie-existing
+    clip: {fileID: 8300000, guid: 853ea853a3f44f74baf91a36ed38f201, type: 3}
+    priority: 128
+    volume: 1

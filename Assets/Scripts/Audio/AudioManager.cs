@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Audio;
 using UnityEngine.UIElements;
+using System.Collections;
 
 [System.Serializable]
 public enum AudioPriority
@@ -32,6 +33,12 @@ public class AudioManager : MonoBehaviour
     private AudioSource BackgroundMusic;
     private Queue<AudioSource> sfxQueue;
 
+    private Coroutine musicTransitionCoroutine;
+    private Coroutine ambienceTransitionCoroutine;
+
+    public AudioSource GetMusicSource() => BackgroundMusic;
+    public AudioSource GetAmbienceSource() => BackgroundAmbience;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -39,14 +46,16 @@ public class AudioManager : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
         InitializePool();
+        BackgroundAmbience = gameObject.AddComponent<AudioSource>();
+        BackgroundMusic = gameObject.AddComponent<AudioSource>();
 
         // Subscribe to AudioEventSystem
         AudioEventSystem.PlaySoundEvent += PlaySoundFromEvent;
-        AudioEventSystem.PlayMusicEvent += PlayMusicFromEvent;
+        AudioEventSystem.PlayMusicEventByName += PlayMusicFromEvent;
+        AudioEventSystem.PlayMusicEventByClip += PlayMusicFromEvent;
         AudioEventSystem.PlayAmbienceEvent += PlayAmbienceFromEvent;
 
-        BackgroundAmbience = gameObject.AddComponent<AudioSource>();
-        BackgroundMusic = gameObject.AddComponent<AudioSource>();
+
     }
 
     private void InitializePool()
@@ -113,7 +122,7 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioClip clip = null;
-        float defaultVolume = 1f; // Default fallback volume
+        float defaultVolume = 1f;
         AudioPriority defaultPriority = AudioPriority.Critical;
 
         foreach (var library in soundLibraries)
@@ -128,16 +137,25 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // Use provided volume or fallback to default
         float finalVolume = volume ?? defaultVolume;
 
-        BackgroundMusic.Stop();
-        BackgroundMusic.clip = clip;
-        BackgroundMusic.volume = finalVolume;
-        BackgroundMusic.loop = true;
-        BackgroundMusic.Play();
-    }
+        if (musicTransitionCoroutine != null)
+            StopCoroutine(musicTransitionCoroutine);
 
+        musicTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundMusic, clip, finalVolume, 2f));
+    }
+    private void PlayMusicFromEvent(AudioClip musicClip, float? volume = null)
+    {
+        if (musicClip == null) return;
+
+        float defaultVolume = 1f;
+        float finalVolume = volume ?? defaultVolume;
+
+        if (musicTransitionCoroutine != null)
+            StopCoroutine(musicTransitionCoroutine);
+
+        musicTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundMusic, musicClip, finalVolume, 2f));
+    }
     private void PlayAmbienceFromEvent(string ambienceName, float? volume = null)
     {
         if (string.IsNullOrEmpty(ambienceName)) return;
@@ -148,7 +166,7 @@ public class AudioManager : MonoBehaviour
         }
 
         AudioClip clip = null;
-        float defaultVolume = 1f; // Default fallback volume
+        float defaultVolume = 1f;
         AudioPriority defaultPriority = AudioPriority.Critical;
 
         foreach (var library in soundLibraries)
@@ -163,14 +181,13 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // Use provided volume or fallback to default
         float finalVolume = volume ?? defaultVolume;
 
-        BackgroundAmbience.Stop();
-        BackgroundAmbience.clip = clip;
-        BackgroundAmbience.volume = finalVolume;
-        BackgroundAmbience.loop = true;
-        BackgroundAmbience.Play();
+        if (this == null)  return;
+        if (ambienceTransitionCoroutine != null)
+            StopCoroutine(ambienceTransitionCoroutine);
+
+        ambienceTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundAmbience, clip, finalVolume, 2f));
     }
 
     /// <summary>
@@ -370,5 +387,35 @@ public class AudioManager : MonoBehaviour
         source.pitch = randomPitch ? UnityEngine.Random.Range(minPitch, maxPitch) : 1f;
 
         source.Play();
+    }
+
+    private IEnumerator FadeAudio(AudioSource audioSource, AudioClip newClip, float targetVolume, float duration)
+    {
+        if (audioSource.isPlaying)
+        {
+            float startVolume = audioSource.volume;
+
+            // Fade out
+            for (float t = 0; t < duration; t += Time.deltaTime)
+            {
+                audioSource.volume = Mathf.Lerp(startVolume, 0, t / duration);
+                yield return null;
+            }
+
+            audioSource.Stop();
+        }
+
+        // Assign new clip and start playback
+        audioSource.clip = newClip;
+        audioSource.Play();
+
+        // Fade in
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            audioSource.volume = Mathf.Lerp(0, targetVolume, t / duration);
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
     }
 }

@@ -61,9 +61,9 @@ Material:
     - _SunSize: 0.2
     - _ZenithBlend: 0.4
     m_Colors:
-    - _GroundColor: {r: 0.5943396, g: 0.351973, b: 0.1541919, a: 0}
+    - _GroundColor: {r: 0.8490566, g: 0.5480094, b: 0.3003738, a: 0}
     - _HorizonColor: {r: 0.3882353, g: 0.3882353, b: 0.3882353, a: 0}
-    - _NightSkyColor: {r: 0.29894277, g: 0.076660745, b: 0.3660378, a: 0}
-    - _SkyColor: {r: 0.7207546, g: 0.56655025, b: 0.14551082, a: 0}
-    - _SunColor: {r: 11.867108, g: 11.984313, b: 6.387865, a: 0}
+    - _NightSkyColor: {r: 0.14217466, g: 0.058873206, b: 0.19811314, a: 1}
+    - _SkyColor: {r: 0.58459413, g: 0.8207547, b: 0.78370047, a: 0}
+    - _SunColor: {r: 13.493466, g: 13.584906, b: 5.4467783, a: 0}
   m_BuildTextureStacks: []

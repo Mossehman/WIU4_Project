@@ -19,6 +19,19 @@ public class FPController : MonoBehaviour
     {
         HandleMovement();
         HandleMouseLook();
+
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+            AudioEventSystem.PlayAmbience("scifi");
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            AudioEventSystem.PlayAmbience("desert");
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            AudioEventSystem.PlayAmbience("night");
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+            AudioEventSystem.PlayAmbience("cave");
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            AudioEventSystem.PlayAmbience("rain");
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            AudioEventSystem.PlayAmbience("snow");
     }
 
     void HandleMovement()
