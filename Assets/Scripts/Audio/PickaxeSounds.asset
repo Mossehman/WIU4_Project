@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
   m_Name: PickaxeSounds
   m_EditorClassIdentifier: 
-  libraryname: 
-  sounds: []
+  libraryname: PickaxeSounds
+  sounds:
+  - soundName: 
+    clip: {fileID: 8300000, guid: b41c85b569539914b829d0e0cfbf05ad, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: 5d9ba24f7157cb04a883348aeed66ea4, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: a3202e2fb79da05469e1e4b7661d1178, type: 3}
+    priority: 64
+    volume: 1

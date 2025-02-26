@@ -6,7 +6,8 @@ using UnityEngine.UIElements;
 public class AudioEventSystem : MonoBehaviour
 {
     public static Action<string, AudioPriority, float?, Vector3?, bool, float, float> PlaySoundEvent;
-    public static Action<string, float?> PlayMusicEvent;
+    public static Action<string, float?> PlayMusicEventByName;
+    public static Action<AudioClip, float?> PlayMusicEventByClip;
     public static Action<string, float?> PlayAmbienceEvent;
 
     /// <summary>
@@ -38,9 +39,12 @@ public class AudioEventSystem : MonoBehaviour
     /// <param name="volume">(Optional) The volume of the audio when you wish to override</param>
     public static void PlayMusic(string musicName, float? volume = null)
     {
-        PlayMusicEvent?.Invoke(musicName, volume);
+        PlayMusicEventByName?.Invoke(musicName, volume);
     }
-
+    public static void PlayMusic(AudioClip musicName, float? volume = null)
+    {
+        PlayMusicEventByClip?.Invoke(musicName, volume);
+    }
     /// <summary>
     /// This will invoke an event to play an ambient sound, it will always loop
     /// </summary>

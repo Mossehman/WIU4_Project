@@ -14,7 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   libraryname: Ambience
   sounds:
-  - soundName: 
+  - soundName: scifi
     clip: {fileID: 8300000, guid: 50d121783af01fb439a3fc6e49fa308b, type: 3}
-    priority: 128
+    priority: 0
+    volume: 1
+  - soundName: desert
+    clip: {fileID: 8300000, guid: 1ef70ad7f36a7c0419e9faeb3e349766, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: night
+    clip: {fileID: 8300000, guid: 39235e473c80030478794c19c3cdb8a7, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: cave
+    clip: {fileID: 8300000, guid: 125f7be6326b3694bbb5b2cae62ca55b, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: rain
+    clip: {fileID: 8300000, guid: 38dda189952793248a720d5944290571, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: snow
+    clip: {fileID: 8300000, guid: 7ada3a906ba6354458b52b98dee6e40b, type: 3}
+    priority: 0
     volume: 1

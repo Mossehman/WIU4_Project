@@ -18,3 +18,19 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: c8b29f450b9e4344e92cd46d3d7ba999, type: 3}
     priority: 64
     volume: 1
+  - soundName: door-open
+    clip: {fileID: 8300000, guid: 683710caa9a828c479be0ba60d0e5c41, type: 3}
+    priority: 128
+    volume: 1
+  - soundName: door-close
+    clip: {fileID: 8300000, guid: fe0698160a987ee49b67ef1aa21e5156, type: 3}
+    priority: 128
+    volume: 1
+  - soundName: shimmering-object
+    clip: {fileID: 8300000, guid: 271dadfc2f091874e9a1e747d3fee23d, type: 3}
+    priority: 64
+    volume: 1
+  - soundName: mushroom-squeezing
+    clip: {fileID: 8300000, guid: 1fc6ed807794bdd4cbbbfb6eb3a760f5, type: 3}
+    priority: 128
+    volume: 1
