@@ -5,10 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Remus/Main Game Scene.unity
-    guid: d62bd39332ff602479a8f3179427f414
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Test_AaronScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
@@ -17,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Remus/Menu.unity
     guid: 42c63162aac6bd04f914825a862ceb84
+  - enabled: 1
+    path: Assets/Remus/Main Game Scene.unity
+    guid: d62bd39332ff602479a8f3179427f414
+  - enabled: 1
+    path: Assets/Remus/EndCutscene.unity
+    guid: bb60462e44cde3344a7767fcea64810c
   m_configObjects: {}

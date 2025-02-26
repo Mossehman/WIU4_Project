@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class ProximityDoor : MonoBehaviour
 {
-    public Transform player; // Assign the player object in the Inspector
-    public float activationDistance = 3f; // Distance at which the door opens
-    public float deactivationDistance = 5f; // Distance at which the door closes
-    public string animationBool = "IsOpen"; // Animator parameter name
+    public Transform player;
+    public float activationDistance = 3f;
+    public float deactivationDistance = 5f;
+    public string animationBool = "IsOpen";
 
     [SerializeField] private Animator animator;
     private bool isOpen = false;

@@ -2,20 +2,20 @@ using UnityEngine;
 
 public class ShipExitInteraction : InteractionObject
 {
-    public GameObject crashedShip;  // Assign the crashed ship in Inspector
-    public GameObject shipInterior; // Assign the ship interior in Inspector
-    public Transform outsideSpawnPoint; // Assign the spawn point outside the ship
-    public GameObject player; // Assign the player GameObject
+    public GameObject crashedShip;
+    public GameObject shipInterior;
+    public Transform outsideSpawnPoint;
+    public GameObject player;
 
     public override void Interact()
     {
         if (shipInterior != null)
-            shipInterior.SetActive(false);  // Hide the ship interior
+            shipInterior.SetActive(false);
 
         if (crashedShip != null)
-            crashedShip.SetActive(true);  // Enable the crashed ship
+            crashedShip.SetActive(true);
 
         if (player != null && outsideSpawnPoint != null)
-            player.transform.position = outsideSpawnPoint.position; // Teleport player outside
+            player.transform.position = outsideSpawnPoint.position;
     }
 }

@@ -65,6 +65,10 @@ namespace Player.Inventory
         [SerializeField]    private GameObject              _infoPanel;
         [SerializeField]    private GameObject              _mapPanel;
 
+        [SerializeField]    private GameObject              _crosshair;
+        [SerializeField]    private GameObject              _inventoryIcon;
+        [SerializeField]    private GameObject              _inventoryText;
+
         [Header("Hotbar Transform Settings")]
         private RectTransform _hotbarRect;
         private GridLayoutGroup _hotbarGrid;
@@ -83,6 +87,81 @@ namespace Player.Inventory
         private Vector2 _openedOffsetMax;
         private Vector2 _openedSpacing;
         private TextAnchor _openedAlignment;
+
+        public BaseItem[] GetHotbar()
+        {
+            return _hotbarItems;
+        }
+
+        public int GetItemCount(string itemID)
+        {
+            int count = 0;
+
+            // Check Inventory
+            foreach (BaseItem item in _inventoryItems)
+            {
+                if (item.getID() == itemID)
+                {
+                    count += item._quantity;
+                }
+            }
+
+            // Check Hotbar
+            foreach (BaseItem hotbarItem in _hotbarItems)
+            {
+                if (hotbarItem != null && hotbarItem.getID() == itemID)
+                {
+                    count += hotbarItem._quantity;
+                }
+            }
+
+            return count;
+        }
+
+        public void RemoveItem(string itemID, int amountToRemove)
+        {
+            int remainingToRemove = amountToRemove;
+
+            // Remove from Hotbar first
+            for (int i = 0; i < _hotbarItems.Length; i++)
+            {
+                if (_hotbarItems[i] != null && _hotbarItems[i].getID() == itemID)
+                {
+                    int removeAmount = Mathf.Min(remainingToRemove, _hotbarItems[i]._quantity);
+                    _hotbarItems[i]._quantity -= removeAmount;
+                    remainingToRemove -= removeAmount;
+
+                    if (_hotbarItems[i]._quantity <= 0)
+                    {
+                        _hotbarItems[i] = null;
+                    }
+
+                    if (remainingToRemove <= 0) break; // Stop if enough removed
+                }
+            }
+
+            // Remove from Inventory if still needed
+            for (int i = 0; i < _inventoryItems.Count && remainingToRemove > 0; i++)
+            {
+                if (_inventoryItems[i].getID() == itemID)
+                {
+                    int removeAmount = Mathf.Min(remainingToRemove, _inventoryItems[i]._quantity);
+                    _inventoryItems[i]._quantity -= removeAmount;
+                    remainingToRemove -= removeAmount;
+
+                    if (_inventoryItems[i]._quantity <= 0)
+                    {
+                        _inventoryItems.RemoveAt(i);
+                        i--; // Adjust index after removal
+                    }
+
+                    if (remainingToRemove <= 0) break; // Stop if enough removed
+                }
+            }
+
+            RefreshInventoryUI();
+            RefreshHotbarUI();
+        }
 
         void Start()
         {
@@ -293,40 +372,47 @@ namespace Player.Inventory
             }
         }
 
-        public void AddItem(BaseItem newItem)
-        {
-            //// try to add to hotbar first
-            //for (int i = 0; i < _maxHotbarItems; i++)
-            //{
-            //    if (_hotbarItems[i] != null && _hotbarItems[i].getID() == newItem.getID())
-            //    {
-            //        _hotbarItems[i]._quantity++;
-            //        _currentWeight += newItem.getWeight() * newItem._quantity;
-            //        return;
-            //    }
-            //
-            //    if (_hotbarItems[i] != null) continue;
-            //    _hotbarItems[i] = newItem;
-            //    _isLocked.Add(false);
-            //    _currentWeight += newItem.getWeight() * newItem._quantity;
-            //    return;
-            //}
+		public void AddItem(BaseItem newItem)
+		{
+			// Try to add to hotbar first
+			for (int i = 0; i < _maxHotbarItems; i++)
+			{
+				if (_hotbarItems[i] != null && _hotbarItems[i].getID() == newItem.getID())
+				{
+					_hotbarItems[i]._quantity += newItem._quantity;
+					_currentWeight += newItem.getWeight() * newItem._quantity;
+					return;
+				}
 
-            // if hotbar is full, try adding to inventory
-            foreach (var item in _inventoryItems)
-            {
-                if (item.getID() == newItem.getID())
-                {
-                    item._quantity++;
-                    _currentWeight += newItem.getWeight() * newItem._quantity;
-                    return;
-                }
-            }
+				if (_hotbarItems[i] == null)
+				{
+					_hotbarItems[i] = newItem;
+					_isLocked.Add(false);
+					_currentWeight += newItem.getWeight() * newItem._quantity;
+					return;
+				}
+			}
 
-            _inventoryItems.Add(newItem);
-            _isLocked.Add(false);
-            _currentWeight += newItem.getWeight() * newItem._quantity;
-        }
+			// If hotbar is full, try adding to inventory
+			foreach (var item in _inventoryItems)
+			{
+				if (item.getID() == newItem.getID())
+				{
+					Debug.Log($"Item {item.getDisplayName()} already exists in inventory. Increasing quantity.");
+					item._quantity += newItem._quantity;
+					_currentWeight += newItem.getWeight() * newItem._quantity;
+					return;
+				}
+			}
+
+			// Ensure newItem starts with quantity 1 if it's being added for the first time
+			newItem._quantity = Mathf.Max(newItem._quantity, 1);
+			_inventoryItems.Add(newItem);
+			_isLocked.Add(false);
+			_currentWeight += newItem.getWeight() * newItem._quantity;
+
+			Debug.Log($"Added new item: {newItem.getDisplayName()} with quantity {newItem._quantity}");
+		}
 
         private void RenderInventory()
         {
@@ -360,6 +446,61 @@ namespace Player.Inventory
 
                 itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item._quantity.ToString();
                 itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
+            }
+        }
+
+        public void RefreshInventoryUI()
+        {
+            // Clear the inventory UI panel
+            foreach (Transform child in _inventoryPanel.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            List<BaseItem> inventoryItems = GetInventory();
+
+            foreach (BaseItem item in inventoryItems)
+            {
+                GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
+                itemUI.GetComponent<Draggable>()._item = item;
+                itemUI.transform.Find("ItemIcon").GetComponent<Image>().sprite = item.getItemIcon();
+
+                TextMeshProUGUI quantityText = itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>();
+                quantityText.text = item._quantity.ToString();
+
+                Button button = itemUI.GetComponent<Button>();
+                if (button != null)
+                {
+                    button.onClick.AddListener(() => ShowItem(item));
+                }
+                else
+                {
+                    Debug.LogError("Button component missing from itemUI prefab!");
+                }
+            }
+
+            Debug.Log("Inventory UI updated.");
+        }
+
+        public void RefreshHotbarUI()
+        {
+            for (int i = 0; i < _hotbarItems.Length; i++)
+            {
+                Transform slotTransform = _hotbarSlots[i].transform;
+
+                if (_hotbarItems[i] != null)
+                {
+                    slotTransform.Find("ItemIcon").GetComponent<Image>().sprite = _hotbarItems[i].getItemIcon();
+                    slotTransform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = _hotbarItems[i]._quantity.ToString();
+                }
+                else
+                {
+                    // Clear hotbar slot when item is removed
+                    foreach (Transform child in slotTransform)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
             }
         }
 
@@ -433,15 +574,21 @@ namespace Player.Inventory
         {
             if (_inventory.activeInHierarchy == false)
             {
-                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
                 _inventory.SetActive(true);
                 _backgroundPanel.SetActive(false);
                 _vitalsPanel.SetActive(false);
                 _infoPanel.SetActive(false);
                 _mapPanel.SetActive(false);
+
+                _crosshair.SetActive(false);
+                _inventoryIcon.SetActive(false);
+                _inventoryText.SetActive(false);
+
                 RenderInventory();
 
-                // Apply Opened Hotbar settings (from Image 2)
                 _hotbarRect.offsetMin = _openedOffsetMin; // Adjust Left/Bottom
                 _hotbarRect.offsetMax = _openedOffsetMax; // Adjust Right/Top
 
@@ -451,13 +598,18 @@ namespace Player.Inventory
             else
             {
                 Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+
                 _inventory.SetActive(false);
                 _backgroundPanel.SetActive(true);
                 _vitalsPanel.SetActive(true);
                 _infoPanel.SetActive(true);
                 _mapPanel.SetActive(true);
 
-                // Restore Closed Hotbar settings (from Image 1)
+                _crosshair.SetActive(true);
+                _inventoryIcon.SetActive(true);
+                _inventoryText.SetActive(true);
+
                 _hotbarRect.offsetMin = _closedOffsetMin; // Restore Left/Bottom
                 _hotbarRect.offsetMax = _closedOffsetMax; // Restore Right/Top
 
