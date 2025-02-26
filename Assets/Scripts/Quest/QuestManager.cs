@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace QuestSystem
 {
@@ -118,17 +119,55 @@ namespace QuestSystem
             return numCompleted == _quests[_currentQuestIndex].GetSubquests().Count;
         }
 
+        // Pass in base item
         private void OnCollectMission(object[] args)
         {
+            BaseItem item = args[0] as BaseItem;
 
+            foreach (SubQuest goal in _quests[_currentQuestIndex].GetSubquests())
+            {
+                if (goal.GetSubQuestType() == subquestType.COLLECT && goal is Collect collectQuest)
+                {
+                    if (collectQuest.GetTargetID() == item.getID())
+                    {
+                        goal._currentAmount++;
+                    }
+                }
+
+                if (goal._currentAmount >= goal.GetRequiredAmount()) { goal.Complete(); }
+            }
         }
+        // Pass in base item
         private void OnCraftMisson(object[] args)
         {
+            BaseItem item = args[0] as BaseItem;
 
+            foreach (SubQuest goal in _quests[_currentQuestIndex].GetSubquests())
+            {
+                if (goal.GetSubQuestType() == subquestType.CRAFT && goal is Craft craftQuest)
+                {
+                    if (craftQuest.GetTargetID() == item.getID())
+                    {
+                        goal._currentAmount++;
+                    }
+                }
+
+                if (goal._currentAmount >= goal.GetRequiredAmount()) { goal.Complete(); }
+            }
         }
+        // pass in gameobbject
         private void OnHuntMission(object[] args)
         {
+            GameObject go = args[0] as GameObject;
+            foreach (SubQuest goal in _quests[_currentQuestIndex].GetSubquests())
+            {
+                if (goal.GetSubQuestType() == subquestType.HUNT)
+                {
+                    goal._currentAmount++;
+                }
 
+                if (goal._currentAmount >= goal.GetRequiredAmount()) { goal.Complete(); }
+            }
         }
     }
 }

@@ -4,14 +4,15 @@ using UnityEngine;
 
 namespace QuestSystem
 {
+    public enum subquestType
+    {
+        COLLECT,
+        CRAFT,
+        HUNT
+    }
+
     public abstract class SubQuest : ScriptableObject
     {
-        public enum subquestType
-        {
-            COLLECT,
-            CRAFT,
-            HUNT
-        }
         [SerializeField] private string _subquestID;
         [SerializeField] private string _subquestName;
         [SerializeField] public int _currentAmount;
@@ -45,6 +46,8 @@ namespace QuestSystem
     [CreateAssetMenu(fileName = "New Collect Subquest", menuName = "Quests/Collect Sub-Quest")]
     public class Collect : SubQuest
     {
+        [SerializeField] private BaseItem _targetItem;
+
         public override void Init()
         {
             base.Init();
@@ -55,6 +58,8 @@ namespace QuestSystem
         {
             base.CheckSubQuest();
         }
+
+        public string GetTargetID() { return _targetItem.getID(); }
     }
 
     [CreateAssetMenu(fileName = "New Craft Subquest", menuName = "Quests/Craft Sub-Quest")]
@@ -70,6 +75,8 @@ namespace QuestSystem
         {
             base.CheckSubQuest();
         }
+
+        public string GetTargetID() { return _targetItem.getID(); }
     }
 
     [CreateAssetMenu(fileName = "New Hunt Subquest", menuName = "Quests/Hunt Sub-Quest")]
