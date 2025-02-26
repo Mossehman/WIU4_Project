@@ -20,9 +20,11 @@ MonoBehaviour:
   _weight: 1
   _quantity: 0
   recipes: []
+  isHeld: 0
   objToPlacePreview: {fileID: 9207019264188730602, guid: 730ffb9af8a132249af092fa63ae223b, type: 3}
   placementRange: 20
   placementNormalsThreshold: 0.5
   placeableSurfaces:
     serializedVersion: 2
     m_Bits: 256
+  objToPlace: {fileID: 6773663609740343893, guid: 8b402f63df73580479a62c1cb93898ac, type: 3}

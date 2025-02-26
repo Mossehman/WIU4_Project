@@ -16,7 +16,8 @@ MonoBehaviour:
   _displayName: Ironite
   _itemDescription: E
   itemIcon: {fileID: 21300000, guid: 18304199209841140a9307d22d48091a, type: 3}
-  itemModel: {fileID: 0}
+  itemModel: {fileID: 3158072368491625460, guid: c2b42f6f2a0dc084e83720386dbff197, type: 3}
   _weight: 1
   _quantity: 1
   recipes: []
+  isHeld: 0

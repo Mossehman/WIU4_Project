@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class TerrainScanner : MonoBehaviour
 {
+    public static bool isHoldingScanner = false;
+
     [Header("VFX Scanner")]
     public GameObject TerrainScannerPrefab; // VFX prefab
     public float vfxDuration = 3f;
@@ -31,7 +33,7 @@ public class TerrainScanner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && isHoldingScanner)
         {
             SpawnTerrainScannerVFX();
             StartCoroutine(DelayedScan());

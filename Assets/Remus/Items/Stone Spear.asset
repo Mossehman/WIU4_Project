@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e0945d4d5a5e834e84d1b2075b0bf18, type: 3}
+  m_Script: {fileID: 11500000, guid: a7ae79099f6134d44ac069f716d7fe5d, type: 3}
   m_Name: Stone Spear
   m_EditorClassIdentifier: 
   itemName: ID12
   _displayName: Stone Spear
-  _itemDescription: E
+  _itemDescription: aaaa
   itemIcon: {fileID: 21300000, guid: 848a0fa32f624e74fa22d94140d91031, type: 3}
-  itemModel: {fileID: 0}
+  itemModel: {fileID: 6897095569315692755, guid: 4bd462af2d846594c94c166ea8fbcc02, type: 3}
   _weight: 1
   _quantity: 0
   recipes:
@@ -25,3 +25,15 @@ MonoBehaviour:
       quantity: 3
     - itemID: ID5
       quantity: 2
+  isHeld: 0
+  damage: 20
+  reach: 5
+  range: 5
+  useCooldown: 0.8
+  holdToUse: 0
+  toolEffectorLayers:
+    serializedVersion: 2
+    m_Bits: 786432
+  worldLayers:
+    serializedVersion: 2
+    m_Bits: 238945151

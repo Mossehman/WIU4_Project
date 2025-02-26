@@ -16,7 +16,8 @@ MonoBehaviour:
   _displayName: Stone
   _itemDescription: E
   itemIcon: {fileID: 21300000, guid: b4d77cbe80cfbb2408d3846771d8141c, type: 3}
-  itemModel: {fileID: 595492054557384492, guid: 2d2eb5c82b681164088c45c42cfe62c1, type: 3}
+  itemModel: {fileID: 2397130356778340570, guid: 1c2461cca93d70d4684f3da1ac876f30, type: 3}
   _weight: 1
   _quantity: 0
   recipes: []
+  isHeld: 0

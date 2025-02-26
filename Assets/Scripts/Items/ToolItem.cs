@@ -17,6 +17,8 @@ public class ToolItem : BaseItem
     public LayerMask toolEffectorLayers;    // this should be the layers that the tool can affect
     public LayerMask worldLayers;           // this should basically be every layer besides the player's layer
 
+    public bool isWeapon = true;
+
     public override void OnItemHeld(GameObject holder) { 
         return; 
     }
@@ -40,7 +42,18 @@ public class ToolItem : BaseItem
     public override void OnItemLeftClick(GameObject holder) {
         if ((isUsingItem && !holdToUse) || useCooldownTimer > 0) { return; }
 
-
+        Animator animator = holder.GetComponent<Animator>();
+        if (animator != null)
+        {
+            if (isWeapon)
+            {
+                animator.SetTrigger("Attack");
+            }
+            else
+            {
+                animator.SetTrigger("Mine");
+            }
+        }
         RaycastHit hit;
         if (Physics.Raycast(holder.transform.position, holder.transform.forward, out hit, reach, worldLayers))
         {   
@@ -51,11 +64,15 @@ public class ToolItem : BaseItem
                 var damageable = component as IDamageable;
                 if (damageable == null) continue;
 
+
+
                 damageable.Damage(damage);
                 ///TODO: Play a sfx for when the weapon is used, maybe make it do different damage depending on which layermask was hit
-                return;
+                break;
             }
         }
+
+
         isUsingItem = true;
         useCooldownTimer = useCooldown;
         return; 

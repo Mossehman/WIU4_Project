@@ -16,10 +16,11 @@ MonoBehaviour:
   _displayName: Circuit Board
   _itemDescription: E
   itemIcon: {fileID: 21300000, guid: 749a5e39578099b4296bc0d4d7e19d0d, type: 3}
-  itemModel: {fileID: 0}
+  itemModel: {fileID: 9060180330377884731, guid: 6444ce89f03a42046bfee73f0e633e5a, type: 3}
   _weight: 1
-  _quantity: 1
+  _quantity: 0
   recipes:
   - data:
     - itemID: ID4
       quantity: 5
+  isHeld: 0

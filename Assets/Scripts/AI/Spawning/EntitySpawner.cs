@@ -14,6 +14,7 @@ public class EntitySpawner : MonoBehaviour
             int randomSpawnCount = Random.Range((int)data.minSpawn, (int)data.maxSpawn);
             for (int i = 0; i < randomSpawnCount; i++)
             {
+                Debug.Log("Spawned entity!");
                 Instantiate(data.entityPrefab, transform.position, Quaternion.identity);
             }
         }

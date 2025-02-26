@@ -16,7 +16,7 @@ MonoBehaviour:
   _displayName: Stone Axe
   _itemDescription: E
   itemIcon: {fileID: 21300000, guid: a55c0b01f7363dc4ca1ceeeb4a909da4, type: 3}
-  itemModel: {fileID: 0}
+  itemModel: {fileID: 3124636007348482117, guid: a2d14cc2b2cd7ef46bcd7259635e99ef, type: 3}
   _weight: 1
   _quantity: 0
   recipes:
@@ -25,3 +25,4 @@ MonoBehaviour:
       quantity: 1
     - itemID: ID5
       quantity: 2
+  isHeld: 0

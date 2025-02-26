@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9529cbdd8be660499d0dd9a79068a60, type: 3}
+  m_Name: Scanner 2
+  m_EditorClassIdentifier: 
+  itemName: ID2
+  _displayName: Scanner
+  _itemDescription: Tis a scanner
+  itemIcon: {fileID: 21300000, guid: 5a75d6c701cfe1d4499e663712c2bbad, type: 3}
+  itemModel: {fileID: 358668359503837668, guid: 7693c701b152fd24bafbd0847f15e471, type: 3}
+  _weight: 1
+  _quantity: 0
+  recipes: []
+  isHeld: 0

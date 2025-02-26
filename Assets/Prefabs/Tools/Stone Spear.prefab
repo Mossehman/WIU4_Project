@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1583ce422c73d4145953122e0345fe15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: ff93ef9a8a10d454aa7fd134bc03e018, type: 2}
+  itemData: {fileID: 11400000, guid: 709fe51f5e245254292a7f4e6469ad8a, type: 2}
   isDropped: 1
   modelRB: {fileID: 0}
   modelCollider: {fileID: 0}
@@ -210,7 +210,7 @@ Transform:
   m_GameObject: {fileID: 7048164559698261410}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 0.424, z: 0.002}
+  m_LocalPosition: {x: -0.04, y: -0.123, z: -0}
   m_LocalScale: {x: 13.051318, y: 13.630524, z: 13.051318}
   m_ConstrainProportionsScale: 0
   m_Children:

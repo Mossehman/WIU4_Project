@@ -96,6 +96,9 @@ public class AStarBounds : MonoBehaviour
             currentWaypointNode = currentWaypointNode.parent;
         }
 
+
+        uncheckedNodes.Clear();
+        uncheckedNodes = null;
         return path;
     }
 
@@ -188,11 +191,6 @@ public class AStarBounds : MonoBehaviour
 
 
         nodes.TryAdd(index, newNode); // add our pathfinding node to the list of existing nodes
-    }
-
-    private void Update()
-    {
-        Debug.Log("Node Size: " + nodes.Count);
     }
 
     //private void OnDrawGizmos()
