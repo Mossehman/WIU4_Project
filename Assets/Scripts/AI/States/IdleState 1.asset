@@ -15,6 +15,9 @@ MonoBehaviour:
   statetime: 1
   food:
   - Passive
+  - Player
+  groupFormationRadius: 10
+  shelterSearchRadius: 30
   awaketime:
     start: 2
     end: 0

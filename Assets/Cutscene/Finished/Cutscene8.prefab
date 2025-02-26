@@ -9,13 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8667144899607711615}
+  - component: {fileID: 1781469945410718403}
   m_Layer: 0
   m_Name: Cutscene8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8667144899607711615
 Transform:
   m_ObjectHideFlags: 0
@@ -32,6 +33,30 @@ Transform:
   - {fileID: 1094994218178233151}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1781469945410718403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8394773476528162258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30a6ff20e0db7f43ad8e2dfa358e479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetFrames: 30
+  normalizedTimeTransition: 0.95
+  animator: {fileID: 6472270404137457989}
+  sceneTransition: 1
+  nextTransition: {fileID: 0}
+  nextScene: Main Game Scene
+  defaultSkybox: {fileID: 0}
+  spaceSkybox: {fileID: 0}
+  planetSkybox: {fileID: 0}
+  cutsceneNumber: 0
+  fullScreenRenderFeature1: {fileID: 0}
+  fullScreenRenderFeature2: {fileID: 0}
 --- !u!1001 &628403940268156116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -88,6 +113,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: db12c5780ccbd7a49bff0a1bfe35bbbf, type: 2}
+    - target: {fileID: 8011527126355351306, guid: 2e86d29b4b54a664483c1c79ca45cb33, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e70ee8aea97d18149bbde00fd92c99f5, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -96,5 +125,10 @@ PrefabInstance:
 --- !u!4 &1094994218178233151 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2e86d29b4b54a664483c1c79ca45cb33, type: 3}
+  m_PrefabInstance: {fileID: 628403940268156116}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6472270404137457989 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 2e86d29b4b54a664483c1c79ca45cb33, type: 3}
   m_PrefabInstance: {fileID: 628403940268156116}
   m_PrefabAsset: {fileID: 0}

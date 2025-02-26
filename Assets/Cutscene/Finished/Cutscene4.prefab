@@ -9,13 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1071837106512344952}
+  - component: {fileID: 429975643919185895}
   m_Layer: 0
   m_Name: Cutscene4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1071837106512344952
 Transform:
   m_ObjectHideFlags: 0
@@ -32,6 +33,30 @@ Transform:
   - {fileID: 2507478222013196219}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &429975643919185895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8702952212467736135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30a6ff20e0db7f43ad8e2dfa358e479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetFrames: 30
+  normalizedTimeTransition: 0.99
+  animator: {fileID: 8371196635910389185}
+  sceneTransition: 0
+  nextTransition: {fileID: 0}
+  nextScene: 
+  defaultSkybox: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  spaceSkybox: {fileID: 2100000, guid: 2d056ac30ecc9e542b26e06133f23602, type: 2}
+  planetSkybox: {fileID: 2100000, guid: 04baf48beb828034bb3c967be607e41f, type: 2}
+  cutsceneNumber: 4
+  fullScreenRenderFeature1: {fileID: -9055223975590722860, guid: 3ed7f811354098e4b953b15a5c287670, type: 2}
+  fullScreenRenderFeature2: {fileID: 2810600014419442337, guid: 3ed7f811354098e4b953b15a5c287670, type: 2}
 --- !u!1001 &2686084182515548240
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84,6 +109,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.639
       objectReference: {fileID: 0}
+    - target: {fileID: -4509823143501964880, guid: 14d3bbdd560a429448eff1f83b860668, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 74d1c0dce267acd4c85022b17b39f1ca, type: 2}
+    - target: {fileID: -2034016664468511749, guid: 14d3bbdd560a429448eff1f83b860668, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ff2d9e1c1ea99b54e9b2a5c2def081cc, type: 2}
     - target: {fileID: 919132149155446097, guid: 14d3bbdd560a429448eff1f83b860668, type: 3}
       propertyPath: m_Name
       value: Cutscene_4_Export
@@ -105,5 +138,10 @@ PrefabInstance:
 --- !u!4 &2507478222013196219 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 14d3bbdd560a429448eff1f83b860668, type: 3}
+  m_PrefabInstance: {fileID: 2686084182515548240}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8371196635910389185 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 14d3bbdd560a429448eff1f83b860668, type: 3}
   m_PrefabInstance: {fileID: 2686084182515548240}
   m_PrefabAsset: {fileID: 0}
