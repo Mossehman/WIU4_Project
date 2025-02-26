@@ -31,7 +31,14 @@ public class AudioEventSystem : MonoBehaviour
     {
         PlaySoundEvent?.Invoke(soundName, priority, volume, position, randomPitch, minPitch, maxPitch);
     }
-
+    /// <summary>
+    /// Simplified verison of PlaySound, made to use with animation events
+    /// </summary>
+    /// <param name="soundName">The name of the sound you set in the Sound Libraries</param>
+    public static void PlaySoundSimple(string soundName)
+    {
+        PlaySoundEvent?.Invoke(soundName, AudioPriority.Medium, null, null, false, 1, 1);
+    }
     /// <summary>
     /// This will invoke an event to play music, it will always loop
     /// </summary>
