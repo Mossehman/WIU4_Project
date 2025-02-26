@@ -1,3 +1,4 @@
+using DialogueSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace QuestSystem
         [SerializeField]    private List<Quest>     _requriedQuests;
         [SerializeField]    private List<SubQuest>  _subquests;
         [SerializeField]    private questStatus     _questStatus;
+        [SerializeField]    public Dialogue         _dialogueUponCompleteion, _dialogueUponStart;
 
         private void OnValidate()
         {

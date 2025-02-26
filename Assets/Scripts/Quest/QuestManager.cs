@@ -55,7 +55,14 @@ namespace QuestSystem
             {
                 if (_quests[_currentQuestIndex + 1].GetQuestStatus() == questStatus.UNLOCKED)
                 {
+                    EventManager.Fire("OnQuestComplete", _quests[_currentQuestIndex]);
+                    _quests[_currentQuestIndex].SetQuestStatus(questStatus.COMPLETED);
+
                     _currentQuestIndex++;
+
+                    EventManager.Fire("OnQuestStart", _quests[_currentQuestIndex]);
+                    _quests[_currentQuestIndex].SetQuestStatus(questStatus.IN_PROGRESS);
+
                     RefreshQuestUI();
                 }
             }
