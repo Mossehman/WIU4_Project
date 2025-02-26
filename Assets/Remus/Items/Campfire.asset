@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID7
   _displayName: Campfire
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: 7b56131ae85671f4b8a08d05ad52440b, type: 3}
   itemModel: {fileID: 0}
   _weight: 1
   _quantity: 0
