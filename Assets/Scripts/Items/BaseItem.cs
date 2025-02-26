@@ -26,6 +26,9 @@ public class BaseItem : ScriptableObject
 
     public CraftingRecipe[] recipes;
 
+    [HideInInspector]
+    public bool isHeld = false;
+
     public string getID() { return itemName; }
     public string getDisplayName() { return _displayName; }
     public string getItemDescription() { return _itemDescription; }
@@ -43,6 +46,7 @@ public class BaseItem : ScriptableObject
     public virtual void OnItemLeftUp(GameObject holder) { return; } 
     public virtual void OnItemRightUp(GameObject holder) { return; } 
 
+    public virtual void OnRemoved(GameObject holder) { return; }
 
     public virtual void Init() { return; }
     public virtual void Update() { return; }

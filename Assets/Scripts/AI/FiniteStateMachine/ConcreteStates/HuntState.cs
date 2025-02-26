@@ -105,6 +105,11 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                         }
                         return;
                     }
+                    else if (stats.target.TryGetComponent<PlayerStats>(out var playerstats))
+                    {
+                        playerstats.DecreaseStat(PlayerStats.StatType.Health, damage);
+                        return;
+                    }
                     else
                     {
                         Destroy(stats.target);

@@ -128,6 +128,7 @@ namespace Player.Inventory
                 if (_hotbarItems[i] != null && _hotbarItems[i].getID() == itemID)
                 {
                     int removeAmount = Mathf.Min(remainingToRemove, _hotbarItems[i]._quantity);
+                    _hotbarItems[i].OnRemoved(gameObject);
                     _hotbarItems[i]._quantity -= removeAmount;
                     remainingToRemove -= removeAmount;
 
@@ -146,6 +147,7 @@ namespace Player.Inventory
                 if (_inventoryItems[i].getID() == itemID)
                 {
                     int removeAmount = Mathf.Min(remainingToRemove, _inventoryItems[i]._quantity);
+                    _inventoryItems[i].OnRemoved(gameObject);
                     _inventoryItems[i]._quantity -= removeAmount;
                     remainingToRemove -= removeAmount;
 
@@ -161,6 +163,11 @@ namespace Player.Inventory
 
             RefreshInventoryUI();
             RefreshHotbarUI();
+
+            if (_selectedHotbarIndex > -1)
+            {
+                DisplayHeldItem(_hotbarItems[_selectedHotbarIndex]);
+            }
         }
 
         void Start()
@@ -227,6 +234,8 @@ namespace Player.Inventory
                 model.modelRB.isKinematic = true;
             }
 
+            item.isHeld = true;
+
         }
 
         void Update()
@@ -242,6 +251,11 @@ namespace Player.Inventory
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
                 {
+                    if (_selectedHotbarIndex != i && _selectedHotbarIndex != -1 && _hotbarItems[_selectedHotbarIndex] != null)
+                    {
+                        _hotbarItems[_selectedHotbarIndex].isHeld = false;
+                    }
+
                     _selectedHotbarIndex = i;
                     Debug.Log($"Hotbar slot {i + 1} selected.");
                     UpdateHotbarUI();
@@ -275,12 +289,21 @@ namespace Player.Inventory
             foreach (var item in _inventoryItems)
             {
                 if (item == null) continue;
+                item.isHeld = false;
                 item.Update();
             }
 
             foreach (var item in _hotbarItems)
             {
                 if (item == null) continue;
+                if (_selectedHotbarIndex != - 1 && item != _hotbarItems[_selectedHotbarIndex])
+                {
+                    item.isHeld = false;
+                }
+                else
+                {
+                    item.isHeld = true;
+                }
                 item.Update();
             }
 
@@ -557,6 +580,7 @@ namespace Player.Inventory
             {
                 for (int i = 0; i < _maxHotbarItems; i++)
                 {
+                    if (_hotbarItems[i] == null) continue;
                     if (_hotbarItems[i].getID() == item.GetComponent<Draggable>()._item.getID())
                     {
                         _hotbarItems[i] = null;
