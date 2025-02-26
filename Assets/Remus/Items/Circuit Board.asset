@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID17
   _displayName: Circuit Board
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: 749a5e39578099b4296bc0d4d7e19d0d, type: 3}
   itemModel: {fileID: 0}
   _weight: 1
   _quantity: 1

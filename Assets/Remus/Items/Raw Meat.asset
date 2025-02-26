@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID8
   _displayName: Raw Meat
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: 24a52edca3e1f1745b76492e09535ec3, type: 3}
   itemModel: {fileID: 1348358377248304059, guid: 831fd74091af3d844aa0848ccedc3685, type: 3}
   _weight: 1
   _quantity: 0

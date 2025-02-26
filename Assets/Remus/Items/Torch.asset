@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID6
   _displayName: Torch
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: b2ae8e977fdf6d84fb49926813d27d05, type: 3}
   itemModel: {fileID: 0}
   _weight: 1
   _quantity: 0

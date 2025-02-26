@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID16
   _displayName: Ironite Spear
   _itemDescription: Spear made of iron, does more damage to entites when thrown
-  itemIcon: {fileID: 21300000, guid: 8e61b22b19ce3d5459decceb777fbf72, type: 3}
+  itemIcon: {fileID: 21300000, guid: 9ac2c77e12b10e04ba9cb46ad3a934d9, type: 3}
   itemModel: {fileID: 588426268175082474, guid: a97e2150f065dac44a3a96a919ca8d7c, type: 3}
   _weight: 1
   _quantity: 0

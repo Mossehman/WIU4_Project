@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID13
   _displayName: Ironite
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: 18304199209841140a9307d22d48091a, type: 3}
   itemModel: {fileID: 0}
   _weight: 1
   _quantity: 1

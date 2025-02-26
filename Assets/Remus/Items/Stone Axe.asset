@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID10
   _displayName: Stone Axe
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: a55c0b01f7363dc4ca1ceeeb4a909da4, type: 3}
   itemModel: {fileID: 0}
   _weight: 1
   _quantity: 0

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1383555210}
-  m_IndirectSpecularColor: {r: 0.30362463, g: 0.13084488, b: 0.0456931, a: 1}
+  m_IndirectSpecularColor: {r: 0.32657498, g: 0.2196277, b: 0.14108142, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 187356261}
   m_Lens:
-    FieldOfView: 60.000004
+    FieldOfView: 70
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -26263,7 +26263,7 @@ MonoBehaviour:
   hours: 8
   minutes: 0
   days: 1
-  secondsPerHour: 1
+  secondsPerHour: 7.5
   dayTimeText: {fileID: 1402304512}
   timeOfTheDay: 1
   volumetricFogMaterial: {fileID: 2100000, guid: 6a316c1e3fb5ec0449b3baa992146f66, type: 2}
@@ -35281,7 +35281,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 60.000004
+  field of view: 70
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -35519,7 +35519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -65940,7 +65940,7 @@ Transform:
   m_GameObject: {fileID: 8773215132270094984}
   serializedVersion: 2
   m_LocalRotation: {x: 0.027488675, y: 0.8553681, z: -0.045631897, w: 0.51527417}
-  m_LocalPosition: {x: 14.557122, y: 18.895632, z: -36.353157}
+  m_LocalPosition: {x: 15.121571, y: 19.50497, z: -36.576424}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -66138,9 +66138,9 @@ MonoBehaviour:
   m_Priority: 0
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 1001476409}
+  m_Follow: {fileID: 187356261}
   m_Lens:
-    FieldOfView: 40
+    FieldOfView: 70
     OrthographicSize: 10
     NearClipPlane: 0.1
     FarClipPlane: 5000
@@ -66751,7 +66751,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8568141123611905501, guid: 109f864b491378547b7ca6a8c0afdaef, type: 3}
       propertyPath: dayLengthInSeconds
-      value: 24
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 8568141123611905501, guid: 109f864b491378547b7ca6a8c0afdaef, type: 3}
       propertyPath: volumetricFogMaterial

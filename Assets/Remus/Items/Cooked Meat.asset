@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID9
   _displayName: Cooked Meat
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: 080cca325d7a46744a2d46078c4d5977, type: 3}
   itemModel: {fileID: 0}
   _weight: 1
   _quantity: 0

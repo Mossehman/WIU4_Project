@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: ID4
   _displayName: Stone
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 2cb689dbfe1f71a43a3515b85ddf9004, type: 3}
+  itemIcon: {fileID: 21300000, guid: b4d77cbe80cfbb2408d3846771d8141c, type: 3}
   itemModel: {fileID: 595492054557384492, guid: 2d2eb5c82b681164088c45c42cfe62c1, type: 3}
   _weight: 1
   _quantity: 0

@@ -69,7 +69,7 @@ Material:
     m_Floats:
     - _BumpAmt: 10
     - _Cutoff: 0
-    - _DensityMultiplier: 0.016272934
+    - _DensityMultiplier: 0.019999988
     - _DensityThreshold: 0
     - _DisplaceAmount: 1.5
     - _EdgeSize: 0.2
@@ -93,7 +93,7 @@ Material:
     - _marchDistance: 3
     - _numSteps: 4
     m_Colors:
-    - _Color: {r: 0.7058824, g: 0.4901961, b: 0.44705886, a: 1}
+    - _Color: {r: 0.44705883, g: 0.5907816, b: 0.7058824, a: 1}
     - _EdgeColor1: {r: 1, g: 1, b: 1, a: 1}
     - _Emission: {r: 0, g: 0, b: 0, a: 0}
     - _FresnelColor: {r: 1, g: 1, b: 1, a: 1}
