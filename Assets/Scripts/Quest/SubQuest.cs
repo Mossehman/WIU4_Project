@@ -12,13 +12,13 @@ namespace QuestSystem
             CRAFT,
             HUNT
         }
-
+        [SerializeField] private string _subquestID;
+        [SerializeField] private string _subquestName;
         [SerializeField] public int _currentAmount;
         [SerializeField] protected int _requiredAmount;
 
         public bool _isCompleted;
-        private string _subquestID;
-        private string _subquestName;
+        
         protected subquestType _type;
 
         public virtual void Init()

@@ -9,7 +9,7 @@ namespace QuestSystem
     {
         [Header("Quest Logic")]
         [SerializeField] private List<Quest> _quests;
-        private int _currentQuestIndex = -1;
+        private int _currentQuestIndex = 0;
 
 
         [Header("Quest UI")]
@@ -19,7 +19,8 @@ namespace QuestSystem
         // Start is called before the first frame update
         void Start()
         {
-            _quests = new List<Quest>();
+            //_quests = new List<Quest>();
+            RefreshQuestUI();
 
             EventManager.CreateEvent("OnCollectMission");
             EventManager.CreateEvent("OnCraftMisson");
