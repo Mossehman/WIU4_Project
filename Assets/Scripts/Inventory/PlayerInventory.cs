@@ -335,15 +335,27 @@ namespace Player.Inventory
             }
 
             Debug.Log($"Dropping item {itemToDrop.getDisplayName()} from hotbar slot {_selectedHotbarIndex + 1}");
-
-            // Remove item from hotbar
-            _hotbarItems[_selectedHotbarIndex] = null;
-
-            // **Destroy the hotbar UI prefab for this slot**
-            Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
-            if (slotTransform.childCount > 0)
+            if (itemToDrop._quantity > 1)
             {
-                Destroy(slotTransform.GetChild(0).gameObject); // Removes item UI
+                itemToDrop._quantity--;
+
+                Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
+                if (slotTransform.childCount > 0)
+                {
+                    slotTransform.GetChild(0).Find("Quantity").GetComponent<TMP_Text>().SetText(itemToDrop._quantity.ToString());
+                }
+            }
+            else
+            {
+                // Remove item from hotbar
+                _hotbarItems[_selectedHotbarIndex] = null;
+
+                // **Destroy the hotbar UI prefab for this slot**
+                Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
+                if (slotTransform.childCount > 0)
+                {
+                    Destroy(slotTransform.GetChild(0).gameObject); // Removes item UI
+                }
             }
 
             // Update hotbar UI after dropping

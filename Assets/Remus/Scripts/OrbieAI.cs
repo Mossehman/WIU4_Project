@@ -67,16 +67,17 @@ public class OrbAI : MonoBehaviour
 
     void FollowPlayerWithDynamicOffset()
     {
-        Vector3 cameraOffset = cameraTransform.right * cameraFollowWeight;
+        Vector3 cameraOffset = cameraTransform.forward * cameraFollowWeight;
+        Vector3 localOffset = player.transform.localRotation * baseOffset;
 
         dynamicOffset = new Vector3(
-            baseOffset.x + cameraOffset.x,
-            baseOffset.y,
-            baseOffset.z + cameraOffset.z
+            localOffset.x + cameraOffset.x,
+            localOffset.y,
+            localOffset.z + cameraOffset.z
         );
 
         Vector3 targetPosition = player.position + dynamicOffset;
-
+        
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * followSpeed);
 
         Vector3 lookDirection = (player.position - transform.position).normalized;
