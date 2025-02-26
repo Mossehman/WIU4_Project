@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Collect1
+  m_Name: Collect Wood
   m_EditorClassIdentifier: Assembly-CSharp:QuestSystem:Collect
-  _subquestID: Collect1
-  _subquestName: Collect Wood
+  _subquestID: 
+  _subquestName: 
   _currentAmount: 0
-  _requiredAmount: 10
+  _requiredAmount: 0
   _isCompleted: 0
+  _targetItem: {fileID: 0}
