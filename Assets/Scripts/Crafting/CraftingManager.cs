@@ -67,7 +67,10 @@ public class CraftingManager : MonoBehaviour
         _currentRecipePanel.transform.Find("InfoPanel").transform.Find("InfoDesc").
                             transform.Find("Viewport").transform.Find("Content").GetComponent<TextMeshProUGUI>().text = item.getItemDescription();
         _currentRecipePanel.transform.Find("InfoPanel").transform.Find("InfoIcon").GetComponent<Image>().sprite = item.getItemIcon();
-        _currentRecipePanel.transform.Find("CraftPanel").transform.Find("CraftBtn").GetComponent<Button>().onClick.AddListener(() => Craft(item, recipe));
+
+        Button craftButton = _currentRecipePanel.transform.Find("CraftPanel").transform.Find("CraftBtn").GetComponent<Button>();
+        craftButton.onClick.RemoveAllListeners(); // Prevent duplicate listeners
+        craftButton.onClick.AddListener(() => Craft(item, recipe));
 
         Transform materialsContent = _currentRecipePanel.transform.Find("MaterialsPanel").Find("Viewport").Find("Content");
 
@@ -82,6 +85,10 @@ public class CraftingManager : MonoBehaviour
             GameObject ingredientGO = Instantiate(_ingredientPrefab, materialsContent);
             ingredientGO.transform.Find("Icon").GetComponent<Image>().sprite = item.getItemIcon();
 
+            // Get the actual number of items from the inventory and hotbar
+            int ownedQuantity = _playerInventory.GetItemCount(ingredient.itemID);
+
+            // Get the display name from the static item list (_items)
             BaseItem matchedSO = null;
             foreach (BaseItem things in _items)
             {
@@ -96,7 +103,7 @@ public class CraftingManager : MonoBehaviour
             {
                 ingredientGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = matchedSO.getDisplayName();
                 ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text =
-                    $"{matchedSO._quantity} / {ingredient.quantity}";
+                    $"{ownedQuantity} / {ingredient.quantity}";
             }
             else
             {
@@ -104,6 +111,7 @@ public class CraftingManager : MonoBehaviour
             }
         }
     }
+
 
     public bool CanCraft(CraftingRecipe recipe)
     {

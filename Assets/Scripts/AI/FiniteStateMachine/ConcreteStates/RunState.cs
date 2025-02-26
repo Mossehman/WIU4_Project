@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.AI.FiniteStateMachine
 {
@@ -42,7 +43,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                 Vector3 dir = (fsm.transform.position - stats.target.transform.position).normalized;
                 if (isTurning) dir = Quaternion.Euler(0, 90, 0) * dir;
                 movedirection = Vector3.Slerp(movedirection, dir, turnSmoothness);
-
+                movedirection.y = 0;
                 Vector3 left = Quaternion.Euler(0, -90, 0) * movedirection;
                 // Check for wall
                 if (Physics.Raycast(fsm.transform.position, movedirection, out RaycastHit hit, wallDetectionDistance, wallLayer))

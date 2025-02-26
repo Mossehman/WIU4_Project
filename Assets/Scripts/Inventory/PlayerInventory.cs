@@ -31,50 +31,50 @@ namespace Player.Inventory
     public class PlayerInventory : MonoBehaviour
     {
         [Header("Inventory Logic")]
-        [SerializeField]    private BaseItem[]              _startingItems;
-                            private List<BaseItem>          _inventoryItems;
-        [SerializeField]    public float                    _baseWeight = 0.0f;
-        [SerializeField]    public float                    _baseMaxWeight = 10.0f;
-        [SerializeField]    private float                   _currentWeight;
+        [SerializeField] private List<BaseItem> _startItems;
+        [SerializeField] List<BaseItem> _inventoryItems;
+        [SerializeField] public float _baseWeight = 0.0f;
+        [SerializeField] public float _baseMaxWeight = 10.0f;
+        [SerializeField] private float _currentWeight;
         // SORTING
-        [SerializeField]    private SortingType             _currentSort = SortingType.DATE_ADDED;
+        [SerializeField] private SortingType _currentSort = SortingType.DATE_ADDED;
         // LOCKING ITEMS
-                            private BaseItem                _currentlySelected;
-                            private List<bool>              _isLocked;
+        private BaseItem _currentlySelected;
+        private List<bool> _isLocked;
 
         [Header("Inventory UI")]
-        [SerializeField]    private GameObject              _inventory;
-        [SerializeField]    private GameObject              _inventoryPanel;
-        [SerializeField]    private GameObject              _itemPrefab;
-        [SerializeField]    private GameObject              _itemDescPanel;
+        [SerializeField] private GameObject _inventory;
+        [SerializeField] private GameObject _inventoryPanel;
+        [SerializeField] private GameObject _itemPrefab;
+        [SerializeField] private GameObject _itemDescPanel;
 
         [Header("Hotbar Logic")]
-        [SerializeField]    private BaseItem[]              _hotbarItems;
-                            private int                     _maxHotbarItems = 5;
-        [SerializeField]    private int                     _selectedHotbarIndex = 0;
-        [SerializeField]    private Color                   _selectedSlotColor = Color.red;
-        [SerializeField]    private Color                   _defaultSlotColor = Color.white;
+        [SerializeField] private BaseItem[] _hotbarItems;
+        private int _maxHotbarItems = 5;
+        [SerializeField] private int _selectedHotbarIndex = -1;
+        [SerializeField] private Color _selectedSlotColor = Color.red;
+        [SerializeField] private Color _defaultSlotColor = Color.white;
 
         [Header("Hotbar UI")]
-        [SerializeField]    private GameObject              _hotBarPanel;
-        [SerializeField]    private GameObject              _hotBarSlotPrefab;
-        [SerializeField]    private GameObject[]            _hotbarSlots;
+        [SerializeField] private GameObject _hotBarPanel;
+        [SerializeField] private GameObject _hotBarSlotPrefab;
+        [SerializeField] private GameObject[] _hotbarSlots;
 
-        [SerializeField]    private GameObject              _backgroundPanel;
-        [SerializeField]    private GameObject              _vitalsPanel;
-        [SerializeField]    private GameObject              _infoPanel;
-        [SerializeField]    private GameObject              _mapPanel;
+        [SerializeField] private GameObject _backgroundPanel;
+        [SerializeField] private GameObject _vitalsPanel;
+        [SerializeField] private GameObject _infoPanel;
+        [SerializeField] private GameObject _mapPanel;
 
-        [SerializeField]    private GameObject              _crosshair;
-        [SerializeField]    private GameObject              _inventoryIcon;
-        [SerializeField]    private GameObject              _inventoryText;
+        [SerializeField] private GameObject _crosshair;
+        [SerializeField] private GameObject _inventoryIcon;
+        [SerializeField] private GameObject _inventoryText;
 
         [Header("Hotbar Transform Settings")]
         private RectTransform _hotbarRect;
         private GridLayoutGroup _hotbarGrid;
 
-        [Header("Item Visuals")]
-        [SerializeField]    private Transform               _playerHand;
+        [Header("Visuals")]
+        [SerializeField] private Transform _playerHand; // Hand object for held items to be displayed on
 
         // Closed (default) state
         private Vector2 _closedOffsetMin;
@@ -167,20 +167,15 @@ namespace Player.Inventory
         {
             EventManager.Connect("OnItemMove", OnItemMove);
 
-            // INVENTORY
-            _inventoryItems = new List<BaseItem>();
-
-            if (_startingItems != null && _startingItems.Length > 0)
+            foreach (BaseItem item in _startItems)
             {
-                foreach (var item in _startingItems)
-                {
-                    if (item == null) continue;
-                    BaseItem itemInstance = Instantiate(item);
-                    itemInstance.Init();
-                    _inventoryItems.Add(itemInstance);
-                }
+                BaseItem itemInstance = Instantiate(item);
+                itemInstance.Init();
+                _inventoryItems.Add(itemInstance);
             }
 
+            // INVENTORY
+            _inventoryItems = new List<BaseItem>();
             _isLocked = new List<bool>();
             _currentWeight = _baseWeight;
 
@@ -215,20 +210,23 @@ namespace Player.Inventory
             _openedAlignment = TextAnchor.UpperCenter;
         }
 
-        private void DisplayItem(BaseItem item)
+        private void DisplayHeldItem(BaseItem item)
         {
-            for (int i = 0; i < _playerHand.transform.childCount; i++)
+            if (_playerHand == null) { return; } // player hand was not assigned, do not do anything
+            for (int i = 0; i < _playerHand.childCount; i++)
             {
                 Destroy(_playerHand.GetChild(i).gameObject);
             }
-            if (_playerHand == null || item == null || item.getItemModel() == null) { return; }
-            GameObject itemToDisplay = Instantiate(item.getItemModel(), _playerHand.transform);
-            if (itemToDisplay.TryGetComponent(out ItemModelScript itemData))
+
+            if (item == null || item.getItemModel() == null) { return; } // item or item model was not assigned, do not do anything
+            GameObject itemToDisplay = Instantiate(item.getItemModel(), _playerHand);
+            if (itemToDisplay.TryGetComponent(out ItemModelScript model))
             {
-                itemData.isDropped = false;
-                itemData.modelRB.isKinematic = true;
-                itemData.modelCollider.isTrigger = true;
+                model.isDropped = false;
+                model.modelCollider.isTrigger = true;
+                model.modelRB.isKinematic = true;
             }
+
         }
 
         void Update()
@@ -248,16 +246,13 @@ namespace Player.Inventory
                     Debug.Log($"Hotbar slot {i + 1} selected.");
                     UpdateHotbarUI();
 
-                    if (_hotbarItems[i] != null)
-                    {
-                        DisplayItem(_hotbarItems[i]);
-                    }
+                    DisplayHeldItem(_hotbarItems[i]);
                 }
             }
 
             if (_selectedHotbarIndex >= 0 && _hotbarItems[_selectedHotbarIndex] != null)
             {
-                _hotbarItems[_selectedHotbarIndex].OnItemHeld(gameObject); 
+                _hotbarItems[_selectedHotbarIndex].OnItemHeld(gameObject);
 
                 if (Input.GetMouseButton(0))
                 {
@@ -294,7 +289,7 @@ namespace Player.Inventory
                 TryDropSelectedItem();
             }
 
-            
+
 
             SortInventory(_currentSort);
         }
@@ -320,14 +315,6 @@ namespace Player.Inventory
 
             // Remove item from hotbar
             _hotbarItems[_selectedHotbarIndex] = null;
-
-            if (_playerHand != null)
-            {
-                for (int i = 0; i < _playerHand.transform.childCount; i++)
-                {
-                    Destroy(_playerHand.GetChild(i).gameObject);
-                }
-            }
 
             // **Destroy the hotbar UI prefab for this slot**
             Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
@@ -368,51 +355,32 @@ namespace Player.Inventory
 
             if (_selectedHotbarIndex != -1)
             {
-                DisplayItem(_hotbarItems[_selectedHotbarIndex]);
+                DisplayHeldItem(_hotbarItems[_selectedHotbarIndex]);
             }
         }
 
-		public void AddItem(BaseItem newItem)
-		{
-			// Try to add to hotbar first
-			for (int i = 0; i < _maxHotbarItems; i++)
-			{
-				if (_hotbarItems[i] != null && _hotbarItems[i].getID() == newItem.getID())
-				{
-					_hotbarItems[i]._quantity += newItem._quantity;
-					_currentWeight += newItem.getWeight() * newItem._quantity;
-					return;
-				}
+        public void AddItem(BaseItem newItem)
+        {
+            foreach (BaseItem item in _inventoryItems)
+            {
+                if (item.getID() == newItem.getID())
+                {
+                    Debug.Log($"Item {item.getDisplayName()} already exists in inventory. Increasing quantity.");
 
-				if (_hotbarItems[i] == null)
-				{
-					_hotbarItems[i] = newItem;
-					_isLocked.Add(false);
-					_currentWeight += newItem.getWeight() * newItem._quantity;
-					return;
-				}
-			}
+                    item._quantity += newItem._quantity; // Fix: Increment based on newItem's quantity
+                    _currentWeight += newItem.getWeight() * newItem._quantity;
+                    return;
+                }
+            }
 
-			// If hotbar is full, try adding to inventory
-			foreach (var item in _inventoryItems)
-			{
-				if (item.getID() == newItem.getID())
-				{
-					Debug.Log($"Item {item.getDisplayName()} already exists in inventory. Increasing quantity.");
-					item._quantity += newItem._quantity;
-					_currentWeight += newItem.getWeight() * newItem._quantity;
-					return;
-				}
-			}
+            // Fix: Ensure newItem starts with quantity 1 if it's being added for the first time
+            newItem._quantity = Mathf.Max(newItem._quantity, 1);
+            _inventoryItems.Add(newItem);
+            _isLocked.Add(false);
+            _currentWeight += newItem.getWeight() * newItem._quantity;
 
-			// Ensure newItem starts with quantity 1 if it's being added for the first time
-			newItem._quantity = Mathf.Max(newItem._quantity, 1);
-			_inventoryItems.Add(newItem);
-			_isLocked.Add(false);
-			_currentWeight += newItem.getWeight() * newItem._quantity;
-
-			Debug.Log($"Added new item: {newItem.getDisplayName()} with quantity {newItem._quantity}");
-		}
+            Debug.Log($"Added new item: {newItem.getDisplayName()} with quantity {newItem._quantity}");
+        }
 
         private void RenderInventory()
         {
@@ -446,61 +414,6 @@ namespace Player.Inventory
 
                 itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = item._quantity.ToString();
                 itemUI.transform.Find("Lock").GetComponent<Image>().enabled = _isLocked[index];
-            }
-        }
-
-        public void RefreshInventoryUI()
-        {
-            // Clear the inventory UI panel
-            foreach (Transform child in _inventoryPanel.transform)
-            {
-                Destroy(child.gameObject);
-            }
-
-            List<BaseItem> inventoryItems = GetInventory();
-
-            foreach (BaseItem item in inventoryItems)
-            {
-                GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
-                itemUI.GetComponent<Draggable>()._item = item;
-                itemUI.transform.Find("ItemIcon").GetComponent<Image>().sprite = item.getItemIcon();
-
-                TextMeshProUGUI quantityText = itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>();
-                quantityText.text = item._quantity.ToString();
-
-                Button button = itemUI.GetComponent<Button>();
-                if (button != null)
-                {
-                    button.onClick.AddListener(() => ShowItem(item));
-                }
-                else
-                {
-                    Debug.LogError("Button component missing from itemUI prefab!");
-                }
-            }
-
-            Debug.Log("Inventory UI updated.");
-        }
-
-        public void RefreshHotbarUI()
-        {
-            for (int i = 0; i < _hotbarItems.Length; i++)
-            {
-                Transform slotTransform = _hotbarSlots[i].transform;
-
-                if (_hotbarItems[i] != null)
-                {
-                    slotTransform.Find("ItemIcon").GetComponent<Image>().sprite = _hotbarItems[i].getItemIcon();
-                    slotTransform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = _hotbarItems[i]._quantity.ToString();
-                }
-                else
-                {
-                    // Clear hotbar slot when item is removed
-                    foreach (Transform child in slotTransform)
-                    {
-                        Destroy(child.gameObject);
-                    }
-                }
             }
         }
 
@@ -644,8 +557,7 @@ namespace Player.Inventory
             {
                 for (int i = 0; i < _maxHotbarItems; i++)
                 {
-                    if (_hotbarItems[i] == null) { continue; }
-                    if (_hotbarItems[i] == item.GetComponent<Draggable>()._item)
+                    if (_hotbarItems[i].getID() == item.GetComponent<Draggable>()._item.getID())
                     {
                         _hotbarItems[i] = null;
                         break;
@@ -665,9 +577,9 @@ namespace Player.Inventory
             {
                 for (int i = 0; i < _hotBarPanel.transform.childCount; i++)
                 {
-                    if (_hotBarPanel.transform.GetChild(i).TryGetComponent<PlacableSlot>(out PlacableSlot slotData))
+                    if (_hotBarPanel.transform.GetChild(i).TryGetComponent(out PlacableSlot slotData))
                     {
-                        if (slotData != slot) { continue; }
+                        if (slotData != slot) continue;
                         _hotbarItems[i] = item.GetComponent<Draggable>()._item;
                         break;
                     }
@@ -675,12 +587,69 @@ namespace Player.Inventory
             }
             else if (destination == ItemDestination.STORAGE)
             {
-            
+
             }
 
             if (_selectedHotbarIndex != -1)
             {
-                DisplayItem(_hotbarItems[_selectedHotbarIndex]);
+                DisplayHeldItem(_hotbarItems[_selectedHotbarIndex]);
+            }
+        }
+
+        public void RefreshInventoryUI()
+        {
+            // Clear the inventory UI panel
+            foreach (Transform child in _inventoryPanel.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            List<BaseItem> inventoryItems = GetInventory();
+
+            foreach (BaseItem item in inventoryItems)
+            {
+                GameObject itemUI = Instantiate(_itemPrefab, _inventoryPanel.transform);
+                itemUI.GetComponent<Draggable>()._item = item;
+                itemUI.transform.Find("ItemIcon").GetComponent<Image>().sprite = item.getItemIcon();
+
+                TextMeshProUGUI quantityText = itemUI.transform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>();
+                quantityText.text = item._quantity.ToString();
+
+                Button button = itemUI.GetComponent<Button>();
+                if (button != null)
+                {
+                    button.onClick.AddListener(() => ShowItem(item));
+                }
+                else
+                {
+                    Debug.LogError("Button component missing from itemUI prefab!");
+                }
+            }
+
+            Debug.Log("Inventory UI updated.");
+        }
+
+        public void RefreshHotbarUI()
+        {
+            for (int i = 0; i < _hotbarItems.Length; i++)
+            {
+                Transform slotTransform = _hotbarSlots[i].transform;
+
+                if (_hotbarItems[i] != null)
+                {
+                    Image img = slotTransform.Find("ItemIcon").GetComponent<Image>();
+                    if (img == null) { Debug.Log("Image was null!"); continue; }
+                    slotTransform.Find("ItemIcon").GetComponent<Image>().sprite = _hotbarItems[i].getItemIcon();
+                    slotTransform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = _hotbarItems[i]._quantity.ToString();
+                }
+                else
+                {
+                    // Clear hotbar slot when item is removed
+                    foreach (Transform child in slotTransform)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
             }
         }
 
