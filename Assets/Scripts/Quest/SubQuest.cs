@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SubQuest : MonoBehaviour
+namespace QuestSystem
 {
     public enum subquestType
     {
@@ -11,29 +11,85 @@ public abstract class SubQuest : MonoBehaviour
         HUNT
     }
 
-    private bool _isCompleted;
-    private string _subquestID;
-    private string _questName;
-    private subquestType _type;
-
-    public virtual void Init()
+    public abstract class SubQuest : ScriptableObject
     {
-        _isCompleted = false;
-    }
+        [SerializeField] private string _subquestID;
+        [SerializeField] private string _subquestName;
+        [SerializeField] public int _currentAmount;
+        [SerializeField] protected int _requiredAmount;
 
-    public void Complete()
-    {
-        _isCompleted = true;
-    }
-
-    void Start()
-    {
+        public bool _isCompleted;
         
+        protected subquestType _type;
+
+        public virtual void Init()
+        {
+            _isCompleted = false;
+        }
+
+        public virtual void CheckSubQuest() 
+        {
+            if (_currentAmount != _requiredAmount) { Complete(); }
+        }
+
+        public void Complete()
+        {
+            _isCompleted = true;
+        }
+
+        public string GetSubQuestName() { return _subquestName; }
+        public string GetSubQuestID() { return _subquestID; }
+        public subquestType GetSubQuestType() { return _type; }
+        public int GetRequiredAmount() { return _requiredAmount; }
     }
 
-    // Update is called once per frame
-    void Update()
+    [CreateAssetMenu(fileName = "New Collect Subquest", menuName = "Quests/Collect Sub-Quest")]
+    public class Collect : SubQuest
     {
-        
+        [SerializeField] private BaseItem _targetItem;
+
+        public override void Init()
+        {
+            base.Init();
+            _type = subquestType.COLLECT;
+        }
+
+        public override void CheckSubQuest()
+        {
+            base.CheckSubQuest();
+        }
+
+        public string GetTargetID() { return _targetItem.getID(); }
+    }
+
+    [CreateAssetMenu(fileName = "New Craft Subquest", menuName = "Quests/Craft Sub-Quest")]
+    public class Craft : SubQuest
+    {
+        [SerializeField] private BaseItem _targetItem;
+        public override void Init()
+        {
+            base.Init();
+            _type = subquestType.CRAFT;
+        }
+        public override void CheckSubQuest()
+        {
+            base.CheckSubQuest();
+        }
+
+        public string GetTargetID() { return _targetItem.getID(); }
+    }
+
+    [CreateAssetMenu(fileName = "New Hunt Subquest", menuName = "Quests/Hunt Sub-Quest")]
+    public class Hunt : SubQuest
+    {
+        public override void Init()
+        {
+            base.Init();
+            _type = subquestType.HUNT;
+        }
+        public override void CheckSubQuest()
+        {
+            base.CheckSubQuest();
+        }
     }
 }
