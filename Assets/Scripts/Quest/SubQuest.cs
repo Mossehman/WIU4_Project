@@ -18,7 +18,12 @@ public abstract class SubQuest : MonoBehaviour
 
     public virtual void Init()
     {
+        _isCompleted = false;
+    }
 
+    public void Complete()
+    {
+        _isCompleted = true;
     }
 
     void Start()
