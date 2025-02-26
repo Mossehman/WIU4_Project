@@ -14,11 +14,11 @@ namespace QuestSystem
     [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/Quest")]
     public class Quest : ScriptableObject
     {
-        [SerializeField] private string _questID;
-        [SerializeField] private string _questName;
-        [SerializeField] private List<Quest> _requriedQuests;
-        [SerializeField] private List<SubQuest> _subquests;
-        [SerializeField] private questStatus _questStatus;
+        [SerializeField]    private string          _questID;
+        [SerializeField]    private string          _questName;
+        [SerializeField]    private List<Quest>     _requriedQuests;
+        [SerializeField]    private List<SubQuest>  _subquests;
+        [SerializeField]    private questStatus     _questStatus;
 
         private void OnValidate()
         {

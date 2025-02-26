@@ -7,13 +7,12 @@ namespace QuestSystem
     public class QuestManager : MonoBehaviour
     {
         [Header("Quest Logic")]
-        [SerializeField] private List<Quest> _quests;
-        private int _currentQuestIndex = 0;
-
+        [SerializeField]    private List<Quest>     _quests;
+                            private int             _currentQuestIndex = 0;
 
         [Header("Quest UI")]
-        [SerializeField] private GameObject _questPanel;
-        [SerializeField] private GameObject _subquestPrefab;
+        [SerializeField]    private GameObject      _questPanel;
+        [SerializeField]    private GameObject      _subquestPrefab;
 
         // Start is called before the first frame update
         void Start()

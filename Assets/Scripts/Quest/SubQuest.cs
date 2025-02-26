@@ -13,14 +13,12 @@ namespace QuestSystem
 
     public abstract class SubQuest : ScriptableObject
     {
-        [SerializeField] private string _subquestID;
-        [SerializeField] private string _subquestName;
-        [SerializeField] public int _currentAmount;
-        [SerializeField] protected int _requiredAmount;
-
-        public bool _isCompleted;
-        
-        protected subquestType _type;
+        [SerializeField]    private string              _subquestID;
+        [SerializeField]    private string              _subquestName;
+        [SerializeField]    public int                  _currentAmount;
+        [SerializeField]    protected int               _requiredAmount;
+                            public bool                 _isCompleted;
+                            protected subquestType      _type;
 
         public virtual void Init()
         {
@@ -46,7 +44,7 @@ namespace QuestSystem
     [CreateAssetMenu(fileName = "New Collect Subquest", menuName = "Quests/Collect Sub-Quest")]
     public class Collect : SubQuest
     {
-        [SerializeField] private BaseItem _targetItem;
+        [SerializeField]    private BaseItem    _targetItem;
 
         public override void Init()
         {
@@ -65,7 +63,7 @@ namespace QuestSystem
     [CreateAssetMenu(fileName = "New Craft Subquest", menuName = "Quests/Craft Sub-Quest")]
     public class Craft : SubQuest
     {
-        [SerializeField] private BaseItem _targetItem;
+        [SerializeField]    private BaseItem    _targetItem;
         public override void Init()
         {
             base.Init();
