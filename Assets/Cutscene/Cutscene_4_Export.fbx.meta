@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b2b69ff3e30740446b27b789047ca757
+guid: 14d3bbdd560a429448eff1f83b860668
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Cutscene2
+      name: Cutscene 4
       takeName: Take 001
       internalID: 1827226128182048838
       firstFrame: 0
-      lastFrame: 145
+      lastFrame: 86
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
