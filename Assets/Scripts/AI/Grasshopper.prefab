@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb8fe50d9c8d40d4fbf9e4c2ebf3d977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 70
+  health: 120
   hunger: 80
   target: {fileID: 0}
   segs: {fileID: 68349615528311788, guid: a4d77473a22460d43b39286f17f85802, type: 3}

@@ -16,3 +16,4 @@ MonoBehaviour:
   searchradius: 55
   food:
   - Passive
+  - Player

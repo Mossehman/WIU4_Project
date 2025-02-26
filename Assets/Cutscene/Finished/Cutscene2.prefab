@@ -5539,7 +5539,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7323580414956584226, guid: b2b69ff3e30740446b27b789047ca757, type: 3}
+  - {fileID: 2100000, guid: ff2d9e1c1ea99b54e9b2a5c2def081cc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6735,7 +6735,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -941363572372779850, guid: b2b69ff3e30740446b27b789047ca757, type: 3}
+  - {fileID: 2100000, guid: 74d1c0dce267acd4c85022b17b39f1ca, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8803,13 +8803,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6317895895111688522}
+  - component: {fileID: 770671774021641420}
   m_Layer: 0
   m_Name: Cutscene2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6317895895111688522
 Transform:
   m_ObjectHideFlags: 0
@@ -8828,6 +8829,30 @@ Transform:
   - {fileID: 320420699100805993}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &770671774021641420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8992743802391882360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30a6ff20e0db7f43ad8e2dfa358e479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetFrames: 30
+  normalizedTimeTransition: 0.99
+  animator: {fileID: 2019839073172760909}
+  sceneTransition: 0
+  nextTransition: {fileID: 0}
+  nextScene: 
+  defaultSkybox: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  spaceSkybox: {fileID: 2100000, guid: 2d056ac30ecc9e542b26e06133f23602, type: 2}
+  planetSkybox: {fileID: 2100000, guid: 04baf48beb828034bb3c967be607e41f, type: 2}
+  cutsceneNumber: 2
+  fullScreenRenderFeature1: {fileID: -9055223975590722860, guid: 3ed7f811354098e4b953b15a5c287670, type: 2}
+  fullScreenRenderFeature2: {fileID: 2810600014419442337, guid: 3ed7f811354098e4b953b15a5c287670, type: 2}
 --- !u!1 &9081238826852215081
 GameObject:
   m_ObjectHideFlags: 0
