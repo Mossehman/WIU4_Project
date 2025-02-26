@@ -11955,6 +11955,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0499217de74a6a342ab538246a4a5b1f, type: 3}
   m_PrefabInstance: {fileID: 2120184402}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &266301396
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 15.998024
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 16.851904
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -37.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1665468790589192257, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9207019264188730602, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+      propertyPath: m_Name
+      value: Torch (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
 --- !u!1001 &277429721
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28247,6 +28304,10 @@ MonoBehaviour:
   staminaText: {fileID: 1165028640}
   oxygenText: {fileID: 50074092}
   waterText: {fileID: 1396040278}
+  _health: 0
+  _stamina: 0
+  _oxygen: 0
+  _water: 0
   oxygenDrainRate: 1
   waterDrainRate: 0.5
   overlay: {fileID: 1797619132}
@@ -67504,3 +67565,4 @@ SceneRoots:
   - {fileID: 1459464717}
   - {fileID: 661860671}
   - {fileID: 2086368106}
+  - {fileID: 266301396}
