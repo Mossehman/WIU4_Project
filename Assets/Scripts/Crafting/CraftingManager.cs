@@ -57,7 +57,6 @@ public class CraftingManager : MonoBehaviour
                 newRecipe.GetComponent<Button>().onClick.AddListener(() => ShowRecipe(item, recipe));
             }
         }
-
     }
 
     public void ShowRecipe(BaseItem item, CraftingRecipe recipe)
@@ -83,12 +82,8 @@ public class CraftingManager : MonoBehaviour
         foreach (RecipeData ingredient in recipe.data)
         {
             GameObject ingredientGO = Instantiate(_ingredientPrefab, materialsContent);
-            ingredientGO.transform.Find("Icon").GetComponent<Image>().sprite = item.getItemIcon();
 
-            // Get the actual number of items from the inventory and hotbar
-            int ownedQuantity = _playerInventory.GetItemCount(ingredient.itemID);
-
-            // Get the display name from the static item list (_items)
+            // Find the correct ingredient in the list
             BaseItem matchedSO = null;
             foreach (BaseItem things in _items)
             {
@@ -101,7 +96,11 @@ public class CraftingManager : MonoBehaviour
 
             if (matchedSO != null)
             {
+                ingredientGO.transform.Find("Icon").GetComponent<Image>().sprite = matchedSO.getItemIcon();
                 ingredientGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = matchedSO.getDisplayName();
+
+                // Get the actual number of items from the inventory and hotbar
+                int ownedQuantity = _playerInventory.GetItemCount(ingredient.itemID);
                 ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text =
                     $"{ownedQuantity} / {ingredient.quantity}";
             }
@@ -112,11 +111,8 @@ public class CraftingManager : MonoBehaviour
         }
     }
 
-
     public bool CanCraft(CraftingRecipe recipe)
     {
-        int fulfilled = 0;
-
         foreach (RecipeData ingredient in recipe.data)
         {
             int totalQuantity = 0;
@@ -145,14 +141,15 @@ public class CraftingManager : MonoBehaviour
 
             Debug.Log($"Checking ingredient: {ingredient.itemID} | Required: {ingredient.quantity} | Available: {totalQuantity}");
 
-            if (totalQuantity >= ingredient.quantity)
+            // If any required ingredient is missing, return false
+            if (totalQuantity < ingredient.quantity)
             {
-                fulfilled++;
+                return false;
             }
         }
 
-        Debug.Log($"Crafting check result: {fulfilled}/{recipe.data.Length} ingredients fulfilled.");
-        return fulfilled == recipe.data.Length;
+        Debug.Log($"Crafting check result: ALL ingredients met.");
+        return true;
     }
 
     public void Craft(BaseItem item, CraftingRecipe recipe)

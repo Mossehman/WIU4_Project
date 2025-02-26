@@ -14,7 +14,7 @@ public class ShipThrusterInteraction : InteractionObject
     public override string GetCustomDescription()
     {
         int itemCount = _playerInventory.GetItemCount(requiredItemID);
-        return $"Repaired Thruster: {itemCount}/1 item";
+        return $"Repaired Thruster: {itemCount}/1";
     }
 
     public override void Interact()

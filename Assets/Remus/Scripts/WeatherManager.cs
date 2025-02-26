@@ -31,6 +31,8 @@ public class WeatherManager : MonoBehaviour
     void Start()
     {
         playerController = FindObjectOfType<PlayerController>(); // Cache player once
+        playerStats = FindObjectOfType<PlayerStats>();
+
         if (playerController == null)
         {
             Debug.LogError("[WeatherManager] PlayerController not found in the scene!");
@@ -61,6 +63,9 @@ public class WeatherManager : MonoBehaviour
             if (eventDuration > 0)
             {
                 eventDuration--;
+
+                ApplyWeatherEffectsToPlayer();
+
                 if (eventDuration == 0)
                 {
                     currentWeather = WeatherType.None;
