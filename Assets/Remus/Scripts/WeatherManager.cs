@@ -26,6 +26,7 @@ public class WeatherManager : MonoBehaviour
     private Material activeMaterial; // Track current material
 
     private PlayerController playerController;
+    private PlayerStats playerStats;
 
     void Start()
     {
@@ -139,6 +140,41 @@ public class WeatherManager : MonoBehaviour
 
         float changeSpeed = (eventDuration > 0) ? 500f : 50f;
         temperature = Mathf.MoveTowards(temperature, targetTemperature, changeSpeed * Time.deltaTime);
+    }
+
+    void ApplyWeatherEffectsToPlayer()
+    {
+        if (playerStats == null) return;
+
+        float damageAmount = 0f;
+
+        switch (currentWeather)
+        {
+            case WeatherType.Blizzard:
+                damageAmount = 10f; // Blizzard slowly kills player
+                playerStats.DecreaseStat(PlayerStats.StatType.Stamina, 5f); // Lower stamina too
+                break;
+            case WeatherType.Snowstorm:
+                damageAmount = 5f;
+                playerStats.DecreaseStat(PlayerStats.StatType.Stamina, 3f);
+                break;
+            case WeatherType.Heatwave:
+                damageAmount = 15f;
+                playerStats.DecreaseStat(PlayerStats.StatType.Water, 10f); // Increase dehydration
+                break;
+            case WeatherType.Sandstorm:
+                damageAmount = 7f;
+                playerStats.DecreaseStat(PlayerStats.StatType.Stamina, 4f);
+                break;
+            case WeatherType.AcidRain:
+                damageAmount = 20f; // More deadly
+                break;
+            default:
+                return; // No effect
+        }
+
+        Debug.Log($"[WeatherManager] Applying {damageAmount} damage due to {currentWeather}");
+        playerStats.DecreaseStat(PlayerStats.StatType.Health, damageAmount);
     }
 
     void UpdateWeatherEffects()

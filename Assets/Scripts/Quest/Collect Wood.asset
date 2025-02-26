@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: Collect Wood
   m_EditorClassIdentifier: Assembly-CSharp:QuestSystem:Collect
-  _subquestID: 
-  _subquestName: 
+  _subquestID: collect1
+  _subquestName: Collect Wood
   _currentAmount: 0
-  _requiredAmount: 0
+  _requiredAmount: 100
   _isCompleted: 0
-  _targetItem: {fileID: 0}
+  _targetItem: {fileID: 11400000, guid: 008b11dc298c7b241bb267ed62609158, type: 2}
