@@ -45,6 +45,7 @@ namespace QuestSystem
         // Update is called once per frame
         void Update()
         {
+            if (_quests[_currentQuestIndex].GetQuestStatus() == questStatus.UNLOCKED) { _quests[_currentQuestIndex].SetQuestStatus(questStatus.IN_PROGRESS); }
             foreach (Quest quest in _quests)
             {
                 if (quest.GetQuestStatus() == questStatus.LOCKED && CheckRequirements(quest) == true)
