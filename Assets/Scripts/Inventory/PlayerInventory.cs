@@ -177,7 +177,7 @@ namespace Player.Inventory
             foreach (BaseItem item in _startItems)
             {
                 BaseItem itemInstance = Instantiate(item);
-                itemInstance.Init();
+                itemInstance.Init(gameObject);
                 _inventoryItems.Add(itemInstance);
             }
 
@@ -290,7 +290,7 @@ namespace Player.Inventory
             {
                 if (item == null) continue;
                 item.isHeld = false;
-                item.Update();
+                item.UpdateItem(gameObject);
             }
 
             foreach (var item in _hotbarItems)
@@ -304,7 +304,7 @@ namespace Player.Inventory
                 {
                     item.isHeld = true;
                 }
-                item.Update();
+                item.UpdateItem(gameObject);
             }
 
             if (Input.GetKeyDown(KeyCode.Y))

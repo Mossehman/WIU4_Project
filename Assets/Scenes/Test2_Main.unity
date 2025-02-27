@@ -49123,6 +49123,63 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2381890483179193753, guid: 814f296ba19313948bdda0d5d8f06c2b, type: 3}
+--- !u!1001 &1797465327
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6210586553226619958, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_Name
+      value: Cooked Meat
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 13.188599
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 20.29694
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -37.546
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7020122653902875980, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
 --- !u!1 &1797619130
 GameObject:
   m_ObjectHideFlags: 0
@@ -54489,8 +54546,8 @@ MonoBehaviour:
   chargingBay: {fileID: 187356261}
   orbRenderer: {fileID: 1218519060}
   thirdPersonCam: {fileID: 554292540906907655}
-  baseOffset: {x: 1.5, y: 1, z: -2}
-  followSpeed: 5
+  baseOffset: {x: 1.5, y: 2.76, z: -3.29}
+  followSpeed: 1.04
   rotationSpeed: 2
   floatSpeed: 1
   floatAmplitude: 0.5
@@ -67566,3 +67623,4 @@ SceneRoots:
   - {fileID: 661860671}
   - {fileID: 2086368106}
   - {fileID: 266301396}
+  - {fileID: 1797465327}

@@ -28,7 +28,7 @@ public class PlayerStats : MonoBehaviour
     public TextMeshProUGUI oxygenText;
     public TextMeshProUGUI waterText;
 
-    [SerializeField] private float _health, _stamina, _oxygen, _water;
+    public float _health, _stamina, _oxygen, _water;
 
     [Header("Drain Rates")]
     public float oxygenDrainRate = 1f;

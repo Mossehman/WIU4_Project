@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 
     private CharacterController characterController;
     private Vector3 velocity;
-    private float verticalRotation = 0f;
 
     private Vector2 moveInput;
     private Vector2 lookInput;

@@ -48,7 +48,7 @@ public class PlaceableItem : BaseItem
 
     }
 
-    public override void Update()
+    public override void UpdateItem(GameObject holder)
     {
         if (!isHeld && objPlacePreview != null) {
             Destroy(objPlacePreview);

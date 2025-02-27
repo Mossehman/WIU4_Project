@@ -26,7 +26,7 @@ public class ToolItem : BaseItem
         return; 
     }
 
-    public override void Update()
+    public override void UpdateItem(GameObject holder)
     {
         if (useCooldownTimer > 0) {
             useCooldownTimer -= Time.deltaTime;
