@@ -16,13 +16,13 @@ MonoBehaviour:
   sounds:
   - soundName: 
     clip: {fileID: 8300000, guid: b41c85b569539914b829d0e0cfbf05ad, type: 3}
-    priority: 64
+    priority: 0
     volume: 1
   - soundName: 
     clip: {fileID: 8300000, guid: 5d9ba24f7157cb04a883348aeed66ea4, type: 3}
-    priority: 64
+    priority: 0
     volume: 1
   - soundName: 
     clip: {fileID: 8300000, guid: a3202e2fb79da05469e1e4b7661d1178, type: 3}
-    priority: 64
+    priority: 0
     volume: 1

@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
   m_Name: AxeSounds
   m_EditorClassIdentifier: 
-  libraryname: 
-  sounds: []
+  libraryname: AxeSounds
+  sounds:
+  - soundName: 
+    clip: {fileID: 8300000, guid: c69b12cc211cf3b438a70c95eae5cec6, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: 8b18d597709645a449fba265e192a4be, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: 
+    clip: {fileID: 8300000, guid: 0484ddb28f48c624f9ea4c0e363f164d, type: 3}
+    priority: 0
+    volume: 1

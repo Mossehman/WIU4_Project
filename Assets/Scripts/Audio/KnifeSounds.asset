@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
   m_Name: KnifeSounds
   m_EditorClassIdentifier: 
-  libraryname: 
-  sounds: []
+  libraryname: KnifeSounds
+  sounds:
+  - soundName: 
+    clip: {fileID: 8300000, guid: c6ce64518180cb84b898c294b1b118b0, type: 3}
+    priority: 0
+    volume: 0
+  - soundName: 
+    clip: {fileID: 8300000, guid: 544d2c3afd77211479fe84a3f694ebad, type: 3}
+    priority: 0
+    volume: 0
+  - soundName: 
+    clip: {fileID: 8300000, guid: 204f4af8e234c45429ae842a13c60f76, type: 3}
+    priority: 0
+    volume: 0
