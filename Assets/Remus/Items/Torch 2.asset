@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff8be596d46b9b45bf394145f1387af, type: 3}
+  m_Name: Torch 2
+  m_EditorClassIdentifier: 
+  itemName: ID6
+  _displayName: Torch
+  _itemDescription: WDNJDWNND
+  itemIcon: {fileID: 21300000, guid: b2ae8e977fdf6d84fb49926813d27d05, type: 3}
+  itemModel: {fileID: 9207019264188730602, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
+  _weight: 1
+  _quantity: 0
+  recipes:
+  - data:
+    - itemID: ID5
+      quantity: 1
+  isHeld: 0
+  objToPlacePreview: {fileID: 9207019264188730602, guid: 730ffb9af8a132249af092fa63ae223b, type: 3}
+  placementRange: 5
+  placementNormalsThreshold: 0.5
+  placeableSurfaces:
+    serializedVersion: 2
+    m_Bits: 256
+  objToPlace: {fileID: 6773663609740343893, guid: 8b402f63df73580479a62c1cb93898ac, type: 3}

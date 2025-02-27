@@ -14,7 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID7
   _displayName: Campfire
-  _itemDescription: E
+  _itemDescription: 'Campfires can provide light and keep you warm during those chilly
+    nights outside your ship.
+
+'
   itemIcon: {fileID: 21300000, guid: 7b56131ae85671f4b8a08d05ad52440b, type: 3}
   itemModel: {fileID: 0}
   _weight: 1
@@ -25,3 +28,4 @@ MonoBehaviour:
       quantity: 5
     - itemID: ID5
       quantity: 8
+  isHeld: 0

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 namespace Player.Inventory
 {
@@ -182,13 +181,6 @@ namespace Player.Inventory
         {
             EventManager.Connect("OnItemMove", OnItemMove);
 
-            foreach (BaseItem item in _startItems)
-            {
-                BaseItem itemInstance = Instantiate(item);
-                itemInstance.Init(gameObject);
-                _inventoryItems.Add(itemInstance);
-            }
-
             // INVENTORY
             _inventoryItems = new List<BaseItem>();
             _isLocked = new List<bool>();
@@ -223,6 +215,13 @@ namespace Player.Inventory
             _openedOffsetMax = new Vector2(-518.9836f, -875.54f);  // Right, Top
             _openedSpacing = new Vector2(-9.4f, 76.81f);
             _openedAlignment = TextAnchor.UpperCenter;
+
+            foreach (BaseItem item in _startItems)
+            {
+                BaseItem itemInstance = Instantiate(item);
+                itemInstance.Init(gameObject);
+                AddItem(itemInstance);
+            }
         }
 
         private void DisplayHeldItem(BaseItem item)
