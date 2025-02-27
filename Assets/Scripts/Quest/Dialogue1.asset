@@ -10,11 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Collect Wood
-  m_EditorClassIdentifier: Assembly-CSharp:QuestSystem:Collect
-  _subquestID: ID1
-  _subquestName: MOW
-  _currentAmount: 0
-  _requiredAmount: 100
-  _isCompleted: 0
-  _targetItem: {fileID: 11400000, guid: 6b7c6a73e62955c449c96853f43f42c1, type: 2}
+  m_Name: Dialogue1
+  m_EditorClassIdentifier: Assembly-CSharp:DialogueSystem:Dialogue
+  _dialogueID: ID1
+  _lines:
+  - Hey!
