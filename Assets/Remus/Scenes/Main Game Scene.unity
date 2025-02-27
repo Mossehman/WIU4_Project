@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1383555210}
-  m_IndirectSpecularColor: {r: 0.32657498, g: 0.2196277, b: 0.14108142, a: 1}
+  m_IndirectSpecularColor: {r: 0.99999905, g: 0, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -189,7 +189,7 @@ Transform:
   m_GameObject: {fileID: 14822876}
   serializedVersion: 2
   m_LocalRotation: {x: 0.053271994, y: -0.0000000021477435, z: 1.1457726e-10, w: 0.99858004}
-  m_LocalPosition: {x: 0.043000713, y: 0.88699913, z: 0.39800036}
+  m_LocalPosition: {x: 0.039001092, y: 0.88699913, z: 0.49499953}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1450,7 +1450,7 @@ Transform:
   m_GameObject: {fileID: 187356260}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.043, y: 0.887, z: 0.398}
+  m_LocalPosition: {x: 0.039, y: 0.887, z: 0.495}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25293,7 +25293,7 @@ MonoBehaviour:
   hours: 8
   minutes: 0
   days: 1
-  secondsPerHour: 1
+  secondsPerHour: 60
   dayTimeText: {fileID: 1402304512}
   timeOfTheDay: 1
   volumetricFogMaterial: {fileID: 2100000, guid: 6a316c1e3fb5ec0449b3baa992146f66, type: 2}
@@ -26619,6 +26619,7 @@ MonoBehaviour:
   _water: 100
   oxygenDrainRate: 1
   waterDrainRate: 0.5
+  healthDecayRate: 1
   overlay: {fileID: 1797619132}
   overlayDuration: 0.5
   fadeSpeed: 2
@@ -34075,7 +34076,7 @@ Transform:
   m_GameObject: {fileID: 1361291993}
   serializedVersion: 2
   m_LocalRotation: {x: 0.046380408, y: 0.49123296, z: -0.026206171, w: 0.8693977}
-  m_LocalPosition: {x: 16.59311, y: 18.247, z: -34.621464}
+  m_LocalPosition: {x: 16.674133, y: 18.247, z: -34.567986}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -64169,7 +64170,7 @@ Transform:
   m_GameObject: {fileID: 8773215132270094984}
   serializedVersion: 2
   m_LocalRotation: {x: 0.027488675, y: 0.8553681, z: -0.045631897, w: 0.51527417}
-  m_LocalPosition: {x: 15.121571, y: 19.50497, z: -36.576424}
+  m_LocalPosition: {x: 15.202596, y: 19.50497, z: -36.522945}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -64924,7 +64925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8568141123611905501, guid: 109f864b491378547b7ca6a8c0afdaef, type: 3}
       propertyPath: dayLengthInSeconds
-      value: 24
+      value: 1440
       objectReference: {fileID: 0}
     - target: {fileID: 8568141123611905501, guid: 109f864b491378547b7ca6a8c0afdaef, type: 3}
       propertyPath: volumetricFogMaterial

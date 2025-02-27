@@ -31,5 +31,11 @@ MonoBehaviour:
     m_Bits: 34340864
   worldLayers:
     serializedVersion: 2
-    m_Bits: 1044252543
+    m_Bits: 34340864
   isWeapon: 1
+  swing:
+    name: tool-swing
+    isLibrary: 0
+  hitSFX:
+    name: KnifeSounds
+    isLibrary: 1

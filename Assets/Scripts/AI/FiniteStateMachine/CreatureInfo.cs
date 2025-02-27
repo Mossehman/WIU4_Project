@@ -93,7 +93,8 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             OnEntityHurt += (CreatureInfo _) =>
             {
                 //Debug.Log("Hurt");
-                AudioEventSystem.PlaySound(hurt.name, default, 1, transform.position);
+                AudioEventSystem.PlaySoundSmart(hurt, ref voiceSource, default, default, true, true, 1, true);
+
             };
 
             OnEntityDeath += (CreatureInfo _) =>
@@ -103,8 +104,11 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     //Debug.Log("Dead");
                     AudioEventSystem.PlaySound(dead.name, default, 1, transform.position);
                     fsm.enabled = false;
-                    if (animator != null) animator.SetBool("isMoving", false);
-
+                    if (animator != null)
+                    {
+                        animator.SetBool("isDead", true);
+                        animator.SetBool("isMoving", false);
+                    }
                     if (lootprefab != null && minamt > 0 && maxamt > 0)
                     {
                         int amt = UnityEngine.Random.Range(minamt, maxamt);
@@ -123,7 +127,6 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         {
             if (hunger <= 0 || isDead)
             {
-                animator.SetBool("isDead", true);
                 Destroy(gameObject, 10f);
                 isDead = true;
                 characterController.enabled = false;
@@ -364,10 +367,10 @@ namespace Assets.Scripts.AI.FiniteStateMachine
             return;
         }
     }
-    [Serializable]
-    public class SoundInfo
-    {
-        public string name;
-        public bool isLibrary;
-    }
+}
+[Serializable]
+public class SoundInfo
+{
+    public string name;
+    public bool isLibrary;
 }
