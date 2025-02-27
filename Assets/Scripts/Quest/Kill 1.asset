@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Kill 1
   m_EditorClassIdentifier: 
   _subquestID: 
-  _subquestName: Kill 5 goobers
+  _subquestName: 
   _currentAmount: 0
-  _requiredAmount: 5
+  _requiredAmount: 0
   _isCompleted: 0

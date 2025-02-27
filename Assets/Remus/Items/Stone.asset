@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID4
   _displayName: Stone
-  _itemDescription: Stone is a durable, essential material used for crafting basic
-    tools and building structures.
+  _itemDescription: E
   itemIcon: {fileID: 21300000, guid: b4d77cbe80cfbb2408d3846771d8141c, type: 3}
   itemModel: {fileID: 2397130356778340570, guid: 1c2461cca93d70d4684f3da1ac876f30, type: 3}
   _weight: 1

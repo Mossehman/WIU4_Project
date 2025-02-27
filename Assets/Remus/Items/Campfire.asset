@@ -10,19 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0945d4d5a5e834e84d1b2075b0bf18, type: 3}
-  m_Name: Repaired Engine
+  m_Name: Campfire
   m_EditorClassIdentifier: 
-  itemName: ID18
-  _displayName: Repaired Engine
-  _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 74037aa2ba6d6db46879b6bef62ef4f6, type: 3}
-  itemModel: {fileID: 8278941144582235545, guid: bab46142b5f39d940ae6a6632e95e48d, type: 3}
+  itemName: ID7
+  _displayName: Campfire
+  _itemDescription: 'Campfires can provide light and keep you warm during those chilly
+    nights outside your ship.
+
+'
+  itemIcon: {fileID: 21300000, guid: 7b56131ae85671f4b8a08d05ad52440b, type: 3}
+  itemModel: {fileID: 0}
   _weight: 1
   _quantity: 0
   recipes:
   - data:
-    - itemID: ID17
-      quantity: 1
-    - itemID: ID13
-      quantity: 3
+    - itemID: ID4
+      quantity: 5
+    - itemID: ID5
+      quantity: 8
   isHeld: 0

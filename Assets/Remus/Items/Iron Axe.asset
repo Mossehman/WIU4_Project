@@ -33,14 +33,8 @@ MonoBehaviour:
   holdToUse: 0
   toolEffectorLayers:
     serializedVersion: 2
-    m_Bits: 34340864
+    m_Bits: 234881024
   worldLayers:
     serializedVersion: 2
-    m_Bits: 34340864
+    m_Bits: 1044252543
   isWeapon: 1
-  swing:
-    name: tool-swing
-    isLibrary: 0
-  hitSFX:
-    name: AxeSounds
-    isLibrary: 1

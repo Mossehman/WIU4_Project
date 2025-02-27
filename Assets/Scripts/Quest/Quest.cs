@@ -18,8 +18,7 @@ namespace QuestSystem
         [SerializeField]    private string          _questID;
         [SerializeField]    private string          _questName;
         [SerializeField]    private List<Quest>     _requriedQuests;
-        [SerializeField]    private List<SubQuest>   subQuests;
-                            public List<SubQuest>  _subquests = new List<SubQuest>();
+        [SerializeField]    private List<SubQuest>  _subquests;
         [SerializeField]    private questStatus     _questStatus;
         [SerializeField]    public Dialogue         _dialogueUponCompletion, _dialogueUponStart;
 
@@ -27,16 +26,6 @@ namespace QuestSystem
         {
             _questID = this.name;
             _questStatus = questStatus.LOCKED;
-        }
-
-        public void Init()
-        {
-            foreach (var subQuest in subQuests)
-            {
-                SubQuest q = Instantiate(subQuest);
-                q.Init();
-                _subquests.Add(q);
-            }
         }
 
         public string GetID() { return _questID; }

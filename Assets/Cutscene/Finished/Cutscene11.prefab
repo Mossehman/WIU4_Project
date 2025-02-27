@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 168776963109241378}
+  - component: {fileID: 4959455705425606389}
   m_Layer: 0
   m_Name: Cutscene11
   m_TagString: Untagged
@@ -32,6 +33,30 @@ Transform:
   - {fileID: 7122912423877122843}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4959455705425606389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1361296835002704668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c30a6ff20e0db7f43ad8e2dfa358e479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetFrames: 30
+  normalizedTimeTransition: 0.95
+  animator: {fileID: 3763188260232511841}
+  sceneTransition: 1
+  nextTransition: {fileID: 0}
+  nextScene: Menu
+  defaultSkybox: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  spaceSkybox: {fileID: 2100000, guid: 2d056ac30ecc9e542b26e06133f23602, type: 2}
+  planetSkybox: {fileID: 2100000, guid: 04baf48beb828034bb3c967be607e41f, type: 2}
+  cutsceneNumber: 11
+  fullScreenRenderFeature1: {fileID: -9055223975590722860, guid: 3ed7f811354098e4b953b15a5c287670, type: 2}
+  fullScreenRenderFeature2: {fileID: 2810600014419442337, guid: 3ed7f811354098e4b953b15a5c287670, type: 2}
 --- !u!1001 &7301199629420657904
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -113,6 +138,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: acaed4d324f0ea846907d945df77a791, type: 3}
+--- !u!95 &3763188260232511841 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: acaed4d324f0ea846907d945df77a791, type: 3}
+  m_PrefabInstance: {fileID: 7301199629420657904}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7122912423877122843 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: acaed4d324f0ea846907d945df77a791, type: 3}

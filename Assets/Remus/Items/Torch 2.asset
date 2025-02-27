@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID6
   _displayName: Torch
-  _itemDescription: The torch used to light up the area.
+  _itemDescription: WDNJDWNND
   itemIcon: {fileID: 21300000, guid: b2ae8e977fdf6d84fb49926813d27d05, type: 3}
   itemModel: {fileID: 9207019264188730602, guid: 5551d5b75f0b46a4fb74dedb689595d8, type: 3}
   _weight: 1

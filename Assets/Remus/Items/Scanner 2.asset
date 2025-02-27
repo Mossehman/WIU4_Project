@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID2
   _displayName: Scanner
-  _itemDescription: Used to learn more about the terrain, plants and creatures after
-    a scan.
+  _itemDescription: Tis a scanner
   itemIcon: {fileID: 21300000, guid: 5a75d6c701cfe1d4499e663712c2bbad, type: 3}
   itemModel: {fileID: 358668359503837668, guid: 7693c701b152fd24bafbd0847f15e471, type: 3}
   _weight: 1

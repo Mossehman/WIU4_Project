@@ -39,12 +39,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1044252543
   isWeapon: 0
-  swing:
-    name: tool-swing
-    isLibrary: 0
-  hitSFX:
-    name: PickaxeSounds
-    isLibrary: 1
   terrainEditorPrefab: {fileID: 5916436038094255366, guid: 8cf16c675a1b57a4da33f76ebc166ab5, type: 3}
   terrainLayer:
     serializedVersion: 2

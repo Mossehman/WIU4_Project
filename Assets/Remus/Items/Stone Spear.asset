@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID12
   _displayName: Stone Spear
-  _itemDescription: Stone spear used for attacking and hunting down foes.
+  _itemDescription: aaaa
   itemIcon: {fileID: 21300000, guid: 848a0fa32f624e74fa22d94140d91031, type: 3}
   itemModel: {fileID: 6897095569315692755, guid: 4bd462af2d846594c94c166ea8fbcc02, type: 3}
   _weight: 1
@@ -38,5 +38,3 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1044252543
   isWeapon: 1
-  swing: 
-  hitSFX: 

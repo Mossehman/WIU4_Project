@@ -10,19 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e0945d4d5a5e834e84d1b2075b0bf18, type: 3}
-  m_Name: Repaired Engine
+  m_Name: Raw Meat
   m_EditorClassIdentifier: 
-  itemName: ID18
-  _displayName: Repaired Engine
+  itemName: ID8
+  _displayName: Raw Meat
   _itemDescription: E
-  itemIcon: {fileID: 21300000, guid: 74037aa2ba6d6db46879b6bef62ef4f6, type: 3}
-  itemModel: {fileID: 8278941144582235545, guid: bab46142b5f39d940ae6a6632e95e48d, type: 3}
+  itemIcon: {fileID: 21300000, guid: 24a52edca3e1f1745b76492e09535ec3, type: 3}
+  itemModel: {fileID: 6210586553226619958, guid: 58f5c108f52bc8f45b95e4cab89f659f, type: 3}
   _weight: 1
   _quantity: 0
-  recipes:
-  - data:
-    - itemID: ID17
-      quantity: 1
-    - itemID: ID13
-      quantity: 3
+  recipes: []
   isHeld: 0

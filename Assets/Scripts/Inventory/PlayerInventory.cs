@@ -170,7 +170,6 @@ namespace Player.Inventory
 
             RefreshInventoryUI();
             RefreshHotbarUI();
-            EventManager.Fire("OnCollectMission", this);
 
             if (_selectedHotbarIndex > -1)
             {
@@ -371,7 +370,6 @@ namespace Player.Inventory
 
             // Update hotbar UI after dropping
             UpdateHotbarUI();
-            EventManager.Fire("OnCollectMission", this);
 
             // Calculate a safe drop position in front of the player
             Vector3 dropOffset = transform.forward * 2.0f + Vector3.up * 1.0f; // Move 2 units forward, 1 unit up
@@ -416,7 +414,6 @@ namespace Player.Inventory
                     item._quantity ++; // Fix: Increment based on newItem's quantity
                     Debug.Log($"Item {item.getDisplayName()} already exists in inventory. New Quantity: " + item._quantity);
                     _currentWeight += newItem.getWeight() * newItem._quantity;
-                    EventManager.Fire("OnCollectMission", this);
                     return;
                 }
             }
@@ -427,7 +424,6 @@ namespace Player.Inventory
             _isLocked.Add(false);
             _currentWeight += newItem.getWeight() * newItem._quantity;
 
-            EventManager.Fire("OnCollectMission", this);
             Debug.Log($"Added new item: {newItem.getDisplayName()} with quantity {newItem._quantity}");
         }
 
