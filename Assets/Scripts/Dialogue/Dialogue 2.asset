@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: Dialogue1
+  m_Name: Dialogue 2
   m_EditorClassIdentifier: Assembly-CSharp:DialogueSystem:Dialogue
-  _dialogueID: ID1
+  _dialogueID: 
   _lines:
-  - Hey!
+  - Completed
+  - Nice

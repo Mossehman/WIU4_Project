@@ -42,29 +42,49 @@ namespace QuestSystem
         // Update is called once per frame
         void Update()
         {
-            if (_quests[_currentQuestIndex].GetQuestStatus() == questStatus.UNLOCKED) { _quests[_currentQuestIndex].SetQuestStatus(questStatus.IN_PROGRESS); }
             foreach (Quest quest in _quests)
             {
                 if (quest.GetQuestStatus() == questStatus.LOCKED && CheckRequirements(quest) == true)
                 {
                     quest.SetQuestStatus(questStatus.UNLOCKED);
+                    if (_quests[_currentQuestIndex].GetQuestStatus() == questStatus.UNLOCKED)
+                    {
+                        _quests[_currentQuestIndex].SetQuestStatus(questStatus.IN_PROGRESS);
+                        EventManager.Fire("OnQuestStart", _quests[_currentQuestIndex]);
+                    }
                 }
             }
 
             if (CheckQuestCompleted() == true)
             {
-                if (_quests[_currentQuestIndex + 1].GetQuestStatus() == questStatus.UNLOCKED)
+                if (_quests.Count > 1)
+                {
+                    if (_quests[_currentQuestIndex + 1].GetQuestStatus() == questStatus.UNLOCKED)
+                    {
+                        EventManager.Fire("OnQuestComplete", _quests[_currentQuestIndex]);
+                        _quests[_currentQuestIndex].SetQuestStatus(questStatus.COMPLETED);
+
+                        _currentQuestIndex++;
+
+                        EventManager.Fire("OnQuestStart", _quests[_currentQuestIndex]);
+                        _quests[_currentQuestIndex].SetQuestStatus(questStatus.IN_PROGRESS);
+
+                        RefreshQuestUI();
+                    }
+                }
+                else
                 {
                     EventManager.Fire("OnQuestComplete", _quests[_currentQuestIndex]);
                     _quests[_currentQuestIndex].SetQuestStatus(questStatus.COMPLETED);
-
-                    _currentQuestIndex++;
-
-                    EventManager.Fire("OnQuestStart", _quests[_currentQuestIndex]);
-                    _quests[_currentQuestIndex].SetQuestStatus(questStatus.IN_PROGRESS);
-
-                    RefreshQuestUI();
                 }
+            }
+        }
+
+        public void CompleteQuest()
+        {
+            foreach (SubQuest goal in _quests[_currentQuestIndex].GetSubquests())
+            {
+                goal._isCompleted = true;
             }
         }
 

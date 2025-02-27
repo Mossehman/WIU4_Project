@@ -9,12 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Collect Wood
-  m_EditorClassIdentifier: Assembly-CSharp:QuestSystem:Collect
-  _subquestID: ID1
-  _subquestName: MOW
+  m_Script: {fileID: 11500000, guid: dcc0de7d0bed8eb419b2e4a1de2af082, type: 3}
+  m_Name: Kill 1
+  m_EditorClassIdentifier: 
+  _subquestID: 
+  _subquestName: 
   _currentAmount: 0
-  _requiredAmount: 100
-  _isCompleted: 1
-  _targetItem: {fileID: 11400000, guid: 6b7c6a73e62955c449c96853f43f42c1, type: 2}
+  _requiredAmount: 0
+  _isCompleted: 0
