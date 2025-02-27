@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID10
   _displayName: Stone Axe
-  _itemDescription: Stone axe!!
+  _itemDescription: Stone Axe used to cut down trees.
   itemIcon: {fileID: 21300000, guid: a55c0b01f7363dc4ca1ceeeb4a909da4, type: 3}
   itemModel: {fileID: 3124636007348482117, guid: a2d14cc2b2cd7ef46bcd7259635e99ef, type: 3}
   _weight: 1
@@ -38,3 +38,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1044252543
   isWeapon: 0
+  swing: 
+  hitSFX: 

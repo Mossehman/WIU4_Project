@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID5
   _displayName: Sticks
-  _itemDescription: E
+  _itemDescription: A stick. The foundation for most tools
   itemIcon: {fileID: 21300000, guid: fccc4ac8435e64a44a17d5675ace0d7b, type: 3}
   itemModel: {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
   _weight: 1

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID18
   _displayName: Repaired Engine
-  _itemDescription: E
+  _itemDescription: It looks as good as new. Time to go home!
   itemIcon: {fileID: 21300000, guid: 74037aa2ba6d6db46879b6bef62ef4f6, type: 3}
   itemModel: {fileID: 8278941144582235545, guid: bab46142b5f39d940ae6a6632e95e48d, type: 3}
   _weight: 1

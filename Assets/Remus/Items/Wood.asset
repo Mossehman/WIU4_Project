@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID3
   _displayName: Wood
-  _itemDescription: E
+  _itemDescription: Fungora wood can be used to craft basic tools and be used as
+    fuel for fires.
   itemIcon: {fileID: 21300000, guid: 71a7e88c6098451468db93e2be8daa0f, type: 3}
   itemModel: {fileID: 5629079126216628018, guid: e3541f5d5970720469f6a58f5ffc8307, type: 3}
   _weight: 1

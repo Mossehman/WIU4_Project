@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcc0de7d0bed8eb419b2e4a1de2af082, type: 3}
-  m_Name: Kill 1
+  m_Script: {fileID: 11500000, guid: 516d52f0f35d6ef43a0e116d3d45dcd1, type: 3}
+  m_Name: Craft a torch 1
   m_EditorClassIdentifier: 
-  _subquestID: 
-  _subquestName: Kill 5 goobers
+  _subquestID: ID2
+  _subquestName: Woomie!
   _currentAmount: 0
-  _requiredAmount: 5
+  _requiredAmount: 4
   _isCompleted: 0
+  _targetItem: {fileID: 11400000, guid: 888e2aee59d8f43439c5dde4ca32fc56, type: 2}

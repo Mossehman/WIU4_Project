@@ -39,7 +39,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource GetMusicSource() => BackgroundMusic;
     public AudioSource GetAmbienceSource() => BackgroundAmbience;
-    public AudioSource GetSFXSource() => DedicatedSFX;
+
 
     private void Awake()
     {
@@ -50,7 +50,8 @@ public class AudioManager : MonoBehaviour
         InitializePool();
         BackgroundAmbience = gameObject.AddComponent<AudioSource>();
         BackgroundMusic = gameObject.AddComponent<AudioSource>();
-        BackgroundMusic = gameObject.AddComponent<AudioSource>();
+        DedicatedSFX = gameObject.AddComponent<AudioSource>();
+
         // Subscribe to AudioEventSystem
         AudioEventSystem.PlaySoundEvent += PlaySoundFromEvent;
         AudioEventSystem.PlayMusicEventByName += PlayMusicFromEvent;
@@ -307,15 +308,18 @@ public class AudioManager : MonoBehaviour
     /// <param name="randomPitch">(Optional) A boolean to enable playing the audio at a random pitch</param>
     /// <param name="minPitch">(Optional) The minimum random ptich shift</param>
     /// <param name="maxPitch">(Optional) The maximum random ptich shift</param>
-    public void PlayRandomAudio(string libraryName, ref AudioSource source, float? volume = null, bool is3D = false, float pitch = 1.0f, bool randomPitch = false, float minPitch = 0.95f, float maxPitch = 1.05f)
+    public void PlayRandomAudio(string libraryName, ref AudioSource source, float? volume = null, bool is3D = false, float pitch = 1.0f, bool randomPitch = false, float minPitch = 0.95f, float maxPitch = 1.05f, bool isNonSpammable = false)
     {
-        if (string.IsNullOrEmpty(libraryName)) return;
+        if (string.IsNullOrEmpty(libraryName)) 
+        {
+            return; 
+        }
         if (soundLibraries == null || soundLibraries.Count == 0)
         {
             Debug.LogWarning("No sound libraries assigned");
             return;
         }
-        if (source.isPlaying)
+        if (source.isPlaying && isNonSpammable)
         {
             return;
         }

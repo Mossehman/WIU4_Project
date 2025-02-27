@@ -20,6 +20,7 @@ MonoBehaviour:
   _weight: 0
   _quantity: 0
   recipes: []
+  isHeld: 0
   damage: 0
   reach: 5
   range: 2
@@ -31,4 +32,14 @@ MonoBehaviour:
   worldLayers:
     serializedVersion: 2
     m_Bits: 238945151
+  isWeapon: 1
+  swing:
+    name: tool-swing
+    isLibrary: 0
+  hitSFX:
+    name: PickaxeSounds
+    isLibrary: 1
   terrainEditorPrefab: {fileID: 5916436038094255366, guid: 8cf16c675a1b57a4da33f76ebc166ab5, type: 3}
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 0
