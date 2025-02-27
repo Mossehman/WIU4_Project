@@ -207,7 +207,7 @@ public class PlayerController : MonoBehaviour
         {
             if (moveDirection.sqrMagnitude > 0)
             {
-                AudioManager.Instance.PlayRandomAudio("PlayerFootsteps", ref playerAudio, 0.25f, true, speed * 0.35f, true, 0.7f, 1.3f, true);
+                AudioManager.Instance.PlayRandomAudio("PlayerFootsteps", ref playerAudio, 0.25f, true, speed * 0.35f, true, 0.7f, 1.3f);
                 animator.SetFloat("SpeedMod", speed * 0.2f);
             }
             if (velocity.y < 0)

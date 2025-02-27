@@ -7,6 +7,11 @@ public class ShipEnterInteraction : InteractionObject
     public Transform shipInteriorSpawnPoint;
     public GameObject player;
 
+    public override string GetCustomDescription()
+    {
+        return $"Enter Ship";
+    }
+
     public override void Interact()
     {
         if (crashedShip != null)
@@ -16,6 +21,10 @@ public class ShipEnterInteraction : InteractionObject
             shipInterior.SetActive(true);
 
         if (player != null && shipInteriorSpawnPoint != null)
+        {
+            player.GetComponent<CharacterController>().enabled = false;
             player.transform.position = shipInteriorSpawnPoint.position;
+            player.GetComponent<CharacterController>().enabled = true;
+        }
     }
 }

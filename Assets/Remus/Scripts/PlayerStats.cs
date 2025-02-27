@@ -103,6 +103,10 @@ public class PlayerStats : MonoBehaviour
         UpdateStatUI(StatType.Oxygen, _oxygen, maxOxygen, oxygenBarFront, oxygenBarBack, oxygenText);
         UpdateStatUI(StatType.Water, _water, maxWater, waterBarFront, waterBarBack, waterText);
 
+        if (overlay.color.a > 0)
+        {
+            overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, Mathf.MoveTowards(overlay.color.a, 0, fadeSpeed * Time.deltaTime));
+        }
     }
 
     private void Die()

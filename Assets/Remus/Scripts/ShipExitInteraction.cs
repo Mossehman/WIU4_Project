@@ -7,6 +7,11 @@ public class ShipExitInteraction : InteractionObject
     public Transform outsideSpawnPoint;
     public GameObject player;
 
+    public override string GetCustomDescription()
+    {
+        return $"Leave Ship";
+    }
+
     public override void Interact()
     {
         if (shipInterior != null)
@@ -16,6 +21,10 @@ public class ShipExitInteraction : InteractionObject
             crashedShip.SetActive(true);
 
         if (player != null && outsideSpawnPoint != null)
+        {
+            player.GetComponent<CharacterController>().enabled = false;
             player.transform.position = outsideSpawnPoint.position;
+            player.GetComponent<CharacterController>().enabled = true;
+        }
     }
 }
