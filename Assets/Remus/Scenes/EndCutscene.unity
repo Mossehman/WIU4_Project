@@ -38,7 +38,11 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+<<<<<<< Updated upstream
   m_IndirectSpecularColor: {r: 0.0014785795, g: 0.0013591028, b: 0.0012890887, a: 1}
+=======
+  m_IndirectSpecularColor: {r: 0.34214312, g: 0.2510604, b: 0.17079155, a: 1}
+>>>>>>> Stashed changes
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -123,6 +127,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+<<<<<<< Updated upstream
 --- !u!1 &442259876
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +246,8 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+=======
+>>>>>>> Stashed changes
 --- !u!1 &448413848
 GameObject:
   m_ObjectHideFlags: 0
@@ -1598,6 +1605,7 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+<<<<<<< Updated upstream
 --- !u!1001 &2021720585
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1707,6 +1715,8 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7433939571454946837, guid: 3ac12347019e45a47a20d9672d5e7449, type: 3}
   m_PrefabInstance: {fileID: 2021720585}
   m_PrefabAsset: {fileID: 0}
+=======
+>>>>>>> Stashed changes
 --- !u!1001 &4591722178629478583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1763,6 +1773,7 @@ PrefabInstance:
       propertyPath: nextTransition
       value: 
       objectReference: {fileID: 8394773476790877466}
+<<<<<<< Updated upstream
     - target: {fileID: 7684319572689671732, guid: 3ac12347019e45a47a20d9672d5e7449, type: 3}
       propertyPath: normalizedTimeTransition
       value: 0.87
@@ -1770,6 +1781,11 @@ PrefabInstance:
     - target: {fileID: 8207633384754146667, guid: 3ac12347019e45a47a20d9672d5e7449, type: 3}
       propertyPath: far clip plane
       value: 291.7
+=======
+    - target: {fileID: 8207633384754146667, guid: 3ac12347019e45a47a20d9672d5e7449, type: 3}
+      propertyPath: far clip plane
+      value: 270.1
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 8207633384754146667, guid: 3ac12347019e45a47a20d9672d5e7449, type: 3}
       propertyPath: near clip plane
@@ -1781,12 +1797,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8768395165695884083, guid: 3ac12347019e45a47a20d9672d5e7449, type: 3}
       propertyPath: m_IsActive
+<<<<<<< Updated upstream
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9153883023443760662, guid: 3ac12347019e45a47a20d9672d5e7449, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 87a3a2d1f4084b242b9c9b9624437d79, type: 2}
+=======
+      value: 0
+      objectReference: {fileID: 0}
+>>>>>>> Stashed changes
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1849,10 +1870,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1361296835002704668, guid: 739750bde5a9c474299020d8c8aa9c03, type: 3}
       propertyPath: m_IsActive
+<<<<<<< Updated upstream
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7607278719880249761, guid: 739750bde5a9c474299020d8c8aa9c03, type: 3}
       propertyPath: m_IsActive
+=======
+>>>>>>> Stashed changes
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
