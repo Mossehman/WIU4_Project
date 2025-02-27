@@ -15,8 +15,9 @@ MonoBehaviour:
   _questID: Quest1
   _questName: Tutorial
   _requriedQuests: []
-  _subquests:
-  - {fileID: 11400000, guid: dbb73bc6d92177849801cb42cf43f51e, type: 2}
+  subQuests:
+  - {fileID: 11400000, guid: 244193acbae49e94db4d97fbd4403531, type: 2}
+  _subquests: []
   _questStatus: 0
   _dialogueUponCompletion: {fileID: 11400000, guid: 971066994b261ff44ad40b77c0da0d6e, type: 2}
   _dialogueUponStart: {fileID: 11400000, guid: bdfbb126c04f6274e87418747dd03eb4, type: 2}

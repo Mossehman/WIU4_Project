@@ -87,6 +87,10 @@ MonoBehaviour:
   MaxFlockDistance: 10
   ProductionCooldown: 30
   pathfinder: {fileID: 0}
+  lockrotation: {x: 1, y: 1, z: 1}
+  lootprefab: {fileID: 6210586553226619958, guid: d8cb78eff830c0a4c880285d4e3db525, type: 3}
+  minamt: 2
+  maxamt: 3
   assignedHome: {fileID: 0}
   isSheltered: 0
   isDead: 0

@@ -1,3 +1,4 @@
+using Player.Inventory;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,14 +8,25 @@ namespace QuestSystem
     public class QuestManager : MonoBehaviour
     {
         [Header("Quest Logic")]
-        [SerializeField]    private List<Quest>     _quests;
+        [SerializeField]    private List<Quest>     _questsInit;
+                            private List<Quest>     _quests = new List<Quest>();
                             private int             _currentQuestIndex = 0;
 
         [Header("Quest UI")]
         [SerializeField]    private GameObject      _questPanel;
         [SerializeField]    private GameObject      _subquestPrefab;
 
-        // Start is called before the first frame update
+        private void Awake()
+        {
+            foreach (var quest in _questsInit)
+            {
+                Quest newQuest = Instantiate(quest);
+                newQuest.Init();
+                _quests.Add(newQuest);
+
+            }
+        }
+
         void Start()
         {
             //_quests = new List<Quest>();
@@ -147,17 +159,41 @@ namespace QuestSystem
         // Pass in base item
         private void OnCollectMission(object[] args)
         {
-            BaseItem item = args[0] as BaseItem;
+            PlayerInventory inventory = (PlayerInventory)args[0];
+            if (inventory == null) return;
 
             foreach (SubQuest goal in _quests[_currentQuestIndex].GetSubquests())
             {
                 if (goal.GetSubQuestType() == subquestType.COLLECT && goal is Collect collectQuest)
                 {
-                    if (collectQuest.GetTargetID() == item.getID())
+                    bool foundInHotbar = false;
+                    foreach (var hotbarItem in inventory.GetHotbar())
                     {
-                        goal._currentAmount++;
+                        if (hotbarItem == null) continue;
+                        if (collectQuest.GetTargetID() == hotbarItem.getID())
+                        {
+                            foundInHotbar = true;
+                            goal._currentAmount = hotbarItem._quantity;
+                        }
+
+                        foreach (var inventoryItem in inventory.GetInventory())
+                        {
+                            if (inventoryItem == null) continue;
+                            if (collectQuest.GetTargetID() == inventoryItem.getID())
+                            {
+                                if (foundInHotbar)
+                                {
+                                    goal._currentAmount += inventoryItem._quantity;
+                                }
+                                else
+                                {
+                                    goal._currentAmount = inventoryItem._quantity;
+                                }
+                            }
+                        }
                     }
-                }
+                 }
+                RefreshQuestUI();
 
                 if (goal._currentAmount >= goal.GetRequiredAmount()) { goal.Complete(); }
             }
@@ -174,6 +210,11 @@ namespace QuestSystem
                     if (craftQuest.GetTargetID() == item.getID())
                     {
                         goal._currentAmount++;
+                    }
+                    RefreshQuestUI();
+                    if (goal._currentAmount >= goal.GetRequiredAmount())
+                    {
+                        goal.Complete();
                     }
                 }
 

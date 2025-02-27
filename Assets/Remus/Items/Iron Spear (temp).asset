@@ -40,8 +40,8 @@ MonoBehaviour:
     m_Bits: 238945151
   isWeapon: 1
   swing:
-    name: 
+    name: tool-swing
     isLibrary: 0
   hitSFX:
-    name: 
-    isLibrary: 0
+    name: SpearSounds
+    isLibrary: 1

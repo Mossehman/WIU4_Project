@@ -14,6 +14,8 @@ public class CraftingStationInteraction : InteractionObject
     [SerializeField] private GameObject inventoryIcon;
     [SerializeField] private GameObject inventoryText;
 
+    [SerializeField] private GameObject _objectivePanel;
+
     public float interactionRange = 3f;
     private GameObject player;
 
@@ -47,6 +49,8 @@ public class CraftingStationInteraction : InteractionObject
             inventoryIcon.SetActive(false);
             inventoryText.SetActive(false);
 
+            _objectivePanel.SetActive(false);
+
             Time.timeScale = 0f;
             UIManager.IsCraftingOpen = true;
         }
@@ -69,6 +73,8 @@ public class CraftingStationInteraction : InteractionObject
             hotbar.SetActive(true);
             inventoryIcon.SetActive(true);
             inventoryText.SetActive(true);
+
+            _objectivePanel.SetActive(true);
 
             Time.timeScale = 1f;
             UIManager.IsCraftingOpen = false;

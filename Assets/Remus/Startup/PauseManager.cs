@@ -16,6 +16,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject _inventoryIcon;
     [SerializeField] private GameObject _inventoryText;
 
+    [SerializeField] private GameObject _objectivePanel;
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -42,6 +44,8 @@ public class PauseMenu : MonoBehaviour
         _crosshair.SetActive(true);
         _inventoryIcon.SetActive(true);
         _inventoryText.SetActive(true);
+
+        _objectivePanel.SetActive(true);
     }
 
     public void Pause()
@@ -59,6 +63,8 @@ public class PauseMenu : MonoBehaviour
         _crosshair.SetActive(false);
         _inventoryIcon.SetActive(false);
         _inventoryText.SetActive(false);
+
+        _objectivePanel.SetActive(false);
     }
 
     public void LoadMainMenu()

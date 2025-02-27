@@ -81,14 +81,20 @@ MonoBehaviour:
   segs: {fileID: 1289410198279785359}
   fsm: {fileID: 0}
   FlockDirection: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
   FlockSpeed: 2
   FlockTightness: 0.7
   MaxFlockDistance: 10
   ProductionCooldown: 30
   pathfinder: {fileID: 0}
+  lockrotation: {x: 1, y: 1, z: 1}
+  lootprefab: {fileID: 6210586553226619958, guid: d8cb78eff830c0a4c880285d4e3db525, type: 3}
+  minamt: 1
+  maxamt: 3
   assignedHome: {fileID: 0}
   isSheltered: 0
   isDead: 0
+  isJumping: 0
   goes:
     name: platypus-goes
     isLibrary: 0

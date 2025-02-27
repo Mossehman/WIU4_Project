@@ -220,7 +220,7 @@ public class PlayerStats : MonoBehaviour
     {
         while (true)
         {
-            float randomWait = Random.Range(120f, 300f); // Wait between 2 to 5 minutes
+            float randomWait = Random.Range(1f, 5f); // Wait between 2 to 5 minutes
             yield return new WaitForSeconds(randomWait);
 
             DecreaseStat(StatType.Oxygen, oxygenDrainRate);
@@ -232,7 +232,7 @@ public class PlayerStats : MonoBehaviour
     {
         while (true)
         {
-            float randomWait = Random.Range(120f, 300f); // Wait between 2 to 5 minutes
+            float randomWait = Random.Range(1f, 5f); // Wait between 2 to 5 minutes
             yield return new WaitForSeconds(randomWait);
 
             DecreaseStat(StatType.Water, waterDrainRate);
