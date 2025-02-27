@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace Player.Inventory
 {
@@ -410,9 +411,9 @@ namespace Player.Inventory
             {
                 if (item.getID() == newItem.getID())
                 {
-                    Debug.Log($"Item {item.getDisplayName()} already exists in inventory. Increasing quantity.");
 
-                    item._quantity += newItem._quantity; // Fix: Increment based on newItem's quantity
+                    item._quantity ++; // Fix: Increment based on newItem's quantity
+                    Debug.Log($"Item {item.getDisplayName()} already exists in inventory. New Quantity: " + item._quantity);
                     _currentWeight += newItem.getWeight() * newItem._quantity;
                     return;
                 }
@@ -617,7 +618,8 @@ namespace Player.Inventory
 
             if (destination == ItemDestination.INVENTORY)
             {
-                _inventoryItems.Add(item.GetComponent<Draggable>()._item);
+                BaseItem draggedItem = item.GetComponent<Draggable>()._item;
+                _inventoryItems.Add(draggedItem);
             }
             else if (destination == ItemDestination.HOTBAR)
             {

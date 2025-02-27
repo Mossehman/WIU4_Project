@@ -15,12 +15,12 @@ MonoBehaviour:
   terrainObjectPrefab: {fileID: 7006392862834217419, guid: 53687eece0892d5438b5315a92664211, type: 3}
   poissonSphereRadius: 1
   minYLevel: -20
-  hasMaxYLevel: 1
+  hasMaxYLevel: 0
   maxYLevel: 11
   minNormalsThreshold: -1
   hasMaxNormals: 0
   maxNormalsThreshold: 0
-  numTerrainSamples: 0
-  sampleRadius: 0
-  heightDifferenceThreshold: 0
-  normalDifferenceThreshold: 1
+  numTerrainSamples: 3
+  sampleRadius: 1
+  heightDifferenceThreshold: 2
+  normalDifferenceThreshold: -1

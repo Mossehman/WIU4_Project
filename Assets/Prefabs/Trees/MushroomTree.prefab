@@ -807,7 +807,8 @@ GameObject:
   - component: {fileID: 1594398475508676167}
   - component: {fileID: 8385690944680137909}
   - component: {fileID: 2348837214842554371}
-  m_Layer: 0
+  - component: {fileID: -6192820300123691811}
+  m_Layer: 26
   m_Name: MushroomTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -894,6 +895,37 @@ MonoBehaviour:
   - {fileID: 1864332365423498564}
   foodPrefab: {fileID: 7578855989941239002, guid: 27cd16ba6ac0cf840bdb00bfbb1e2f3c, type: 3}
   minSpawns: 0
+--- !u!114 &-6192820300123691811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921072969651602650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17ff387705490a54282583e04a8fe3b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  health: 0
+  lootTable:
+  - itemDropList:
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+  - itemDropList:
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+  - itemDropList:
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
 --- !u!1 &7561411291110108615
 GameObject:
   m_ObjectHideFlags: 0

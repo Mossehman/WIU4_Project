@@ -35,7 +35,7 @@ public class ConsumableItem : BaseItem
             stats._stamina = Mathf.Clamp(stats._stamina, 0, stats.maxStamina);
             Debug.Log("Consumed!");
 
-            holder.GetComponent<PlayerInventory>().RemoveItem(getID(), 1);
+            holder.GetComponent<PlayerInventory>().ItemRemoveSelf(getID());
 
         }
     }

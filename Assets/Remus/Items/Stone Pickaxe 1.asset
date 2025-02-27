@@ -26,16 +26,19 @@ MonoBehaviour:
     - itemID: ID5
       quantity: 2
   isHeld: 0
-  damage: 1
+  damage: 5
   reach: 5
   range: 2
   useCooldown: 1.3
   holdToUse: 1
   toolEffectorLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 805306368
   worldLayers:
     serializedVersion: 2
-    m_Bits: 238945151
-  isWeapon: 1
+    m_Bits: 1044252543
+  isWeapon: 0
   terrainEditorPrefab: {fileID: 5916436038094255366, guid: 8cf16c675a1b57a4da33f76ebc166ab5, type: 3}
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 256

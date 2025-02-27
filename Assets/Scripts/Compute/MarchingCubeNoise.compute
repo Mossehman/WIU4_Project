@@ -115,7 +115,7 @@ void GenerateNoise (int3 id : SV_DispatchThreadID)
 	}
 
 	if (noiseSamplePoint.y + offset.y < -20) {
-		finalNoiseValue = hardFloorWeight + snoise(noiseSamplePoint + offset) * 4;
+		finalNoiseValue = hardFloorWeight + snoise(noiseSamplePoint + offset) * 4 * 100000;
 	}
 
 	int index = indexFromCoord(id.x,id.y,id.z);

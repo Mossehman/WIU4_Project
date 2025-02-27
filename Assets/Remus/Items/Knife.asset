@@ -20,7 +20,8 @@ MonoBehaviour:
   _weight: 1
   _quantity: 0
   recipes: []
-  damage: 1
+  isHeld: 0
+  damage: 2
   reach: 2
   range: 2
   useCooldown: 0.5
@@ -30,4 +31,5 @@ MonoBehaviour:
     m_Bits: 34340864
   worldLayers:
     serializedVersion: 2
-    m_Bits: 238945151
+    m_Bits: 1044252543
+  isWeapon: 1

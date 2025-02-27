@@ -16,7 +16,7 @@ MonoBehaviour:
   _displayName: Repaired Thruster
   _itemDescription: E
   itemIcon: {fileID: 21300000, guid: 0db162e4921a72045aea346458bf948c, type: 3}
-  itemModel: {fileID: 0}
+  itemModel: {fileID: 6823126107244746525, guid: f07fd3b09f995194db61b48efcb77916, type: 3}
   _weight: 1
   _quantity: 0
   recipes:
@@ -25,3 +25,4 @@ MonoBehaviour:
       quantity: 1
     - itemID: ID20
       quantity: 3
+  isHeld: 0
