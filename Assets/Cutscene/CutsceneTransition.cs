@@ -1,8 +1,6 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class CutsceneTransition : MonoBehaviour
 {
@@ -53,19 +51,23 @@ public class CutsceneTransition : MonoBehaviour
 
     private void CheckSkyboxChange()
     {
-        if (cutsceneNumber == 2 || cutsceneNumber == 10)
+        if (cutsceneNumber == 2)
         {
             RenderSettings.skybox = defaultSkybox;
         }
-        else if (cutsceneNumber == 7 || cutsceneNumber == 8)
+        else if (cutsceneNumber == 7)
         {
-            fullScreenRenderFeature1.SetActive(true);
-            fullScreenRenderFeature2.SetActive(true);
-
+            if (cutsceneNumber == 8)
+            {
+                fullScreenRenderFeature1.SetActive(true);
+                fullScreenRenderFeature2.SetActive(true);
+            }
             RenderSettings.skybox = planetSkybox;
         }
         else
         {
+            fullScreenRenderFeature1.SetActive(false);
+            fullScreenRenderFeature2.SetActive(false);
             RenderSettings.skybox = spaceSkybox;
         }
 
