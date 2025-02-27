@@ -5,13 +5,6 @@ using UnityEngine;
 
 namespace DialogueSystem
 {
-    [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue/Create New Dialogue")]
-    public class Dialogue : ScriptableObject
-    {
-        public string _dialogueID;
-        public string[] _lines;
-    }
-
     public class DialogueManager : MonoBehaviour
     {
         [Header("Dialogue Logic")]
