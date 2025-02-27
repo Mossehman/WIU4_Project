@@ -127,7 +127,7 @@ MonoBehaviour:
     isLibrary: 0
   hurt:
     name: ChomperHurts
-    isLibrary: 0
+    isLibrary: 1
   dead:
     name: chomper-dead
     isLibrary: 0
