@@ -40,7 +40,7 @@ public class ItemModelScript : MonoBehaviour
     /// <param name="dropForce">The force our item should be dropped/thrown with</param>
     public void OnDropItem(BaseItem item, Vector3 dropDirection, float dropForce = 1.0f)
     {
-        if (!item) { return; }
+        if (!item) { return; }  
         this.item = item;
         modelRB.isKinematic = false;
         modelCollider.isTrigger = false;

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff8be596d46b9b45bf394145f1387af, type: 3}
+  m_Name: Campfire 2
+  m_EditorClassIdentifier: 
+  itemName: ID7
+  _displayName: Campfire
+  _itemDescription: BWJHD
+  itemIcon: {fileID: 21300000, guid: 7b56131ae85671f4b8a08d05ad52440b, type: 3}
+  itemModel: {fileID: 3109779232702541744, guid: 7bffef5690ba12449b6640e0875489f6, type: 3}
+  _weight: 1
+  _quantity: 0
+  recipes:
+  - data:
+    - itemID: ID4
+      quantity: 5
+    - itemID: ID5
+      quantity: 8
+  isHeld: 0
+  objToPlacePreview: {fileID: 2737853757744631852, guid: c6c1d131537ced04787c9fb9ea934ee5, type: 3}
+  placementRange: 5
+  placementNormalsThreshold: 0.5
+  placeableSurfaces:
+    serializedVersion: 2
+    m_Bits: 256
+  objToPlace: {fileID: 9080932905974880267, guid: 62f53c6dcf056bf4cb6578bc5eed93df, type: 3}

@@ -30,6 +30,8 @@ namespace Player.Inventory
 
     public class PlayerInventory : MonoBehaviour
     {
+        private List<string> itemsToRemove = new List<string>();
+
         [Header("Inventory Logic")]
         [SerializeField] private List<BaseItem> _startItems;
         [SerializeField] List<BaseItem> _inventoryItems;
@@ -116,6 +118,11 @@ namespace Player.Inventory
             }
 
             return count;
+        }
+
+        public void ItemRemoveSelf(string itemID)
+        {
+            itemsToRemove.Add(itemID);
         }
 
         public void RemoveItem(string itemID, int amountToRemove)
@@ -312,7 +319,10 @@ namespace Player.Inventory
                 TryDropSelectedItem();
             }
 
-
+            foreach (var itemToRemove in itemsToRemove)
+            {
+                RemoveItem(itemToRemove, 1);
+            }
 
             SortInventory(_currentSort);
         }
