@@ -21,17 +21,22 @@ namespace DialogueSystem
             EventManager.CreateEvent("OnQuestStart");
         }
 
-        void FixedUpdate()
+        void Update()
         {
             if (Input.GetMouseButtonDown(0) && _currentDialogue != null && _index < _currentDialogue._lines.Length)
             {
-                if (_dialogueBox.text == _currentDialogue._lines[_index])
+                if (_dialogueBox.text.Length == _currentDialogue._lines[_index].Length)
                 {
-                    NextLine();
+                    //NextLine();
+                    if (_index <= _currentDialogue._lines.Length - 1)
+                    {
+                        _index++;
+
+                    }
                 }
                 else
                 {
-                    StopCoroutine(PlayDialogue(_currentDialogue));
+                    //StopCoroutine(PlayDialogue(_currentDialogue));
                     _dialogueBox.text = _currentDialogue._lines[_index];
                 }
             }
@@ -57,7 +62,9 @@ namespace DialogueSystem
                 _index = 0;
                 _dialogueBox.text = string.Empty;
                 _currentDialogue = quest._dialogueUponCompletion;
-                StartCoroutine(PlayDialogue(quest._dialogueUponCompletion));
+                //StopCoroutine(PlayDialogue(_currentDialogue));
+                //_dialogueBox.text = "";
+                //StartCoroutine(PlayDialogue(quest._dialogueUponCompletion));
             }
         }
 
@@ -69,7 +76,9 @@ namespace DialogueSystem
                 _index = 0;
                 _dialogueBox.text = string.Empty;
                 _currentDialogue = quest._dialogueUponStart;
-                StartCoroutine(PlayDialogue(quest._dialogueUponStart));
+                //StopCoroutine(PlayDialogue(_currentDialogue));
+                //_dialogueBox.text = "";
+                //StartCoroutine(PlayDialogue(quest._dialogueUponStart));
             }
         }
 
