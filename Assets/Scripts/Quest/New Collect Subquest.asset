@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcc0de7d0bed8eb419b2e4a1de2af082, type: 3}
-  m_Name: Kill 1
+  m_Script: {fileID: 11500000, guid: c97bfa7d092ac024a8112499fe1a81bf, type: 3}
+  m_Name: New Collect Subquest
   m_EditorClassIdentifier: 
-  _subquestID: 
-  _subquestName: Kill 5 goobers
+  _subquestID: ID3
+  _subquestName: Collect leaf!
   _currentAmount: 0
-  _requiredAmount: 5
+  _requiredAmount: 2
   _isCompleted: 0
+  _targetItem: {fileID: 11400000, guid: 14253257fa92f3b4ba5bd17ec847d760, type: 2}

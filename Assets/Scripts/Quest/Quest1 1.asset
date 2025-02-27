@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6606d839bb9c04a46bc3db97469c9d0e, type: 3}
-  m_Name: Quest1
+  m_Name: Quest1 1
   m_EditorClassIdentifier: 
-  _questID: Quest1
+  _questID: Quest1 1
   _questName: Kill 5
   _requriedQuests: []
   subQuests:
-  - {fileID: 11400000, guid: a4e3dd95d54be2d419941f20d92ed235, type: 2}
+  - {fileID: 11400000, guid: b6220a66a0ccd8740b266d25b3bd1cc0, type: 2}
   _subquests: []
   _questStatus: 0
   _dialogueUponCompletion: {fileID: 11400000, guid: 971066994b261ff44ad40b77c0da0d6e, type: 2}

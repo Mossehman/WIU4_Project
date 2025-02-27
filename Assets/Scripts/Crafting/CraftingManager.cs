@@ -161,6 +161,7 @@ public class CraftingManager : MonoBehaviour
             Debug.Log($"Crafting {item.getDisplayName()}...");
 
             _playerInventory.AddItem(item); // Add crafted item to inventory
+            EventManager.Fire("OnCraftMisson", item);
 
             // Get inventory and hotbar items
             List<BaseItem> inventoryItems = _playerInventory.GetInventory();
