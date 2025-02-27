@@ -93,6 +93,7 @@ MonoBehaviour:
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
   - itemDropList:
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
   - itemDropList:
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}

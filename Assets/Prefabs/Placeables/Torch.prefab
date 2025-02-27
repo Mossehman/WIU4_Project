@@ -268,7 +268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1583ce422c73d4145953122e0345fe15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: fb481bc16accd7b4a9c519a091f4e71a, type: 2}
+  itemData: {fileID: 11400000, guid: 52fee44efebf36442ba75e15539a6808, type: 2}
   isDropped: 1
   modelRB: {fileID: 0}
   modelCollider: {fileID: 0}

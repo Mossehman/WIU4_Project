@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 namespace Assets.Scripts.Items
@@ -9,7 +8,7 @@ namespace Assets.Scripts.Items
     {
         [SerializeField] float frequency = 1f;
         [SerializeField] float amplitude = 1f;
-        new Light light;
+        Light light;
         float baseintensity = 1f;
         void Start()
         {

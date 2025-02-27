@@ -1210,7 +1210,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b082eaeac7e64554092493ac29611997, type: 2}
   m_sharedMaterial: {fileID: -2376041651259098731, guid: b082eaeac7e64554092493ac29611997, type: 2}
@@ -26311,6 +26311,7 @@ GameObject:
   - component: {fileID: 1001476413}
   - component: {fileID: 1001476412}
   - component: {fileID: 1001476416}
+  - component: {fileID: 1001476417}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -26621,7 +26622,7 @@ MonoBehaviour:
   overlay: {fileID: 1797619132}
   overlayDuration: 0.5
   fadeSpeed: 2
-  ragdollPrefab: {fileID: 4196480357519649025, guid: 6d6c38e2e143fcc44894d23b90355faa, type: 3}
+  ragdoll: {fileID: 4196480357519649025, guid: 6d6c38e2e143fcc44894d23b90355faa, type: 3}
   playerModel: {fileID: 259623425}
   respawnPoint: {fileID: 251112144}
   playerCamera: {fileID: 14822877}
@@ -26645,7 +26646,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67780c47dcdd4714d8e28177374a3a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startItems: []
+  _startItems:
+  - {fileID: 11400000, guid: e6f4a4a068c353e41ba8ba68a8565b72, type: 2}
+  - {fileID: 11400000, guid: 5e21e47fa46cabc4f9efb762f18c7fbe, type: 2}
+  - {fileID: 11400000, guid: 93f07f7a176abdf449edbead849cd5d5, type: 2}
+  - {fileID: 11400000, guid: e8389a5d3bedc324baa5a2cfea353272, type: 2}
+  - {fileID: 11400000, guid: 52fee44efebf36442ba75e15539a6808, type: 2}
+  - {fileID: 11400000, guid: bf71b88d5112cb04cbf0f8afee8c5fe6, type: 2}
   _inventoryItems: []
   _baseWeight: 0
   _baseMaxWeight: 10
@@ -26696,6 +26703,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1001476417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001476402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebea0314f770f1a438baeac0535e6821, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handSprite: {fileID: 21300000, guid: 41ce13280de38f142b4492222bde8d2f, type: 3}
+  worldCanvas: {fileID: 304129433}
+  worldPanel: {fileID: 2287537629848104352, guid: e7334c5c5b3d8a9458f4095b817f78e9, type: 3}
+  pickupItemsLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  pickupRange: 5
 --- !u!1 &1003876076
 GameObject:
   m_ObjectHideFlags: 0
@@ -52335,7 +52361,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 94a6dd0c3e57ff1458100b1250bdca55, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7af2b57af94b4ab41b4f4f0255ef5837, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -58005,7 +58031,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CIRCUIT BOARD
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b082eaeac7e64554092493ac29611997, type: 2}
   m_sharedMaterial: {fileID: -2376041651259098731, guid: b082eaeac7e64554092493ac29611997, type: 2}
@@ -58304,25 +58330,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerInventory: {fileID: 1001476415}
   _items:
-  - {fileID: 11400000, guid: 008b11dc298c7b241bb267ed62609158, type: 2}
+  - {fileID: 11400000, guid: e8389a5d3bedc324baa5a2cfea353272, type: 2}
   - {fileID: 11400000, guid: 13fb9d94d7e025342babb7a0f756d824, type: 2}
-  - {fileID: 11400000, guid: 623e9f7b53ba433489a97e6d10961ab2, type: 2}
-  - {fileID: 11400000, guid: 3e49bdcd58b5c754682bbff028361d97, type: 2}
+  - {fileID: 11400000, guid: c12cd7b42a6538d41b421de7f4b7410e, type: 2}
   - {fileID: 11400000, guid: e6f4a4a068c353e41ba8ba68a8565b72, type: 2}
   - {fileID: 11400000, guid: 5e21e47fa46cabc4f9efb762f18c7fbe, type: 2}
   - {fileID: 11400000, guid: 93f07f7a176abdf449edbead849cd5d5, type: 2}
+  - {fileID: 11400000, guid: 3e49bdcd58b5c754682bbff028361d97, type: 2}
   - {fileID: 11400000, guid: bf71b88d5112cb04cbf0f8afee8c5fe6, type: 2}
   - {fileID: 11400000, guid: 14253257fa92f3b4ba5bd17ec847d760, type: 2}
-  - {fileID: 11400000, guid: cfa218e23985ba44f931cb449d5e2bf6, type: 2}
+  - {fileID: 11400000, guid: b409b9f462ed89d468c7547136502ba8, type: 2}
   - {fileID: 11400000, guid: e27801e0c18a6584fb1075e7e1430f48, type: 2}
   - {fileID: 11400000, guid: 888e2aee59d8f43439c5dde4ca32fc56, type: 2}
-  - {fileID: 11400000, guid: a116fe9210db82149b95d9b6c89873f1, type: 2}
+  - {fileID: 11400000, guid: 69c068537147b2f46abadd29aef705d7, type: 2}
   - {fileID: 11400000, guid: 5edc4679e173d8546b62d20adbea333b, type: 2}
   - {fileID: 11400000, guid: 1d038fc1b056ff646bbf2350480597b1, type: 2}
-  - {fileID: 11400000, guid: 949c1b4db28b7b64b9bfc7d6ca1e59fa, type: 2}
-  - {fileID: 11400000, guid: 32f666465a794284db00eb48b34f3eee, type: 2}
-  - {fileID: 11400000, guid: ff93ef9a8a10d454aa7fd134bc03e018, type: 2}
-  - {fileID: 11400000, guid: a2a5dc1f2afd3f946bdb85c2fc0706d6, type: 2}
+  - {fileID: 11400000, guid: 27bc5e875e8457941b64b4ea6e1fcc0a, type: 2}
+  - {fileID: 11400000, guid: 9545b56bb44121a44ac462222da3f771, type: 2}
+  - {fileID: 11400000, guid: 709fe51f5e245254292a7f4e6469ad8a, type: 2}
+  - {fileID: 11400000, guid: 52fee44efebf36442ba75e15539a6808, type: 2}
   - {fileID: 11400000, guid: 6b7c6a73e62955c449c96853f43f42c1, type: 2}
   _recipes: []
   _craftingUI: {fileID: 1997741867}
@@ -58563,6 +58589,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
   - {fileID: 11400000, guid: 312bdbe5e1b04b3468e86f444d176fe2, type: 2}
   - {fileID: 11400000, guid: 88ea5e871ca40e244b1c6ce32443c1eb, type: 2}
+  - {fileID: 11400000, guid: f6fd4c61b2ed70140b37bae5794b8cc4, type: 2}
+  - {fileID: 11400000, guid: f6fd4c61b2ed70140b37bae5794b8cc4, type: 2}
+  - {fileID: 11400000, guid: 6e4095118f0785348a901b37440029ec, type: 2}
+  - {fileID: 11400000, guid: 6e4095118f0785348a901b37440029ec, type: 2}
+  - {fileID: 11400000, guid: e317296628e55ea4f847e2411390bdc9, type: 2}
+  - {fileID: 11400000, guid: 36d5dba58a5ce4d4a93cceab91ee022c, type: 2}
+  - {fileID: 11400000, guid: db5515b31b9c17f4d9242dd5b7bc9bda, type: 2}
+  - {fileID: 11400000, guid: a7df990cfa7c60e4797276f7246e4cae, type: 2}
+  - {fileID: 11400000, guid: 16ca0272fb99e674094cd4a7a61a5d90, type: 2}
+  - {fileID: 11400000, guid: e317296628e55ea4f847e2411390bdc9, type: 2}
+  - {fileID: 11400000, guid: 36d5dba58a5ce4d4a93cceab91ee022c, type: 2}
+  - {fileID: 11400000, guid: db5515b31b9c17f4d9242dd5b7bc9bda, type: 2}
+  - {fileID: 11400000, guid: a7df990cfa7c60e4797276f7246e4cae, type: 2}
+  - {fileID: 11400000, guid: 16ca0272fb99e674094cd4a7a61a5d90, type: 2}
   placementData: []
   terrainLayerMask:
     serializedVersion: 2

@@ -70,8 +70,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.0033453442, y: 0.0071420628, z: 0.07055795}
-  m_Center: {x: -0.00089883566, y: -0.0005098702, z: 0.029359793}
+  m_Size: {x: 0.015735714, y: 0.0071420628, z: 0.07055795}
+  m_Center: {x: -0.004133913, y: -0.0005098702, z: 0.029359793}
 --- !u!114 &-1707409464121351996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +91,8 @@ MonoBehaviour:
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
+    - {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
   - itemDropList:
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
@@ -98,6 +100,7 @@ MonoBehaviour:
   - itemDropList:
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
 --- !u!1001 &3824570038753787663
 PrefabInstance:
   m_ObjectHideFlags: 0
