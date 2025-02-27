@@ -48,8 +48,8 @@ public class BaseItem : ScriptableObject
 
     public virtual void OnRemoved(GameObject holder) { return; }
 
-    public virtual void Init() { return; }
-    public virtual void Update() { return; }
+    public virtual void Init(GameObject holder) { return; }
+    public virtual void UpdateItem(GameObject holder) { return; }
 }
 
 [System.Serializable]

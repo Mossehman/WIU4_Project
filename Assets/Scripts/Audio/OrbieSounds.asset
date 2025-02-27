@@ -18,3 +18,7 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 853ea853a3f44f74baf91a36ed38f201, type: 3}
     priority: 128
     volume: 1
+  - soundName: orbie-yapping
+    clip: {fileID: 8300000, guid: 002f6eb786c6c394e8c0032bf11961bc, type: 3}
+    priority: 128
+    volume: 1

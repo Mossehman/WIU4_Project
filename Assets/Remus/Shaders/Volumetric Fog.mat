@@ -69,7 +69,7 @@ Material:
     m_Floats:
     - _BumpAmt: 10
     - _Cutoff: 0
-    - _DensityMultiplier: 0.000014091612
+    - _DensityMultiplier: 0.01995312
     - _DensityThreshold: 0
     - _DisplaceAmount: 1.5
     - _EdgeSize: 0.2

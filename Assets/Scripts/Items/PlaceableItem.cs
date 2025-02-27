@@ -15,13 +15,19 @@ public class PlaceableItem : BaseItem
     [SerializeField] private LayerMask placeableSurfaces;
 
     [SerializeField] private GameObject objToPlace;
-
+    
     public override void OnItemHeld(GameObject holder)
     {
         RaycastHit hit;
 
         if (Physics.Raycast(holder.transform.position, Camera.main.transform.forward, out hit, placementRange, placeableSurfaces))
         {
+
+            float normalsThreshold = Vector3.Dot(hit.normal, Vector3.down);
+            if (normalsThreshold > placementNormalsThreshold)
+            {
+                return;
+            }
             if (objPlacePreview == null)
             {
                 objPlacePreview = Instantiate(objToPlacePreview);
@@ -37,18 +43,20 @@ public class PlaceableItem : BaseItem
         }
     }
 
-    public override void OnItemLeftClick(GameObject holder)
+    public override void OnItemRightClick(GameObject holder)
     {
         if (objToPlacePreview == null) return;
 
-        Instantiate(objToPlace, objPlacePreview.transform.position, objPlacePreview.transform.rotation);
-        Destroy(objToPlacePreview);
-        objToPlacePreview = null;
+        GameObject placedObj = Instantiate(objToPlace, objPlacePreview.transform.position, objPlacePreview.transform.rotation);
+        placedObj.GetComponent<PlaceableObjectScript>().item = this;    
+        Destroy(objPlacePreview);
+        objPlacePreview = null;
         holder.GetComponent<PlayerInventory>().RemoveItem(getID(), 1);
+
 
     }
 
-    public override void Update()
+    public override void UpdateItem(GameObject holder)
     {
         if (!isHeld && objPlacePreview != null) {
             Destroy(objPlacePreview);

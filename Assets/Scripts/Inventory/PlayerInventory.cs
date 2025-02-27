@@ -30,6 +30,8 @@ namespace Player.Inventory
 
     public class PlayerInventory : MonoBehaviour
     {
+        private List<string> itemsToRemove = new List<string>();
+
         [Header("Inventory Logic")]
         [SerializeField] private List<BaseItem> _startItems;
         [SerializeField] List<BaseItem> _inventoryItems;
@@ -118,6 +120,11 @@ namespace Player.Inventory
             return count;
         }
 
+        public void ItemRemoveSelf(string itemID)
+        {
+            itemsToRemove.Add(itemID);
+        }
+
         public void RemoveItem(string itemID, int amountToRemove)
         {
             int remainingToRemove = amountToRemove;
@@ -177,7 +184,7 @@ namespace Player.Inventory
             foreach (BaseItem item in _startItems)
             {
                 BaseItem itemInstance = Instantiate(item);
-                itemInstance.Init();
+                itemInstance.Init(gameObject);
                 _inventoryItems.Add(itemInstance);
             }
 
@@ -290,7 +297,7 @@ namespace Player.Inventory
             {
                 if (item == null) continue;
                 item.isHeld = false;
-                item.Update();
+                item.UpdateItem(gameObject);
             }
 
             foreach (var item in _hotbarItems)
@@ -304,7 +311,7 @@ namespace Player.Inventory
                 {
                     item.isHeld = true;
                 }
-                item.Update();
+                item.UpdateItem(gameObject);
             }
 
             if (Input.GetKeyDown(KeyCode.Y))
@@ -312,7 +319,10 @@ namespace Player.Inventory
                 TryDropSelectedItem();
             }
 
-
+            foreach (var itemToRemove in itemsToRemove)
+            {
+                RemoveItem(itemToRemove, 1);
+            }
 
             SortInventory(_currentSort);
         }

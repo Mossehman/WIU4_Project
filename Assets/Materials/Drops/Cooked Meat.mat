@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Meat
+  m_Name: Cooked Meat
   m_Shader: {fileID: -6465566751694194690, guid: b04f9bd50b5b2ef46a98f68e8db88e7d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -127,7 +127,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _LerpProgress: 0
+    - _LerpProgress: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005

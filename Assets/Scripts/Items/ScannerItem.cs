@@ -4,7 +4,7 @@ using UnityEngine;
 public class ScannerItem : BaseItem
 {
 
-    public override void Update()
+    public override void UpdateItem(GameObject holder)
     {
         TerrainScanner.isHoldingScanner = isHeld;
     }
