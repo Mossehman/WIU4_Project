@@ -31,6 +31,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSettings audioSettings;
     private AudioSource BackgroundAmbience;
     private AudioSource BackgroundMusic;
+    public AudioSource DedicatedSFX;
     private Queue<AudioSource> sfxQueue;
 
     private Coroutine musicTransitionCoroutine;
@@ -38,6 +39,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource GetMusicSource() => BackgroundMusic;
     public AudioSource GetAmbienceSource() => BackgroundAmbience;
+    public AudioSource GetSFXSource() => DedicatedSFX;
 
     private void Awake()
     {
@@ -48,7 +50,7 @@ public class AudioManager : MonoBehaviour
         InitializePool();
         BackgroundAmbience = gameObject.AddComponent<AudioSource>();
         BackgroundMusic = gameObject.AddComponent<AudioSource>();
-
+        BackgroundMusic = gameObject.AddComponent<AudioSource>();
         // Subscribe to AudioEventSystem
         AudioEventSystem.PlaySoundEvent += PlaySoundFromEvent;
         AudioEventSystem.PlayMusicEventByName += PlayMusicFromEvent;

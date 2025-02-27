@@ -45,7 +45,7 @@ public class PlaceableItem : BaseItem
 
     public override void OnItemRightClick(GameObject holder)
     {
-        if (objToPlacePreview == null) return;
+        if (objToPlacePreview == null || objPlacePreview == null) return;
 
         GameObject placedObj = Instantiate(objToPlace, objPlacePreview.transform.position, objPlacePreview.transform.rotation);
         placedObj.GetComponent<PlaceableObjectScript>().item = this;    

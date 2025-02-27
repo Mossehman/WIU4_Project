@@ -16,6 +16,7 @@ public class PickaxeTool : ToolItem
         {
             if (((1 << hit.collider.gameObject.layer) & terrainLayer) != 0) {
                 Instantiate(terrainEditorPrefab, hit.point, Quaternion.identity);
+                AudioEventSystem.PlaySound(hitSFX, default, default, default, true);
             }
             else if (((1 << hit.collider.gameObject.layer) & toolEffectorLayers) != 0)
             {
@@ -24,6 +25,7 @@ public class PickaxeTool : ToolItem
                 {
                     var damageable = component as IDamageable;
                     if (damageable == null) continue;
+                    AudioManager.Instance.PlayRandomAudio(hitSFX, ref AudioManager.Instance.DedicatedSFX, default, false, 1, true);
                     damageable.Damage(damage);
                     ///TODO: Play a sfx for when the weapon is used, maybe make it do different damage depending on which layermask was hit
                     break;
@@ -33,6 +35,7 @@ public class PickaxeTool : ToolItem
         }
         Animator animator = holder.GetComponent<Animator>();
         if (animator != null) { animator.SetTrigger("Mine"); }
+        AudioEventSystem.PlaySound(swing, default, default, default, true);
         isUsingItem = true;
         useCooldownTimer = useCooldown;
         return;

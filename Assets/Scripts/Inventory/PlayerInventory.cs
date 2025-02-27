@@ -620,7 +620,9 @@ namespace Player.Inventory
             if (destination == ItemDestination.INVENTORY)
             {
                 BaseItem draggedItem = item.GetComponent<Draggable>()._item;
-                _inventoryItems.Add(draggedItem);
+                AddItem(draggedItem);
+                RefreshInventoryUI();
+                Destroy(item);
             }
             else if (destination == ItemDestination.HOTBAR)
             {
@@ -683,13 +685,15 @@ namespace Player.Inventory
             for (int i = 0; i < _hotbarItems.Length; i++)
             {
                 Transform slotTransform = _hotbarSlots[i].transform;
+                if (slotTransform == null) Debug.LogError("AAAAAAAAAAAAAAAAAAA");
 
                 if (_hotbarItems[i] != null)
                 {
+                    if (slotTransform.Find("ItemIcon") == null) { Debug.Log("transform was null!"); continue; }
                     Image img = slotTransform.Find("ItemIcon").GetComponent<Image>();
                     if (img == null) { Debug.Log("Image was null!"); continue; }
                     slotTransform.Find("ItemIcon").GetComponent<Image>().sprite = _hotbarItems[i].getItemIcon();
-                    slotTransform.Find("Quantity").GetComponentInChildren<TextMeshProUGUI>().text = _hotbarItems[i]._quantity.ToString();
+                    slotTransform.Find("Quantity").GetComponentInChildren<TMP_Text>().text = _hotbarItems[i]._quantity.ToString();
                 }
                 else
                 {
