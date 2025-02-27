@@ -27,14 +27,14 @@ MonoBehaviour:
     - itemID: ID5
       quantity: 2
   isHeld: 0
-  damage: 5
+  damage: 30
   reach: 8
   range: 2
-  useCooldown: 0.4
+  useCooldown: 0.8
   holdToUse: 0
   toolEffectorLayers:
     serializedVersion: 2
-    m_Bits: 33554432
+    m_Bits: 786432
   worldLayers:
     serializedVersion: 2
     m_Bits: 238945151

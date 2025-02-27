@@ -29,7 +29,7 @@ MonoBehaviour:
   damage: 10
   reach: 5
   range: 2
-  useCooldown: 0.5
+  useCooldown: 0.9
   holdToUse: 0
   toolEffectorLayers:
     serializedVersion: 2

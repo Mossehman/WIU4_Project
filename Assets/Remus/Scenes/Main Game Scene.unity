@@ -26565,11 +26565,12 @@ MonoBehaviour:
   TerrainScannerPrefab: {fileID: 7812747987160554870, guid: 6881f1b4501e94041986475506da65ab, type: 3}
   vfxDuration: 10
   vfxSize: 200
+  scanCooldown: 5
   sfxname: player-scan
   scanDistance: 10
   scannableLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
   scanPanelPrefab: {fileID: 2287537629848104352, guid: e7334c5c5b3d8a9458f4095b817f78e9, type: 3}
   worldCanvas: {fileID: 304129433}
   panelDuration: 3

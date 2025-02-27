@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,9 @@ public class TerrainScanner : MonoBehaviour
     public float vfxDuration = 3f;
     public float vfxSize = 500f;
 
+    public float scanCooldown = 5.0f;
+    private float scanTimer = 0.0f;
+
     [Header("SFX Scanner")]
     public string sfxname;
 
@@ -22,9 +26,11 @@ public class TerrainScanner : MonoBehaviour
     [Header("UI Setup")]
     public GameObject scanPanelPrefab; // UI Panel prefab
     public Transform worldCanvas; // World Space Canvas parent
-    private GameObject currentPanel = null;
-    private Transform currentTarget = null;
     private Coroutine hideCoroutine = null;
+
+    private List<Transform> currentTargets = new List<Transform>();
+    private List<GameObject> activePanels = new List<GameObject>();
+    private List<float> offsets = new List<float>();
 
     private Camera playerCamera;
     public float panelDuration = 3f; // Time before panel disappears
@@ -36,19 +42,24 @@ public class TerrainScanner : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && isHoldingScanner)
+        scanTimer -= Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.Q) && isHoldingScanner && scanTimer <= 0)
         {
+            scanTimer = scanCooldown;
             AudioEventSystem.PlaySound(sfxname, default, default, transform.position, true);
             SpawnTerrainScannerVFX();
             StartCoroutine(DelayedScan());
         }
 
         // If panel is active, make it track the player's view
-        if (currentPanel != null && currentTarget != null)
+        for (int i = 0; i < activePanels.Count; i++)
         {
-            currentPanel.transform.position = currentTarget.position + Vector3.up * 2;
-            currentPanel.transform.LookAt(playerCamera.transform);
-            currentPanel.transform.Rotate(0, 180, 0); // Flip for correct readability
+            if (activePanels[i] != null && currentTargets[i] != null)
+            {
+                activePanels[i].transform.position = currentTargets[i].position + new Vector3(0, offsets[i], 0);
+                activePanels[i].transform.LookAt(playerCamera.transform);
+                activePanels[i].transform.Rotate(0, 180, 0); // Flip for correct readability
+            }
         }
     }
 
@@ -79,40 +90,40 @@ public class TerrainScanner : MonoBehaviour
 
     void ScanForObject()
     {
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
-        RaycastHit hit;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, scanDistance);
 
-        if (Physics.Raycast(ray, out hit, scanDistance, scannableLayer))
-        {
-            if (hit.collider.CompareTag("Scannable"))
+        foreach (var col in colliders) {
+            if (col.TryGetComponent(out ScannableObject scanData))
             {
-                ShowScanPanel(hit.transform);
+                ShowScanPanel(col.transform, scanData);
             }
         }
     }
 
-    void ShowScanPanel(Transform target)
+    void ShowScanPanel(Transform target, ScannableObject scanData)
     {
-        // If panel already exists, reuse it
-        if (currentPanel == null)
-        {
-            currentPanel = Instantiate(scanPanelPrefab, worldCanvas);
-        }
+        GameObject currentPanel = Instantiate(scanPanelPrefab, worldCanvas);
+
 
         // Set the target object and update position
-        currentTarget = target;
+        currentTargets.Add(target);
+        activePanels.Add(currentPanel);
+        offsets.Add(scanData.yOffset);
 
         TMP_Text titleText = currentPanel.transform.Find("TitleText").GetComponent<TMP_Text>();
         TMP_Text descText = currentPanel.transform.Find("DescText").GetComponent<TMP_Text>();
+        Image iconImage = currentPanel.transform.Find("Holder/Icon").GetComponent<Image>();
 
+        iconImage.sprite = scanData.sprite;
+        currentPanel.transform.localScale = new Vector3(3, 3, 1);
         if (titleText != null)
         {
-            titleText.text = target.name;
+            titleText.text = scanData.displayName;
         }
 
         if (descText != null)
         {
-            descText.text = "• Object";
+            descText.text = scanData.description;
         }
 
         // Restart the hide timer
@@ -131,11 +142,15 @@ public class TerrainScanner : MonoBehaviour
 
     void ClearPanel()
     {
-        if (currentPanel != null)
+        for (int i = 0; i < activePanels.Count; i++)
         {
-            Destroy(currentPanel);
-            currentPanel = null;
+            if (activePanels[i] != null)
+            {
+                Destroy(activePanels[i]);
+            }
         }
-        currentTarget = null;
+        offsets.Clear();
+        activePanels.Clear();
+        currentTargets.Clear();
     }
 }

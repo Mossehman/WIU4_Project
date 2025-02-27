@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2971399500059962608}
   - component: {fileID: 282229235524459923}
   - component: {fileID: -9120984955812008043}
+  - component: {fileID: 755599938463463879}
   m_Layer: 25
   m_Name: Cactus
   m_TagString: Untagged
@@ -97,6 +98,25 @@ MonoBehaviour:
   - itemDropList:
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
     - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+--- !u!114 &755599938463463879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7478388737408944165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 228d4f42b53ef0844b4590aeb4dab2ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayName: Stella prickler
+  description: Stella pricklers are thick, water-storing stems with spiky exteriors.
+    Most creatures tend to avoid this plant due to its tiny thorns on its body. Fungora
+    trees grow in bright and dry desert areas, thriving in the fertile soil rich
+    with minerals and organic matter.
+  yOffset: 5
+  sprite: {fileID: 21300000, guid: 29eb7f344c58c5143a166dba23136cce, type: 3}
 --- !u!1001 &1509741956864435985
 PrefabInstance:
   m_ObjectHideFlags: 0

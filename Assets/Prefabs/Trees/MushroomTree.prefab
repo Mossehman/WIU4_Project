@@ -808,6 +808,7 @@ GameObject:
   - component: {fileID: 8385690944680137909}
   - component: {fileID: 2348837214842554371}
   - component: {fileID: -6192820300123691811}
+  - component: {fileID: 6810089664115702490}
   m_Layer: 26
   m_Name: MushroomTree
   m_TagString: Untagged
@@ -936,6 +937,25 @@ MonoBehaviour:
     - {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
     - {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
     - {fileID: 1239651984688710313, guid: 24a565a0a8bee984ba23ec096003d306, type: 3}
+--- !u!114 &6810089664115702490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6921072969651602650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 228d4f42b53ef0844b4590aeb4dab2ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayName: Stella prickler
+  description: Stella pricklers are thick, water-storing stems with spiky exteriors.
+    Most creatures tend to avoid this plant due to its tiny thorns on its body. Fungora
+    trees grow in bright and dry desert areas, thriving in the fertile soil rich
+    with minerals and organic matter.
+  yOffset: 8
+  sprite: {fileID: 21300000, guid: 29eb7f344c58c5143a166dba23136cce, type: 3}
 --- !u!1 &7561411291110108615
 GameObject:
   m_ObjectHideFlags: 0
