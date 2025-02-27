@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID15
   _displayName: Ironite Pickaxe
-  _itemDescription: Pickaxe forged out of ironite, capable of destroying terrain
-    easily
+  _itemDescription: An upgrade from the Stone Pickaxe, the Ironite Pickaxe used to
+    mine ores and stones, more efficiently with more durability.
   itemIcon: {fileID: 21300000, guid: c70d1091994526844b19366884e1ade5, type: 3}
   itemModel: {fileID: 4483433363229920803, guid: 93749d8d400165f44a93725e4cf3a0c3, type: 3}
   _weight: 1
@@ -39,6 +39,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1044252543
   isWeapon: 0
+  swing:
+    name: 
+    isLibrary: 0
+  hitSFX:
+    name: 
+    isLibrary: 0
   terrainEditorPrefab: {fileID: 5916436038094255366, guid: 8cf16c675a1b57a4da33f76ebc166ab5, type: 3}
   terrainLayer:
     serializedVersion: 2

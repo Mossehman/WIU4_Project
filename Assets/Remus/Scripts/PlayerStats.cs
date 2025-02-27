@@ -163,17 +163,17 @@ public class PlayerStats : MonoBehaviour
 
         transform.position = new Vector3(respawnPoint.position.x, respawnPoint.position.y + 2, respawnPoint.position.z);
 
+        if (TryGetComponent<PlayerController>(out var playerController))
+        {
+            playerController.ForceFirstPersonMode();
+            playerController.enabled = true;
+        }
+
         playerCamera.Priority = 11;
 
         if (ragdollCamera != null)
         {
             ragdollCamera.Priority = 5;
-        }
-
-
-        if (TryGetComponent<PlayerController>(out var playerController))
-        {
-            playerController.enabled = true;
         }
     }
 

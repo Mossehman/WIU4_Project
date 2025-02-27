@@ -1,9 +1,6 @@
 using Cinemachine;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.TextCore.Text;
 
 public class PlayerController : MonoBehaviour
 {
@@ -172,24 +169,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ToggleCameraView()
+    public void ToggleCameraView()
     {
         isThirdPerson = !isThirdPerson;
 
         if (isThirdPerson)
         {
-            firstPersonCamera.Priority = 0;  // Lower priority (inactive)
-            thirdPersonCamera.Priority = 10; // Higher priority (active)
-
-            // Ensure thirdPersonCamera follows the anchor correctly
-            //thirdPersonCamera.Follow = thirdPersonAnchor;
-            //thirdPersonCamera.LookAt = transform;
+            firstPersonCamera.Priority = 0;
+            thirdPersonCamera.Priority = 10;
         }
         else
         {
-            firstPersonCamera.Priority = 10; // Higher priority (active)
-            thirdPersonCamera.Priority = 0;  // Lower priority (inactive)
+            firstPersonCamera.Priority = 10;
+            thirdPersonCamera.Priority = 0;
         }
+    }
+
+    public void ForceFirstPersonMode()
+    {
+        isThirdPerson = false;
+        firstPersonCamera.Priority = 10;
+        thirdPersonCamera.Priority = 0;
     }
 
     private void HandleMovement()

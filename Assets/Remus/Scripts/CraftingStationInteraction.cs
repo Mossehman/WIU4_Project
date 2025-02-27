@@ -14,14 +14,19 @@ public class CraftingStationInteraction : InteractionObject
     [SerializeField] private GameObject inventoryIcon;
     [SerializeField] private GameObject inventoryText;
 
-    public float interactionRange = 3f; // Range within which UI appears
+    public float interactionRange = 3f;
     private GameObject player;
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player"); // Ensure the player has the "Player" tag
+        player = GameObject.FindGameObjectWithTag("Player");
         if (craftingUI != null)
-            craftingUI.SetActive(false); // Hide UI initially
+            craftingUI.SetActive(false);
+    }
+
+    public override string GetCustomDescription()
+    {
+        return $"Craft Things!";
     }
 
     private void ShowCraftingUI()
@@ -29,8 +34,8 @@ public class CraftingStationInteraction : InteractionObject
         if (craftingUI != null)
         {
             craftingUI.SetActive(true);
-            Cursor.lockState = CursorLockMode.None; // Unlock the cursor
-            Cursor.visible = true; // Make the cursor visible
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
 
             _backgroundPanel.SetActive(false);
             _vitalsPanel.SetActive(false);
@@ -52,8 +57,8 @@ public class CraftingStationInteraction : InteractionObject
         if (craftingUI != null)
         {
             craftingUI.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked; // Lock the cursor back
-            Cursor.visible = false; // Hide the cursor
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
 
             _backgroundPanel.SetActive(true);
             _vitalsPanel.SetActive(true);

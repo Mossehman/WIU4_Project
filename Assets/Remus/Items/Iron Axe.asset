@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: ID14
   _displayName: Ironite Axe
-  _itemDescription: Axe made of iron, cuts down foliage faster
+  _itemDescription: An upgrade from the Stone Axe, the Ironite Axe used to cut down
+    trees, more efficiently with more durability.
   itemIcon: {fileID: 21300000, guid: 74d523639e8678e4fb23408810fb8a35, type: 3}
   itemModel: {fileID: 113951859308317000, guid: c799a5ad0af8b314e9105146660a6d2b, type: 3}
   _weight: 1
@@ -38,3 +39,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1044252543
   isWeapon: 1
+  swing:
+    name: 
+    isLibrary: 0
+  hitSFX:
+    name: 
+    isLibrary: 0
