@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.TextCore.Text;
 using Cinemachine;
 
 public class PlayerStats : MonoBehaviour
@@ -35,12 +34,12 @@ public class PlayerStats : MonoBehaviour
     [Header("Drain Rates")]
     public float oxygenDrainRate = 1f;
     public float waterDrainRate = 0.5f;
+    public float healthDecayRate = 1f; // Health loss when water reaches 0
 
     [Header("Damage Overlay")]
     public Image overlay;
     public float overlayDuration = 0.5f;
     public float fadeSpeed = 2f;
-    private float overlayTimer;
 
     [Header("Respawn System")]
     [SerializeField] private GameObject ragdoll;
@@ -62,14 +61,13 @@ public class PlayerStats : MonoBehaviour
 
     void Awake()
     {
-        // Singleton (no DontDestroyOnLoad)
         if (Instance == null)
         {
             Instance = this;
         }
         else
         {
-            Destroy(gameObject); // Destroy duplicate instances
+            Destroy(gameObject);
             return;
         }
     }
@@ -80,6 +78,7 @@ public class PlayerStats : MonoBehaviour
 
         StartCoroutine(DrainOxygen());
         StartCoroutine(DrainWater());
+        StartCoroutine(CheckHealthDecay());
     }
 
     void Update()
@@ -103,18 +102,6 @@ public class PlayerStats : MonoBehaviour
         UpdateStatUI(StatType.Stamina, _stamina, maxStamina, staminaBarFront, staminaBarBack, staminaText);
         UpdateStatUI(StatType.Oxygen, _oxygen, maxOxygen, oxygenBarFront, oxygenBarBack, oxygenText);
         UpdateStatUI(StatType.Water, _water, maxWater, waterBarFront, waterBarBack, waterText);
-
-        if (overlay.color.a > 0)
-        {
-            if (_health < 30) return;
-            overlayTimer += Time.deltaTime;
-            if (overlayTimer > overlayDuration)
-            {
-                float tempAlpha = overlay.color.a;
-                tempAlpha -= Time.deltaTime * fadeSpeed;
-                overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, tempAlpha);
-            }
-        }
     }
 
     private void Die()
@@ -224,6 +211,44 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    private IEnumerator DrainOxygen()
+    {
+        while (true)
+        {
+            float randomWait = Random.Range(120f, 300f); // Wait between 2 to 5 minutes
+            yield return new WaitForSeconds(randomWait);
+
+            DecreaseStat(StatType.Oxygen, oxygenDrainRate);
+            Debug.Log($"[Oxygen Drain] -{oxygenDrainRate}. Next drain in {randomWait} seconds.");
+        }
+    }
+
+    private IEnumerator DrainWater()
+    {
+        while (true)
+        {
+            float randomWait = Random.Range(120f, 300f); // Wait between 2 to 5 minutes
+            yield return new WaitForSeconds(randomWait);
+
+            DecreaseStat(StatType.Water, waterDrainRate);
+            Debug.Log($"[Water Drain] -{waterDrainRate}. Next drain in {randomWait} seconds.");
+        }
+    }
+
+    private IEnumerator CheckHealthDecay()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(10f); // Check every 10 seconds
+
+            if (_water <= 0)
+            {
+                DecreaseStat(StatType.Health, healthDecayRate);
+                Debug.Log($"[Health Decay] -{healthDecayRate} due to dehydration.");
+            }
+        }
+    }
+
     public void DecreaseStat(StatType type, float amount)
     {
         switch (type)
@@ -231,7 +256,6 @@ public class PlayerStats : MonoBehaviour
             case StatType.Health:
                 _health -= amount;
 
-                overlayTimer = 0f;
                 overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
 
                 break;
@@ -255,24 +279,6 @@ public class PlayerStats : MonoBehaviour
             case StatType.Stamina: _stamina += amount; break;
             case StatType.Oxygen: _oxygen += amount; break;
             case StatType.Water: _water += amount; break;
-        }
-    }
-
-    private IEnumerator DrainOxygen()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f);
-            DecreaseStat(StatType.Oxygen, oxygenDrainRate);
-        }
-    }
-
-    private IEnumerator DrainWater()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f);
-            DecreaseStat(StatType.Water, waterDrainRate);
         }
     }
 }

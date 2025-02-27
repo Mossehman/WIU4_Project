@@ -46,43 +46,70 @@ public class WeatherManager : MonoBehaviour
 
     void HandleHourlyUpdate(object[] args)
     {
-        if (playerController == null) return; // Ensure player is found
+        if (playerController == null || playerStats == null) return;
+
         bool isSheltered = playerController.IsUnderShelter();
 
-        // Stop the event if the player is under shelter
-        if (isSheltered)
+        if (!isSheltered) // Player is outside, apply effects
         {
-            Debug.Log("[WeatherManager] Player entered shelter. Stopping weather event.");
-            currentWeather = WeatherType.None; // Clear weather
-            eventDuration = 0; // Forcefully end the event
-            targetIntensity = 0f; // Disable effects
-            if (AcidRainParticles != null) AcidRainParticles.Stop();
+            ApplyWeatherEffectsToPlayer();
+        }
+
+        // Weather event still continues in the background
+        if (eventDuration > 0)
+        {
+            eventDuration--;
+
+            if (eventDuration == 0)
+            {
+                currentWeather = WeatherType.None;
+                Debug.Log("[WeatherManager] Weather event ended.");
+                targetIntensity = 0f; // Fade out effect
+                if (AcidRainParticles != null) AcidRainParticles.Stop();
+            }
         }
         else
         {
-            if (eventDuration > 0)
-            {
-                eventDuration--;
-
-                ApplyWeatherEffectsToPlayer();
-
-                if (eventDuration == 0)
-                {
-                    currentWeather = WeatherType.None;
-                    Debug.Log("[WeatherManager] Weather event ended.");
-                    targetIntensity = 0f; // Fade out effect
-                    if (AcidRainParticles != null) AcidRainParticles.Stop();
-                }
-            }
-            else
-            {
-                TryStartWeatherEvent();
-            }
+            TryStartWeatherEvent();
         }
 
         AdjustTemperature();
-        UpdateShaderEffect(); // Gradual fade-in/out effect
+        UpdateShaderEffect();
         UpdateWeatherText();
+    }
+
+    void ApplyWeatherEffectsToPlayer()
+    {
+        if (playerStats == null) return;
+
+        float damageAmount = 0f;
+
+        // Acid Rain deals **direct** health damage
+        if (currentWeather == WeatherType.AcidRain)
+        {
+            damageAmount = Random.Range(5f, 10f); // Acid Rain damage
+            Debug.Log($"[WeatherManager] Acid Rain Damage: {damageAmount}");
+        }
+        else
+        {
+            // Temperature-based damage (only if player is outside)
+            if (temperature <= -30f)
+            {
+                damageAmount = Random.Range(1f, 3f);
+                playerStats.DecreaseStat(PlayerStats.StatType.Stamina, 2f);
+            }
+            else if (temperature >= 70f)
+            {
+                damageAmount = Random.Range(1f, 3f);
+                playerStats.DecreaseStat(PlayerStats.StatType.Water, 2f);
+            }
+        }
+
+        // Apply damage if necessary
+        if (damageAmount > 0)
+        {
+            playerStats.DecreaseStat(PlayerStats.StatType.Health, damageAmount);
+        }
     }
 
     void TryStartWeatherEvent()
@@ -145,41 +172,6 @@ public class WeatherManager : MonoBehaviour
 
         float changeSpeed = (eventDuration > 0) ? 500f : 50f;
         temperature = Mathf.MoveTowards(temperature, targetTemperature, changeSpeed * Time.deltaTime);
-    }
-
-    void ApplyWeatherEffectsToPlayer()
-    {
-        if (playerStats == null) return;
-
-        float damageAmount = 0f;
-
-        switch (currentWeather)
-        {
-            case WeatherType.Blizzard:
-                damageAmount = 10f; // Blizzard slowly kills player
-                playerStats.DecreaseStat(PlayerStats.StatType.Stamina, 5f); // Lower stamina too
-                break;
-            case WeatherType.Snowstorm:
-                damageAmount = 5f;
-                playerStats.DecreaseStat(PlayerStats.StatType.Stamina, 3f);
-                break;
-            case WeatherType.Heatwave:
-                damageAmount = 15f;
-                playerStats.DecreaseStat(PlayerStats.StatType.Water, 10f); // Increase dehydration
-                break;
-            case WeatherType.Sandstorm:
-                damageAmount = 7f;
-                playerStats.DecreaseStat(PlayerStats.StatType.Stamina, 4f);
-                break;
-            case WeatherType.AcidRain:
-                damageAmount = 20f; // More deadly
-                break;
-            default:
-                return; // No effect
-        }
-
-        Debug.Log($"[WeatherManager] Applying {damageAmount} damage due to {currentWeather}");
-        playerStats.DecreaseStat(PlayerStats.StatType.Health, damageAmount);
     }
 
     void UpdateWeatherEffects()

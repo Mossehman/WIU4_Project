@@ -16,17 +16,12 @@ public class CraftingStationInteraction : InteractionObject
 
     public float interactionRange = 3f; // Range within which UI appears
     private GameObject player;
-    private bool isNear = false;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player"); // Ensure the player has the "Player" tag
         if (craftingUI != null)
             craftingUI.SetActive(false); // Hide UI initially
-    }
-
-    private void Update()
-    {
     }
 
     private void ShowCraftingUI()
@@ -36,7 +31,6 @@ public class CraftingStationInteraction : InteractionObject
             craftingUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None; // Unlock the cursor
             Cursor.visible = true; // Make the cursor visible
-            isNear = true;
 
             _backgroundPanel.SetActive(false);
             _vitalsPanel.SetActive(false);
@@ -47,6 +41,9 @@ public class CraftingStationInteraction : InteractionObject
             hotbar.SetActive(false);
             inventoryIcon.SetActive(false);
             inventoryText.SetActive(false);
+
+            Time.timeScale = 0f;
+            UIManager.IsCraftingOpen = true;
         }
     }
 
@@ -57,7 +54,6 @@ public class CraftingStationInteraction : InteractionObject
             craftingUI.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked; // Lock the cursor back
             Cursor.visible = false; // Hide the cursor
-            isNear = false;
 
             _backgroundPanel.SetActive(true);
             _vitalsPanel.SetActive(true);
@@ -68,6 +64,9 @@ public class CraftingStationInteraction : InteractionObject
             hotbar.SetActive(true);
             inventoryIcon.SetActive(true);
             inventoryText.SetActive(true);
+
+            Time.timeScale = 1f;
+            UIManager.IsCraftingOpen = false;
         }
     }
 

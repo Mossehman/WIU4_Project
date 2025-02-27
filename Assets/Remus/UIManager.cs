@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    public static bool IsAnyMenuOpen { get; private set; } = false;
-    public static bool IsInventoryOpen { get; private set; } = false;
-    public static bool IsCraftingOpen { get; private set; } = false;
+    public static bool IsAnyMenuOpen { get; set; } = false;
+    public static bool IsInventoryOpen { get; set; } = false;
+    public static bool IsCraftingOpen { get; set; } = false;
 
     public static void LockCursor()
     {

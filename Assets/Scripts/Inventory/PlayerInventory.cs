@@ -554,6 +554,9 @@ namespace Player.Inventory
 
                 _hotbarGrid.spacing = _openedSpacing;
                 _hotbarGrid.childAlignment = _openedAlignment;
+
+                Time.timeScale = 0f;
+                UIManager.IsInventoryOpen = true;
             }
             else
             {
@@ -575,6 +578,9 @@ namespace Player.Inventory
 
                 _hotbarGrid.spacing = _closedSpacing;
                 _hotbarGrid.childAlignment = _closedAlignment;
+
+                Time.timeScale = 1f;
+                UIManager.IsInventoryOpen = false;
             }
         }
 
