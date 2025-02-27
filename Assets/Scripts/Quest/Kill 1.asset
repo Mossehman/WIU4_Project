@@ -16,4 +16,4 @@ MonoBehaviour:
   _subquestName: 
   _currentAmount: 0
   _requiredAmount: 0
-  _isCompleted: 0
+  _isCompleted: 1

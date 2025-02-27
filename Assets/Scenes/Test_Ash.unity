@@ -2003,7 +2003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b084e6fafd7a193428fb3b5f3232c29d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textSpeed: 0
+  _textSpeed: 0.0001
   _dialogueBox: {fileID: 33088657}
 --- !u!4 &500075042
 Transform:
