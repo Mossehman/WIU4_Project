@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf02ebffd021ab4e85e489b8a0c1381, type: 3}
+  m_Name: MusicNight
+  m_EditorClassIdentifier: 
+  libraryname: MusicNight
+  sounds:
+  - soundName: Freezing Night - John Kensy
+    clip: {fileID: 8300000, guid: 415b0ec2725eace4c8f494f7368ebad2, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: Holy Night - Tomomi Kato
+    clip: {fileID: 8300000, guid: 50f9bf24e1b6a964891055d51368b1a8, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: Relaxing Ambient Music - Clavier Music
+    clip: {fileID: 8300000, guid: 01e64bfb5344ab24cae05d452c7b8ae9, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: Relaxing - Anastasia Chubarova
+    clip: {fileID: 8300000, guid: 178213b8dfd3f56429ec6dc2238d008b, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: Sprakling Night - cyrusNONAME
+    clip: {fileID: 8300000, guid: e053abf28c9a30843956180b8362a99b, type: 3}
+    priority: 0
+    volume: 1

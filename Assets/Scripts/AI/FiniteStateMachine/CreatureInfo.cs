@@ -50,6 +50,12 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         private float ProductionDuration = 30.0f;
         private Vector3 gravity = new Vector3(0, -9.81f, 0);
 
+
+        [Header("Loot Info")]
+        public GameObject lootprefab;
+        public int minamt, maxamt;
+
+        [Header("Behaviour Info")]
         public CreatureShelter assignedHome;
         public bool isSheltered = false;
         public bool isDead = false;
@@ -98,6 +104,15 @@ namespace Assets.Scripts.AI.FiniteStateMachine
                     AudioEventSystem.PlaySound(dead.name, default, 1, transform.position);
                     fsm.enabled = false;
                     if (animator != null) animator.SetBool("isMoving", false);
+
+                    if (lootprefab != null && minamt > 0 && maxamt > 0)
+                    {
+                        int amt = UnityEngine.Random.Range(minamt, maxamt);
+                        for (int i = 0; i < amt; i++)
+                        {
+                            Instantiate(lootprefab, transform.position, Quaternion.identity);
+                        }
+                    }
                     OnDeath();
                     isDead = true;
                 }

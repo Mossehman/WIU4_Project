@@ -83,5 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de43189a86f9bb84ebf63f6f0593f5e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicplaylist: {fileID: 11400000, guid: 242995f5115bb9745a1bd24107697cf3, type: 2}
+  dayplaylist: {fileID: 11400000, guid: 242995f5115bb9745a1bd24107697cf3, type: 2}
+  nightplaylist: {fileID: 11400000, guid: 3e344cb9bf951d74c98aa214ad7063e8, type: 2}
   volume: 0.2
+  currentMusicName: 
