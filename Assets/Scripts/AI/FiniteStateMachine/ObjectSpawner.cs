@@ -21,9 +21,9 @@ public class ObjectSpawner : MonoBehaviour
     void SpawnFruit()
     {
         float x = UnityEngine.Random.Range(-squaresize, squaresize);
-        x = x <= deadsize ? deadsize : x >= -deadsize ? -deadsize : x;
+        x = x <= deadsize && x >= -deadsize ? (x >= 0 ? deadsize : -deadsize) : x;
         float z = UnityEngine.Random.Range(-squaresize, squaresize);
-        z = z <= deadsize ? deadsize : z >= -deadsize ? -deadsize : z;
+        z = z <= deadsize && z >= -deadsize ? (z >= 0 ? deadsize : -deadsize) : z;
         GameObject obj = Instantiate(prefab, new Vector3(x + transform.position.x, transform.position.y, z + transform.position.z), Quaternion.identity);
     }
 }
