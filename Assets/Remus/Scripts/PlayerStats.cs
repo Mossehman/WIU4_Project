@@ -72,7 +72,6 @@ public class PlayerStats : MonoBehaviour
 
     void Start()
     {
-        LoadStats(); // Load stats when the scene starts
         overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 0);
 
         StartCoroutine(DrainOxygen());
@@ -151,7 +150,6 @@ public class PlayerStats : MonoBehaviour
         _stamina = maxStamina;
         _oxygen = maxOxygen;
         _water = maxWater;
-        SaveStats();
     }
 
     private void UpdateStatUI(StatType type, float value, float maxValue, Image frontBar, Image backBar, TextMeshProUGUI text)
@@ -202,7 +200,6 @@ public class PlayerStats : MonoBehaviour
             case StatType.Oxygen: _oxygen -= amount; break;
             case StatType.Water: _water -= amount; break;
         }
-        SaveStats(); // Save the updated values
     }
 
     public void IncreaseStat(StatType type, float amount)
@@ -214,24 +211,6 @@ public class PlayerStats : MonoBehaviour
             case StatType.Oxygen: _oxygen += amount; break;
             case StatType.Water: _water += amount; break;
         }
-        SaveStats(); // Save the updated values
-    }
-
-    private void SaveStats()
-    {
-        PlayerPrefs.SetFloat("Health", _health);
-        PlayerPrefs.SetFloat("Stamina", _stamina);
-        PlayerPrefs.SetFloat("Oxygen", _oxygen);
-        PlayerPrefs.SetFloat("Water", _water);
-        PlayerPrefs.Save();
-    }
-
-    private void LoadStats()
-    {
-        _health = PlayerPrefs.GetFloat("Health", maxHealth);
-        _stamina = PlayerPrefs.GetFloat("Stamina", maxStamina);
-        _oxygen = PlayerPrefs.GetFloat("Oxygen", maxOxygen);
-        _water = PlayerPrefs.GetFloat("Water", maxWater);
     }
 
     private IEnumerator DrainOxygen()
