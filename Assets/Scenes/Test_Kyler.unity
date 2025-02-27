@@ -2230,7 +2230,7 @@ MonoBehaviour:
   hours: 12
   minutes: 0
   days: 1
-  secondsPerHour: 5
+  secondsPerHour: 15
   dayTimeText: {fileID: 1985514241}
   timeOfTheDay: 0
   volumetricFogMaterial: {fileID: 0}
@@ -2550,7 +2550,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8568141123611905501, guid: 109f864b491378547b7ca6a8c0afdaef, type: 3}
       propertyPath: dayLengthInSeconds
-      value: 1440
+      value: 360
       objectReference: {fileID: 0}
     - target: {fileID: 8568141123611905501, guid: 109f864b491378547b7ca6a8c0afdaef, type: 3}
       propertyPath: volumetricFogMaterial
