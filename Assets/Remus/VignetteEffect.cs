@@ -8,10 +8,10 @@ public class VignetteEffect : MonoBehaviour
     public Volume postProcessVolume;
     private Vignette vignette;
 
-    public float fadeDuration = 2f; // Time for the fade effect
-    public float maxVignetteIntensity = 0.8f; // How dark it starts
-    public float minVignetteIntensity = 0f; // Fully open eyes
-    public Canvas uiCanvas; // UI Canvas to hide
+    public float fadeDuration = 2f;
+    public float maxVignetteIntensity = 0.8f;
+    public float minVignetteIntensity = 0f;
+    public Canvas uiCanvas;
 
     void Start()
     {
@@ -22,7 +22,7 @@ public class VignetteEffect : MonoBehaviour
 
         if (uiCanvas != null)
         {
-            uiCanvas.enabled = false; // Hide the UI at start
+            uiCanvas.enabled = false;
         }
 
         if (postProcessVolume.profile.TryGet<Vignette>(out vignette))
@@ -51,7 +51,6 @@ public class VignetteEffect : MonoBehaviour
 
         vignette.intensity.Override(targetIntensity);
 
-        // Show UI after fade effect is complete
         if (uiCanvas != null)
         {
             uiCanvas.enabled = true;

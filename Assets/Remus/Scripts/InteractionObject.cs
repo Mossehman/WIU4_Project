@@ -10,7 +10,6 @@ public class InteractionObject : MonoBehaviour, IInteractable
         return interactionIcon;
     }
 
-
     public virtual string GetInteractionText()
     {
         return interactionText;

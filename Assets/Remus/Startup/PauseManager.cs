@@ -15,7 +15,6 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject _crosshair;
     [SerializeField] private GameObject _inventoryIcon;
     [SerializeField] private GameObject _inventoryText;
-
     [SerializeField] private GameObject _objectivePanel;
 
     void Update()
@@ -44,8 +43,10 @@ public class PauseMenu : MonoBehaviour
         _crosshair.SetActive(true);
         _inventoryIcon.SetActive(true);
         _inventoryText.SetActive(true);
-
         _objectivePanel.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void Pause()
@@ -63,8 +64,10 @@ public class PauseMenu : MonoBehaviour
         _crosshair.SetActive(false);
         _inventoryIcon.SetActive(false);
         _inventoryText.SetActive(false);
-
         _objectivePanel.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void LoadMainMenu()

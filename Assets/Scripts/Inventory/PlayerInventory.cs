@@ -38,8 +38,10 @@ namespace Player.Inventory
         [SerializeField] public float _baseWeight = 0.0f;
         [SerializeField] public float _baseMaxWeight = 10.0f;
         [SerializeField] private float _currentWeight;
+
         // SORTING
         [SerializeField] private SortingType _currentSort = SortingType.DATE_ADDED;
+
         // LOCKING ITEMS
         private BaseItem _currentlySelected;
         private List<bool> _isLocked;
@@ -78,9 +80,9 @@ namespace Player.Inventory
         private GridLayoutGroup _hotbarGrid;
 
         [Header("Visuals")]
-        [SerializeField] private Transform _playerHand; // Hand object for held items to be displayed on
+        [SerializeField] private Transform _playerHand;
 
-        // Closed (default) state
+        // Closed state
         private Vector2 _closedOffsetMin;
         private Vector2 _closedOffsetMax;
         private Vector2 _closedSpacing;
@@ -101,7 +103,6 @@ namespace Player.Inventory
         {
             int count = 0;
 
-            // Check Inventory
             foreach (BaseItem item in _inventoryItems)
             {
                 if (item.getID() == itemID)
@@ -110,7 +111,6 @@ namespace Player.Inventory
                 }
             }
 
-            // Check Hotbar
             foreach (BaseItem hotbarItem in _hotbarItems)
             {
                 if (hotbarItem != null && hotbarItem.getID() == itemID)
@@ -131,7 +131,6 @@ namespace Player.Inventory
         {
             int remainingToRemove = amountToRemove;
 
-            // Remove from Hotbar first
             for (int i = 0; i < _hotbarItems.Length; i++)
             {
                 if (_hotbarItems[i] != null && _hotbarItems[i].getID() == itemID)
@@ -146,11 +145,10 @@ namespace Player.Inventory
                         _hotbarItems[i] = null;
                     }
 
-                    if (remainingToRemove <= 0) break; // Stop if enough removed
+                    if (remainingToRemove <= 0) break;
                 }
             }
 
-            // Remove from Inventory if still needed
             for (int i = 0; i < _inventoryItems.Count && remainingToRemove > 0; i++)
             {
                 if (_inventoryItems[i].getID() == itemID)
@@ -163,10 +161,10 @@ namespace Player.Inventory
                     if (_inventoryItems[i]._quantity <= 0)
                     {
                         _inventoryItems.RemoveAt(i);
-                        i--; // Adjust index after removal
+                        i--;
                     }
 
-                    if (remainingToRemove <= 0) break; // Stop if enough removed
+                    if (remainingToRemove <= 0) break;
                 }
             }
 
@@ -206,13 +204,11 @@ namespace Player.Inventory
             _hotbarRect = _hotBarPanel.GetComponent<RectTransform>();
             _hotbarGrid = _hotBarPanel.GetComponent<GridLayoutGroup>();
 
-            // Store Closed State (from Image 1)
             _closedOffsetMin = _hotbarRect.offsetMin; // Left, Bottom
             _closedOffsetMax = _hotbarRect.offsetMax; // Right, Top
             _closedSpacing = _hotbarGrid.spacing;
             _closedAlignment = _hotbarGrid.childAlignment;
 
-            // Store Opened State (from Image 2)
             _openedOffsetMin = new Vector2(170.9836f, 12.13998f); // Left, Bottom
             _openedOffsetMax = new Vector2(-518.9836f, -875.54f);  // Right, Top
             _openedSpacing = new Vector2(-9.4f, 76.81f);
@@ -228,13 +224,13 @@ namespace Player.Inventory
 
         private void DisplayHeldItem(BaseItem item)
         {
-            if (_playerHand == null) { return; } // player hand was not assigned, do not do anything
+            if (_playerHand == null) { return; }
             for (int i = 0; i < _playerHand.childCount; i++)
             {
                 Destroy(_playerHand.GetChild(i).gameObject);
             }
 
-            if (item == null || item.getItemModel() == null) { return; } // item or item model was not assigned, do not do anything
+            if (item == null || item.getItemModel() == null) { return; }
             GameObject itemToDisplay = Instantiate(item.getItemModel(), _playerHand);
             if (itemToDisplay.TryGetComponent(out ItemModelScript model))
             {
@@ -255,7 +251,6 @@ namespace Player.Inventory
                 ToggleInventory();
             }
 
-            // Detect keys 1-5 to select a hotbar slot
             for (int i = 0; i < _maxHotbarItems; i++)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1 + i))
@@ -331,14 +326,12 @@ namespace Player.Inventory
 
         public void TryDropSelectedItem()
         {
-            // Ensure a hotbar slot is selected
             if (_selectedHotbarIndex == -1)
             {
                 Debug.LogWarning("No hotbar slot selected. Press 1-5 to select a slot.");
                 return;
             }
 
-            // Ensure there is an item in the selected slot
             BaseItem itemToDrop = _hotbarItems[_selectedHotbarIndex];
             if (itemToDrop == null)
             {
@@ -359,32 +352,27 @@ namespace Player.Inventory
             }
             else
             {
-                // Remove item from hotbar
                 _hotbarItems[_selectedHotbarIndex] = null;
 
-                // **Destroy the hotbar UI prefab for this slot**
                 Transform slotTransform = _hotbarSlots[_selectedHotbarIndex].transform;
                 if (slotTransform.childCount > 0)
                 {
-                    Destroy(slotTransform.GetChild(0).gameObject); // Removes item UI
+                    Destroy(slotTransform.GetChild(0).gameObject);
                 }
             }
 
-            // Update hotbar UI after dropping
             UpdateHotbarUI();
             EventManager.Fire("OnCollectMission", this);
 
-            // Calculate a safe drop position in front of the player
-            Vector3 dropOffset = transform.forward * 2.0f + Vector3.up * 1.0f; // Move 2 units forward, 1 unit up
+            Vector3 dropOffset = transform.forward * 2.0f + Vector3.up * 1.0f;
             Vector3 dropPosition = transform.position + dropOffset;
 
-            // Instantiate the item model at the offset position
             GameObject droppedModel = Instantiate(itemToDrop.getItemModel(), dropPosition, Quaternion.identity);
             ItemModelScript itemScript = droppedModel.GetComponent<ItemModelScript>();
 
             if (itemScript != null)
             {
-                itemScript.OnDropItem(itemToDrop, transform.forward, 5.0f); // Apply forward force
+                itemScript.OnDropItem(itemToDrop, transform.forward, 5.0f);
             }
 
             Debug.Log($"Item {itemToDrop.getDisplayName()} dropped and removed from UI.");
@@ -414,7 +402,7 @@ namespace Player.Inventory
                 if (item.getID() == newItem.getID())
                 {
 
-                    item._quantity ++; // Fix: Increment based on newItem's quantity
+                    item._quantity ++;
                     Debug.Log($"Item {item.getDisplayName()} already exists in inventory. New Quantity: " + item._quantity);
                     _currentWeight += newItem.getWeight() * newItem._quantity;
                     EventManager.Fire("OnCollectMission", this);
@@ -422,7 +410,6 @@ namespace Player.Inventory
                 }
             }
 
-            // Fix: Ensure newItem starts with quantity 1 if it's being added for the first time
             newItem._quantity = Mathf.Max(newItem._quantity, 1);
             _inventoryItems.Add(newItem);
             _isLocked.Add(false);
@@ -482,7 +469,7 @@ namespace Player.Inventory
             switch (type)
             {
                 case SortingType.DATE_ADDED:
-                    return temp; // No sorting needed
+                    return temp;
 
                 case SortingType.ALPHABETICAL:
                     temp.Sort((a, b) => a.getDisplayName().CompareTo(b.getDisplayName()));
@@ -595,7 +582,6 @@ namespace Player.Inventory
 
         void OnItemMove(object[] args)
         {
-            // UI Object that got dragged
             GameObject item = args[0] as GameObject;
             ItemOrigin origin = (ItemOrigin)args[1];
             ItemDestination destination = (ItemDestination)args[2];
@@ -664,7 +650,6 @@ namespace Player.Inventory
 
         public void RefreshInventoryUI()
         {
-            // Clear the inventory UI panel
             foreach (Transform child in _inventoryPanel.transform)
             {
                 Destroy(child.gameObject);
@@ -712,7 +697,6 @@ namespace Player.Inventory
                 }
                 else
                 {
-                    // Clear hotbar slot when item is removed
                     foreach (Transform child in slotTransform)
                     {
                         Destroy(child.gameObject);

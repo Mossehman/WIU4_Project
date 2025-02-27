@@ -31,14 +31,13 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private CinemachineVirtualCamera firstPersonCamera;
     [SerializeField] private CinemachineVirtualCamera thirdPersonCamera;
-    [SerializeField] private Transform thirdPersonAnchor; // The orb or anchor point
+    [SerializeField] private Transform thirdPersonAnchor;
 
     private bool isThirdPerson = false;
 
-    // Camera bobbing parameters
-    [SerializeField] private float bobFrequency = 6f; // Speed of bobbing
-    [SerializeField] private float bobAmplitude = 0.1f; // Intensity of bobbing
-    [SerializeField] private float bobSmoothing = 5f; // Smooth transitions
+    [SerializeField] private float bobFrequency = 6f;
+    [SerializeField] private float bobAmplitude = 0.1f;
+    [SerializeField] private float bobSmoothing = 5f;
 
     private CinemachineCameraOffset cameraOffset;
     private float bobTimer = 0f;
@@ -72,7 +71,6 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
 
-        // Get the CinemachineCameraOffset component
         cameraOffset = cinemachineVirtualCamera.GetComponent<CinemachineCameraOffset>();
 
         if (cameraOffset != null)
@@ -104,7 +102,6 @@ public class PlayerController : MonoBehaviour
 
         CheckShelter();
 
-        // Toggle between first-person and third-person view when "V" is pressed
         if (Keyboard.current.vKey.wasPressedThisFrame)
         {
             ToggleCameraView();
@@ -114,12 +111,9 @@ public class PlayerController : MonoBehaviour
         speed = Mathf.SmoothDamp(animator.GetFloat("Speed"), speed, ref velocitySmoothing, 0.1f);
         animator.SetFloat("Speed", speed);
 
-        // Animation: Update Fall State
         bool isFalling = !IsGrounded() && velocity.y < 0;
         animator.SetBool("IsGrounded", IsGrounded());
         animator.SetFloat("VelocityY", velocity.y);
-
-        HandleKeyAnimations();
     }
 
     private void HandleThirdMovement()
@@ -152,17 +146,14 @@ public class PlayerController : MonoBehaviour
             );
         }
 
-        // Jump
         if (jumpPressed && isGrounded)
         {
             gravityVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravityValue);
             jumpPressed = false;
         }
 
-        // Gravity
         gravityVelocity.y += gravityValue * Time.deltaTime;
 
-        // Sprinting Reset
         if (moveInput.magnitude == 0)
         {
             isSprinting = false;
@@ -200,7 +191,6 @@ public class PlayerController : MonoBehaviour
         float speed = isSprinting ? WalkSpeed * SprintMultiplier : WalkSpeed;
         characterController.Move(moveDirection * speed * Time.deltaTime);
 
-        // More reliable ground check
         bool grounded = IsGrounded();
 
         if (grounded)
@@ -211,12 +201,12 @@ public class PlayerController : MonoBehaviour
                 animator.SetFloat("SpeedMod", speed * 0.2f);
             }
             if (velocity.y < 0)
-                velocity.y = -2f; // Ensures player stays grounded
+                velocity.y = -2f;
 
-            if (jumpPressed) // Jump only when grounded
+            if (jumpPressed)
             {
                 velocity.y = JumpForce;
-                jumpPressed = false; // Reset jump input
+                jumpPressed = false;
             }
         }
         else
@@ -226,7 +216,6 @@ public class PlayerController : MonoBehaviour
 
         characterController.Move(velocity * Time.deltaTime);
 
-        // Call the bobbing effect function
         ApplyHeadBobbing();
     }
 
@@ -252,7 +241,7 @@ public class PlayerController : MonoBehaviour
     {
         if (cameraOffset == null) return;
 
-        if (moveInput.sqrMagnitude > 0.01f && IsGrounded()) // Player is moving and grounded
+        if (moveInput.sqrMagnitude > 0.01f && IsGrounded())
         {
             bobTimer += Time.deltaTime * bobFrequency;
             float bobOffset = Mathf.Sin(bobTimer) * bobAmplitude;
@@ -272,26 +261,15 @@ public class PlayerController : MonoBehaviour
     // Weather
     private void CheckShelter()
     {
-        Vector3 rayStart = transform.position + Vector3.up * 0.1f; // Slightly above the player to avoid ground collision
+        Vector3 rayStart = transform.position + Vector3.up * 0.1f;
         Vector3 rayDirection = Vector3.up;
         float rayDistance = 1000f;
 
         RaycastHit hit;
         bool isSheltered = Physics.Raycast(rayStart, rayDirection, out hit, rayDistance);
 
-        // Draw the debug ray
         Color rayColor = isSheltered ? Color.green : Color.red;
         Debug.DrawRay(rayStart, rayDirection * rayDistance, rayColor);
-
-        // Debugging logs
-        //if (isSheltered)
-        //{
-        //    Debug.Log($"[PlayerController] Player is UNDER SHELTER. Hit: {hit.collider.gameObject.name}");
-        //}
-        //else
-        //{
-        //    Debug.Log("[PlayerController] Player is EXPOSED to weather.");
-        //}
     }
 
     // Public method for WeatherManager
@@ -328,28 +306,5 @@ public class PlayerController : MonoBehaviour
     public void OnSprint(InputAction.CallbackContext context)
     {
         isSprinting = context.performed;
-    }
-
-    private void HandleKeyAnimations()
-    {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            animator.SetTrigger("Interact");
-        }
-
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            animator.SetTrigger("Consume");
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            animator.SetTrigger("Attack");
-        }
-
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            animator.SetTrigger("Mine");
-        }
     }
 }

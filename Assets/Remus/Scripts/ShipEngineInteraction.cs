@@ -4,7 +4,7 @@ using UnityEngine;
 public class ShipEngineInteraction : InteractionObject
 {
     private PlayerInventory _playerInventory;
-    public string requiredItemID = "ID18"; // Item ID for the repaired engine
+    public string requiredItemID = "ID18";
 
     private void Start()
     {
@@ -23,7 +23,7 @@ public class ShipEngineInteraction : InteractionObject
         {
             Debug.Log("Ship engine repaired!");
             _playerInventory.RemoveItem(requiredItemID, 1);
-            ShipRepairManager.Instance.MarkEngineRepaired(); //Notify repair manager
+            ShipRepairManager.Instance.MarkEngineRepaired();
         }
         else
         {

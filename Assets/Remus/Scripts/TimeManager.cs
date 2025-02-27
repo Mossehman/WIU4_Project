@@ -8,7 +8,7 @@ public class TimeManager : MonoBehaviour
     public int hours = 8; // Start at 08:00 AM
     public int minutes = 0;
     public int days = 1;
-    public float secondsPerHour = 7.5f; // Each in-game hour lasts 3 real-world seconds
+    public float secondsPerHour = 7.5f;
 
     private float timeAccumulator = 0f;
     private float hourAccumulator = 0;
@@ -17,9 +17,9 @@ public class TimeManager : MonoBehaviour
 
     public TimeOfTheDay timeOfTheDay;
 
-    [SerializeField] private Material volumetricFogMaterial; // Reference to the fog material
-    private float targetFogDensity = 0.02f; // Default day fog density
-    private float fogTransitionSpeed = 1f;  // Speed of fog transitions
+    [SerializeField] private Material volumetricFogMaterial;
+    private float targetFogDensity = 0.02f;
+    private float fogTransitionSpeed = 1f;
 
     private void Start()
     {
@@ -43,7 +43,7 @@ public class TimeManager : MonoBehaviour
 
     void UpdateTime()
     {
-        minutes++; // Increase minute by 1
+        minutes++;
 
         if (minutes >= 60)
         {
@@ -72,7 +72,6 @@ public class TimeManager : MonoBehaviour
     {
         string period = hours >= 12 ? "PM" : "AM";
         int displayHour = (hours % 12 == 0) ? 12 : (hours % 12);
-        //Debug.Log($"Day {days}, Time: {displayHour:D2}:{minutes:D2} {period}");
 
         dayTimeText.text = $"DAY {days} {displayHour:D2}:{minutes:D2} {period}";
     }
@@ -108,7 +107,6 @@ public class TimeManager : MonoBehaviour
         else
             timeOfTheDay = TimeOfTheDay.Night;
 
-        // Set target fog density based on time of day
         if (timeOfTheDay == TimeOfTheDay.Night || timeOfTheDay == TimeOfTheDay.Midnight)
         {
             targetFogDensity = 0f; // No fog at night
@@ -119,7 +117,7 @@ public class TimeManager : MonoBehaviour
         }
         else
         {
-            targetFogDensity = 0.02f; // Default fog during the day
+            targetFogDensity = 0.02f;
         }
     }
 
@@ -130,9 +128,6 @@ public class TimeManager : MonoBehaviour
         float currentDensity = volumetricFogMaterial.GetFloat("_DensityMultiplier");
         float newDensity = Mathf.Lerp(currentDensity, targetFogDensity, Time.deltaTime * fogTransitionSpeed);
         volumetricFogMaterial.SetFloat("_DensityMultiplier", newDensity);
-
-        // Debugging output
-        //Debug.Log($"[Fog Update] Time: {hours}:{minutes} | Target Density: {targetFogDensity} | Actual Density: {newDensity}");
     }
 }
 

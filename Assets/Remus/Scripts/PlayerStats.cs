@@ -34,7 +34,7 @@ public class PlayerStats : MonoBehaviour
     [Header("Drain Rates")]
     public float oxygenDrainRate = 1f;
     public float waterDrainRate = 0.5f;
-    public float healthDecayRate = 1f; // Health loss when water reaches 0
+    public float healthDecayRate = 1f;
 
     [Header("Damage Overlay")]
     public Image overlay;
@@ -220,7 +220,7 @@ public class PlayerStats : MonoBehaviour
     {
         while (true)
         {
-            float randomWait = Random.Range(1f, 5f); // Wait between 2 to 5 minutes
+            float randomWait = Random.Range(1f, 5f);
             yield return new WaitForSeconds(randomWait);
 
             DecreaseStat(StatType.Oxygen, oxygenDrainRate);
@@ -232,7 +232,7 @@ public class PlayerStats : MonoBehaviour
     {
         while (true)
         {
-            float randomWait = Random.Range(1f, 5f); // Wait between 2 to 5 minutes
+            float randomWait = Random.Range(1f, 5f);
             yield return new WaitForSeconds(randomWait);
 
             DecreaseStat(StatType.Water, waterDrainRate);
@@ -244,12 +244,21 @@ public class PlayerStats : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(10f); // Check every 10 seconds
+            yield return new WaitForSeconds(1f);
 
-            if (_water <= 0)
+            bool isDehydrated = _water <= 0;
+            bool isSuffocating = _oxygen <= 0;
+
+            if (isDehydrated)
             {
                 DecreaseStat(StatType.Health, healthDecayRate);
                 Debug.Log($"[Health Decay] -{healthDecayRate} due to dehydration.");
+            }
+
+            if (isSuffocating)
+            {
+                DecreaseStat(StatType.Health, healthDecayRate);
+                Debug.Log($"[Health Decay] -{healthDecayRate} due to suffocation.");
             }
         }
     }

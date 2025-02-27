@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CraftingStationInteraction : InteractionObject
 {
-    public GameObject craftingUI; // Reference to the Crafting UI Canvas
+    public GameObject craftingUI;
 
     [SerializeField] private GameObject _backgroundPanel;
     [SerializeField] private GameObject _vitalsPanel;

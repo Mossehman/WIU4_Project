@@ -4,7 +4,7 @@ using UnityEngine;
 public class ShipThrusterInteraction : InteractionObject
 {
     private PlayerInventory _playerInventory;
-    public string requiredItemID = "ID19"; // Item ID for the repaired thruster
+    public string requiredItemID = "ID19";
 
     private void Start()
     {
@@ -23,7 +23,7 @@ public class ShipThrusterInteraction : InteractionObject
         {
             Debug.Log("Ship thruster repaired!");
             _playerInventory.RemoveItem(requiredItemID, 1);
-            ShipRepairManager.Instance.MarkThrusterRepaired(); // Notify repair manager
+            ShipRepairManager.Instance.MarkThrusterRepaired();
         }
         else
         {
