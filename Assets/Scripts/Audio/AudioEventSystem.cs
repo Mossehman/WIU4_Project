@@ -76,7 +76,7 @@ public class AudioEventSystem : MonoBehaviour
     {
         if (soundInfo.isLibrary)
         {
-            AudioManager.Instance.PlayRandomAudio(soundInfo.name, ref source, volume, is3D, pitch, randomPitch, minPitch, maxPitch);
+            AudioManager.Instance.PlayRandomAudio(soundInfo.name, ref source, volume, is3D, pitch, randomPitch, minPitch, maxPitch, isNonSpammable);
             return;
         }
         if (isNonSpammable)
@@ -85,6 +85,9 @@ public class AudioEventSystem : MonoBehaviour
             return;
         }
 
-        PlaySoundEvent?.Invoke(soundInfo.name, priority, volume, source.transform.position, randomPitch, minPitch, maxPitch);
+        if (is3D)
+            PlaySoundEvent?.Invoke(soundInfo.name, priority, volume, source.transform.position, randomPitch, minPitch, maxPitch);
+        else
+            PlaySoundEvent?.Invoke(soundInfo.name, priority, volume, null, randomPitch, minPitch, maxPitch);
     }
 }

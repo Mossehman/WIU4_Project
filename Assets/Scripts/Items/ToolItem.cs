@@ -1,3 +1,4 @@
+using Assets.Scripts.AI.FiniteStateMachine;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Tool", menuName = "Items/Tool")]
@@ -20,8 +21,8 @@ public class ToolItem : BaseItem
     public bool isWeapon = true;
 
     [Header("Sound")]
-    public string swing;
-    public string hitSFX;
+    public SoundInfo swing;
+    public SoundInfo hitSFX;
 
     public override void OnItemHeld(GameObject holder) { 
         return; 
@@ -59,7 +60,7 @@ public class ToolItem : BaseItem
             }
         }
 
-        AudioEventSystem.PlaySound(swing, default, default, default, true);
+        AudioEventSystem.PlaySoundSmart(swing, ref AudioManager.Instance.DedicatedSFX, default, default, false, false, 1, true);
         RaycastHit hit;
         if (Physics.Raycast(holder.transform.position, holder.transform.forward, out hit, reach, worldLayers))
         {   
@@ -70,7 +71,7 @@ public class ToolItem : BaseItem
                 var damageable = component as IDamageable;
                 if (damageable == null) continue;
 
-                AudioEventSystem.PlaySound(hitSFX, default, default, default, true);
+                AudioEventSystem.PlaySoundSmart(hitSFX, ref AudioManager.Instance.DedicatedSFX, default, default, false, false, 1, true);
 
                 damageable.Damage(damage);
                 ///TODO: Play a sfx for when the weapon is used, maybe make it do different damage depending on which layermask was hit

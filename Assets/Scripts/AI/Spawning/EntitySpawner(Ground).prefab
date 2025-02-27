@@ -46,5 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnData:
   - {fileID: 11400000, guid: 01702d58f8c7b5d47b5df0d8962fc65f, type: 2}
-  - {fileID: 11400000, guid: 78359d127a943fa47a86c75a56f53561, type: 2}
   - {fileID: 11400000, guid: 127972737b2d03e468adfc69c6d29e6c, type: 2}
+  - {fileID: 11400000, guid: 01702d58f8c7b5d47b5df0d8962fc65f, type: 2}
+  - {fileID: 11400000, guid: 01702d58f8c7b5d47b5df0d8962fc65f, type: 2}
+  - {fileID: 11400000, guid: 42fa87b894a6b754c98a420e2bef2af7, type: 2}
+  - {fileID: 11400000, guid: 42fa87b894a6b754c98a420e2bef2af7, type: 2}
+  - {fileID: 11400000, guid: 78359d127a943fa47a86c75a56f53561, type: 2}
+  - {fileID: 11400000, guid: 78359d127a943fa47a86c75a56f53561, type: 2}
