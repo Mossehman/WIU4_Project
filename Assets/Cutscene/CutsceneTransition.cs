@@ -53,7 +53,7 @@ public class CutsceneTransition : MonoBehaviour
 
     private void CheckSkyboxChange()
     {
-        if (cutsceneNumber == 2 || cutsceneNumber == 4)
+        if (cutsceneNumber == 2 || cutsceneNumber == 10)
         {
             RenderSettings.skybox = defaultSkybox;
         }
