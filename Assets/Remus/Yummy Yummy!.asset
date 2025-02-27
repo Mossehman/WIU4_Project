@@ -15,7 +15,8 @@ MonoBehaviour:
   _questID: Yummy Yummy!
   _questName: Yummy Yummy!
   _requriedQuests: []
-  subQuests: []
+  subQuests:
+  - {fileID: 11400000, guid: f42442b1c15981e42b3857602038aaf5, type: 2}
   _subquests: []
   _questStatus: 0
   _dialogueUponCompletion: {fileID: 0}

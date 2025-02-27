@@ -45,44 +45,46 @@ public class ToolItem : BaseItem
     }
 
     public override void OnItemLeftClick(GameObject holder) {
-        if ((isUsingItem && !holdToUse) || useCooldownTimer > 0) { return; }
-
-        Animator animator = holder.GetComponent<Animator>();
-        if (animator != null)
+        if (useCooldownTimer > 0) return;
+        if ((!isUsingItem || holdToUse))
         {
-            if (isWeapon)
+
+            Animator animator = holder.GetComponent<Animator>();
+            if (animator != null)
             {
-                animator.SetTrigger("Attack");
+                if (isWeapon)
+                {
+                    animator.SetTrigger("Attack");
+                }
+                else
+                {
+                    animator.SetTrigger("Mine");
+                }
             }
-            else
+
+            AudioEventSystem.PlaySoundSmart(swing, ref AudioManager.Instance.DedicatedSFX, default, default, false, false, 1, true);
+            RaycastHit hit;
+            if (Physics.Raycast(holder.transform.position, holder.transform.forward, out hit, reach, worldLayers))
             {
-                animator.SetTrigger("Mine");
+                if (((1 << hit.collider.gameObject.layer) & toolEffectorLayers) == 0) { return; }
+                var components = hit.collider.gameObject.GetComponents<MonoBehaviour>();
+                foreach (var component in components)
+                {
+                    var damageable = component as IDamageable;
+                    if (damageable == null) continue;
+
+                    AudioEventSystem.PlaySoundSmart(hitSFX, ref AudioManager.Instance.DedicatedSFX, default, default, false, false, 1, true);
+
+                    damageable.Damage(damage);
+                    ///TODO: Play a sfx for when the weapon is used, maybe make it do different damage depending on which layermask was hit
+                    break;
+                }
             }
+
+
+            isUsingItem = true;
         }
-
-        AudioEventSystem.PlaySoundSmart(swing, ref AudioManager.Instance.DedicatedSFX, default, default, false, false, 1, true);
-        RaycastHit hit;
-        if (Physics.Raycast(holder.transform.position, holder.transform.forward, out hit, reach, worldLayers))
-        {   
-            if (((1 << hit.collider.gameObject.layer) & toolEffectorLayers) == 0) { return; }
-            var components = hit.collider.gameObject.GetComponents<MonoBehaviour>();
-            foreach (var component in components)
-            {
-                var damageable = component as IDamageable;
-                if (damageable == null) continue;
-
-                AudioEventSystem.PlaySoundSmart(hitSFX, ref AudioManager.Instance.DedicatedSFX, default, default, false, false, 1, true);
-
-                damageable.Damage(damage);
-                ///TODO: Play a sfx for when the weapon is used, maybe make it do different damage depending on which layermask was hit
-                break;
-            }
-        }
-
-
-        isUsingItem = true;
         useCooldownTimer = useCooldown;
-        return; 
     }
 
 

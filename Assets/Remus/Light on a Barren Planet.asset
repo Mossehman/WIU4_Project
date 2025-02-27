@@ -15,7 +15,12 @@ MonoBehaviour:
   _questID: Light on a Barren Planet
   _questName: Light on a Barren Planet
   _requriedQuests: []
-  subQuests: []
+  subQuests:
+  - {fileID: 11400000, guid: f2dd75053ecbdcd4abd06952a51faa0b, type: 2}
+  - {fileID: 11400000, guid: c49936d6ecd034e498c17235781dffc4, type: 2}
+  - {fileID: 11400000, guid: 435b9b8c229d010429079dfcb4e25545, type: 2}
+  - {fileID: 11400000, guid: a69a6405bc9e2e143b398d4e4f7d9650, type: 2}
+  - {fileID: 11400000, guid: 5145a4266f9ea89489643fe3c2cd044d, type: 2}
   _subquests: []
   _questStatus: 0
   _dialogueUponCompletion: {fileID: 0}

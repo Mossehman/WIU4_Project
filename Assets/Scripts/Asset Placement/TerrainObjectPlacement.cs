@@ -10,6 +10,9 @@ public class TerrainObjectPlacement : MonoBehaviour
     public uint objectPlacementChance;
     public bool drawGizmos = false;
 
+    public Transform ship;
+    public float minDistanceFromShip = 20.0f;
+
     [Header("Assets")]
     public TerrainObject[] terrainAssets;
     public List<ObjectPlacementData> placementData = new List<ObjectPlacementData>();
@@ -26,6 +29,8 @@ public class TerrainObjectPlacement : MonoBehaviour
     public void GenerateSpawnPoints(int seed, Vector3 position, Vector3 normal)
     {
         if (placementData.Count >= maxObjectsPerChunk || terrainAssets.Length == 0) { return; }
+        if (Vector3.SqrMagnitude(position - ship.position) < minDistanceFromShip * minDistanceFromShip) { return; }
+
 
         int toSpawn = Random.Range(0, (int)objectPlacementChance);
         if (toSpawn > 0) { return; }

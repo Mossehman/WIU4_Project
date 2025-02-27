@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 6260488828655454574}
   - component: {fileID: -1094162785612115738}
   - component: {fileID: 7135569737686541886}
+  - component: {fileID: 8442732009728082311}
   m_Layer: 29
   m_Name: Ore2
   m_TagString: Untagged
@@ -134,6 +135,23 @@ MonoBehaviour:
   highDetailMesh: {fileID: 538537540218711021}
   lowDetailMesh: {fileID: 0}
   distanceThreshold: 50
+--- !u!114 &8442732009728082311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4272794620485622491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 228d4f42b53ef0844b4590aeb4dab2ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayName: Ironite
+  description: Ironite is believed to be found in the heart of falling stars. Can
+    be used to upgrade tools to be more durable and efficient.
+  yOffset: 1
+  sprite: {fileID: 21300000, guid: 4351a63b55eaac54094fdc71f8413d97, type: 3}
 --- !u!1 &8258066011802663665
 GameObject:
   m_ObjectHideFlags: 0

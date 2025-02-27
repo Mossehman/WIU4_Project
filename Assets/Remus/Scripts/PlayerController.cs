@@ -1,9 +1,12 @@
 using Cinemachine;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private TMP_Text coordinatesText;
+
     public float WalkSpeed = 5f;
     public float SprintMultiplier = 2f;
     public float JumpForce = 5f;
@@ -114,6 +117,9 @@ public class PlayerController : MonoBehaviour
         bool isFalling = !IsGrounded() && velocity.y < 0;
         animator.SetBool("IsGrounded", IsGrounded());
         animator.SetFloat("VelocityY", velocity.y);
+
+        Vector3Int coords = new Vector3Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y), Mathf.FloorToInt(transform.position.z));
+        coordinatesText.SetText(coords.ToString());
     }
 
     private void HandleThirdMovement()
@@ -197,7 +203,7 @@ public class PlayerController : MonoBehaviour
         {
             if (moveDirection.sqrMagnitude > 0)
             {
-                AudioManager.Instance.PlayRandomAudio("PlayerFootsteps", ref playerAudio, 0.25f, true, speed * 0.35f, true, 0.7f, 1.3f);
+                AudioManager.Instance.PlayRandomAudio("PlayerFootsteps", ref playerAudio, 0.25f, true, speed * 0.35f, true, 0.7f, 1.3f, true);
                 animator.SetFloat("SpeedMod", speed * 0.2f);
             }
             if (velocity.y < 0)

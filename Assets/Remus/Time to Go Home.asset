@@ -15,7 +15,11 @@ MonoBehaviour:
   _questID: Time to Go Home
   _questName: Time to Go Home
   _requriedQuests: []
-  subQuests: []
+  subQuests:
+  - {fileID: 11400000, guid: 1bfe12f4f5e416349b2f156b7208610c, type: 2}
+  - {fileID: 11400000, guid: 1b49fc7e0d4c7b445b0d60537d6bffb0, type: 2}
+  - {fileID: 11400000, guid: cdfdc1bf6afcb7d4faf2c02c373e3d3f, type: 2}
+  - {fileID: 11400000, guid: d6fa5d8e8a88e1b4d8b589da901c9d6f, type: 2}
   _subquests: []
   _questStatus: 0
   _dialogueUponCompletion: {fileID: 0}
