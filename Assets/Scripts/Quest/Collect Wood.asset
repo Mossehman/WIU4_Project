@@ -16,5 +16,5 @@ MonoBehaviour:
   _subquestName: MOW
   _currentAmount: 0
   _requiredAmount: 100
-  _isCompleted: 0
+  _isCompleted: 1
   _targetItem: {fileID: 11400000, guid: 6b7c6a73e62955c449c96853f43f42c1, type: 2}

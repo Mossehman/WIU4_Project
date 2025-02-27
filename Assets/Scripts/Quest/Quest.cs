@@ -20,7 +20,7 @@ namespace QuestSystem
         [SerializeField]    private List<Quest>     _requriedQuests;
         [SerializeField]    private List<SubQuest>  _subquests;
         [SerializeField]    private questStatus     _questStatus;
-        [SerializeField]    public Dialogue         _dialogueUponCompleteion, _dialogueUponStart;
+        [SerializeField]    public Dialogue         _dialogueUponCompletion, _dialogueUponStart;
 
         private void OnValidate()
         {

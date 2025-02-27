@@ -5,6 +5,8 @@ using UnityEngine;
 public class MusicPlayer : MonoBehaviour
 {
     public SoundLibrary musicplaylist;
+    [Range(0f, 1f)]
+    public float volume = 1f;
 
     private int currentMusic = 0;
     private AudioSource musicSource;
@@ -20,7 +22,7 @@ public class MusicPlayer : MonoBehaviour
         {
             if (!musicSource.isPlaying)
             {
-                AudioEventSystem.PlayMusic(musicplaylist.sounds[currentMusic].clip);
+                AudioEventSystem.PlayMusic(musicplaylist.sounds[currentMusic].clip, volume);
                 currentMusic = (currentMusic + 1) % musicplaylist.sounds.Count;
             }
         }

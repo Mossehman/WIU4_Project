@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6b1de190f6db0940bce8fa87dd7f051, type: 3}
-  m_Name: Rock6
+  m_Name: Ore6
   m_EditorClassIdentifier: 
-  terrainObjectPrefab: {fileID: 1384115437653816173, guid: 2bb604edc096f4d4c86b32f72f414520, type: 3}
+  terrainObjectPrefab: {fileID: 6833170476988775176, guid: b17c5d98c965ebc4981d4bd3e81a4caa, type: 3}
   poissonSphereRadius: 1
   minYLevel: -20
   hasMaxYLevel: 1

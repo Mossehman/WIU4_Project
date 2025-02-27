@@ -14,11 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   libraryname: 
   sounds:
+  - soundName: player-death
+    clip: {fileID: 8300000, guid: e2b0a56dfb17aa74abc45abaa780b0a4, type: 3}
+    priority: 0
+    volume: 1
   - soundName: player-hurt
     clip: {fileID: 8300000, guid: 1e241c3241decda4ab4b02498a38adbb, type: 3}
     priority: 0
-    volume: 0
+    volume: 1
   - soundName: player-scan
     clip: {fileID: 8300000, guid: 5030c78e3fb091e499de150b0c1fbde5, type: 3}
     priority: 0
-    volume: 0
+    volume: 1
+  - soundName: tool-swing
+    clip: {fileID: 8300000, guid: e4d50e91ab34f074e88dc46ec155e3df, type: 3}
+    priority: 0
+    volume: 1
+  - soundName: tool-swing-delayed
+    clip: {fileID: 8300000, guid: 320fda8d894cc72419ac827df234e601, type: 3}
+    priority: 0
+    volume: 1

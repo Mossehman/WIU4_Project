@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 7460784706523119655}
   - component: {fileID: 7718063368190723911}
   - component: {fileID: 4786201937185540817}
-  m_Layer: 0
+  - component: {fileID: -1707409464121351996}
+  m_Layer: 27
   m_Name: Redflower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,6 +72,32 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0033453442, y: 0.0071420628, z: 0.07055795}
   m_Center: {x: -0.00089883566, y: -0.0005098702, z: 0.029359793}
+--- !u!114 &-1707409464121351996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3054585227057165381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17ff387705490a54282583e04a8fe3b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  health: 0
+  lootTable:
+  - itemDropList:
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+  - itemDropList:
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+  - itemDropList:
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
 --- !u!1001 &3824570038753787663
 PrefabInstance:
   m_ObjectHideFlags: 0

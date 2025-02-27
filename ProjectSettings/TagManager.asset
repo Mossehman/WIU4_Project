@@ -23,7 +23,7 @@ TagManager:
   - Player
   - Terrain
   - Interactable
-  - 
+  - Placeable
   - 
   - 
   - 
@@ -41,8 +41,8 @@ TagManager:
   - Cactus
   - MushroomTree
   - Redflower
-  - 
-  - 
+  - Rock
+  - Ironite
   - 
   - 
   m_SortingLayers:

@@ -88,10 +88,14 @@ MonoBehaviour:
   health: 0
   lootTable:
   - itemDropList:
-    - {fileID: 1603469099823119648, guid: a40b5aae186233b46854709a7c548c1b, type: 3}
-    - {fileID: 1603469099823119648, guid: a40b5aae186233b46854709a7c548c1b, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
   - itemDropList:
-    - {fileID: 1603469099823119648, guid: a40b5aae186233b46854709a7c548c1b, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+  - itemDropList:
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
+    - {fileID: 3374965540279152769, guid: 222ac28ffa1ac6b4996ee88fe762b8ad, type: 3}
 --- !u!1001 &1509741956864435985
 PrefabInstance:
   m_ObjectHideFlags: 0

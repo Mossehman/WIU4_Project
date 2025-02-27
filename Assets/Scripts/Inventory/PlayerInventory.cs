@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace Player.Inventory
 {
@@ -30,6 +31,8 @@ namespace Player.Inventory
 
     public class PlayerInventory : MonoBehaviour
     {
+        private List<string> itemsToRemove = new List<string>();
+
         [Header("Inventory Logic")]
         [SerializeField] private List<BaseItem> _startItems;
         [SerializeField] List<BaseItem> _inventoryItems;
@@ -116,6 +119,11 @@ namespace Player.Inventory
             }
 
             return count;
+        }
+
+        public void ItemRemoveSelf(string itemID)
+        {
+            itemsToRemove.Add(itemID);
         }
 
         public void RemoveItem(string itemID, int amountToRemove)
@@ -312,7 +320,10 @@ namespace Player.Inventory
                 TryDropSelectedItem();
             }
 
-
+            foreach (var itemToRemove in itemsToRemove)
+            {
+                RemoveItem(itemToRemove, 1);
+            }
 
             SortInventory(_currentSort);
         }
@@ -400,9 +411,9 @@ namespace Player.Inventory
             {
                 if (item.getID() == newItem.getID())
                 {
-                    Debug.Log($"Item {item.getDisplayName()} already exists in inventory. Increasing quantity.");
 
-                    item._quantity += newItem._quantity; // Fix: Increment based on newItem's quantity
+                    item._quantity ++; // Fix: Increment based on newItem's quantity
+                    Debug.Log($"Item {item.getDisplayName()} already exists in inventory. New Quantity: " + item._quantity);
                     _currentWeight += newItem.getWeight() * newItem._quantity;
                     return;
                 }
@@ -609,7 +620,8 @@ namespace Player.Inventory
 
             if (destination == ItemDestination.INVENTORY)
             {
-                _inventoryItems.Add(item.GetComponent<Draggable>()._item);
+                BaseItem draggedItem = item.GetComponent<Draggable>()._item;
+                _inventoryItems.Add(draggedItem);
             }
             else if (destination == ItemDestination.HOTBAR)
             {

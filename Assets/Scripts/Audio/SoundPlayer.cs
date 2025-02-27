@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.AI.FiniteStateMachine;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -13,5 +14,27 @@ public class SoundPlayer : MonoBehaviour
     public void PlaySound(string soundName)
     {
         AudioEventSystem.PlaySoundSimple(soundName);
+    }
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+    
+    public string sound;
+    AudioSource audioSource;
+    public bool randomPitch = false;
+    [ConditionalHide("randomPitch", true)]
+    public float minPitch = 1f;
+    [ConditionalHide("randomPitch", true)]
+    public float maxPitch = 1f;
+
+    private void Update()
+    {
+        if (string.IsNullOrEmpty(sound)) return;
+        if (audioSource != null)
+            AudioManager.Instance.PlayRandomAudio(sound, ref audioSource, default, true, 1, randomPitch, minPitch, maxPitch);
+        else
+            AudioEventSystem.PlaySound(sound, default, default, transform.position, randomPitch, minPitch, maxPitch);
     }
 }

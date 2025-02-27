@@ -28,9 +28,9 @@ namespace DialogueSystem
             EventManager.CreateEvent("OnQuestStart");
         }
 
-        void Update()
+        void FixedUpdate()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && _currentDialogue != null && _index < _currentDialogue._lines.Length)
             {
                 if (_dialogueBox.text == _currentDialogue._lines[_index])
                 {
@@ -59,20 +59,22 @@ namespace DialogueSystem
         private void OnQuestComplete(object[] args)
         {
             Quest quest = (Quest)args[0];
-            if (quest != null)
+            if (quest != null && _currentDialogue != quest._dialogueUponCompletion && quest.GetQuestStatus() == questStatus.COMPLETED)
             {
                 _index = 0;
-                _currentDialogue = quest._dialogueUponCompleteion;
-                StartCoroutine(PlayDialogue(quest._dialogueUponCompleteion));
+                _dialogueBox.text = string.Empty;
+                _currentDialogue = quest._dialogueUponCompletion;
+                StartCoroutine(PlayDialogue(quest._dialogueUponCompletion));
             }
         }
 
         private void OnQuestStart(object[] args)
         {
             Quest quest = (Quest)args[0];
-            if (quest != null)
+            if (quest != null && _currentDialogue != quest._dialogueUponStart && quest.GetQuestStatus() == questStatus.IN_PROGRESS)
             {
                 _index = 0;
+                _dialogueBox.text = string.Empty;
                 _currentDialogue = quest._dialogueUponStart;
                 StartCoroutine(PlayDialogue(quest._dialogueUponStart));
             }
@@ -80,16 +82,20 @@ namespace DialogueSystem
 
         private IEnumerator PlayDialogue(Dialogue text)
         {
-            foreach (char c in _currentDialogue._lines[_index])
+            _dialogueBox.text = string.Empty;
+            if (_index <= _currentDialogue._lines.Length - 1)
             {
-                _dialogueBox.text += c;
-                yield return new WaitForSeconds(_textSpeed);
+                foreach (char c in _currentDialogue._lines[_index])
+                {
+                    _dialogueBox.text += c;
+                    yield return new WaitForSeconds(_textSpeed);
+                }
             }
         }
 
         private void NextLine()
         {
-            if (_index < _currentDialogue._lines[_index].Length - 1)
+            if (_index <= _currentDialogue._lines.Length - 1)
             {
                 _index++;
                 _dialogueBox.text = string.Empty;
