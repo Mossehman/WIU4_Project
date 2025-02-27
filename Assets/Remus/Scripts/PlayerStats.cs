@@ -40,6 +40,15 @@ public class PlayerStats : MonoBehaviour
     public float fadeSpeed = 2f;
     private float _durationTimer;
 
+    [Header("Player Death & Respawn")]
+    public Transform respawnPoint;
+    public float respawnTime = 5f;
+    private bool isDead = false;
+
+    private Rigidbody[] ragdollRigidbodies;
+    private Animator playerAnimator;
+    private PlayerController playerController;
+
     void Awake()
     {
         // Singleton (no DontDestroyOnLoad)
@@ -52,6 +61,13 @@ public class PlayerStats : MonoBehaviour
             Destroy(gameObject); // Destroy duplicate instances
             return;
         }
+
+        // Get references for ragdoll system
+        ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
+        playerAnimator = GetComponent<Animator>();
+        playerController = GetComponent<PlayerController>();
+
+        DisableRagdoll();
     }
 
     void Start()
@@ -65,6 +81,8 @@ public class PlayerStats : MonoBehaviour
 
     void Update()
     {
+        if (isDead) return;
+
         _health = Mathf.Clamp(_health, 0, maxHealth);
         _stamina = Mathf.Clamp(_stamina, 0, maxStamina);
         _oxygen = Mathf.Clamp(_oxygen, 0, maxOxygen);
@@ -74,6 +92,66 @@ public class PlayerStats : MonoBehaviour
         UpdateStatUI(StatType.Stamina, _stamina, maxStamina, staminaBarFront, staminaBarBack, staminaText);
         UpdateStatUI(StatType.Oxygen, _oxygen, maxOxygen, oxygenBarFront, oxygenBarBack, oxygenText);
         UpdateStatUI(StatType.Water, _water, maxWater, waterBarFront, waterBarBack, waterText);
+
+        if (_health <= 0 && !isDead)
+        {
+            HandleDeath();
+        }
+    }
+
+    private void HandleDeath()
+    {
+        isDead = true;
+        EnableRagdoll();
+        Debug.Log("[PlayerStats] Player has died. Respawning in " + respawnTime + " seconds...");
+
+        // Wait a few seconds, then respawn
+        StartCoroutine(RespawnPlayer());
+    }
+
+    private IEnumerator RespawnPlayer()
+    {
+        yield return new WaitForSeconds(respawnTime);
+
+        DisableRagdoll();
+        ResetStats();
+        transform.position = respawnPoint.position;
+        isDead = false;
+    }
+
+    private void EnableRagdoll()
+    {
+        playerAnimator.enabled = false; // Disable normal movement animation
+        foreach (var rb in ragdollRigidbodies)
+        {
+            rb.isKinematic = false; // Enable ragdoll
+        }
+        if (playerController != null)
+        {
+            playerController.enabled = false; // Disable player controls
+        }
+    }
+
+    private void DisableRagdoll()
+    {
+        playerAnimator.enabled = true; // Re-enable normal animation
+        foreach (var rb in ragdollRigidbodies)
+        {
+            rb.isKinematic = true; // Disable ragdoll physics
+        }
+        if (playerController != null)
+        {
+            playerController.enabled = true; // Re-enable controls
+        }
+    }
+
+    private void ResetStats()
+    {
+        _health = maxHealth;
+        _stamina = maxStamina;
+        _oxygen = maxOxygen;
+        _water = maxWater;
+        SaveStats();
     }
 
     private void UpdateStatUI(StatType type, float value, float maxValue, Image frontBar, Image backBar, TextMeshProUGUI text)

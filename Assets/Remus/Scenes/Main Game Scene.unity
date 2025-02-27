@@ -28000,6 +28000,8 @@ MonoBehaviour:
   overlay: {fileID: 1797619132}
   overlayDuration: 0.5
   fadeSpeed: 2
+  respawnPoint: {fileID: 251112144}
+  respawnTime: 1
 --- !u!114 &1001476415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60132,7 +60134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af91b526146002f4388786a9e1b10eed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AStarRange: 2
+  AStarRange: 1
 --- !u!114 &2014219193
 MonoBehaviour:
   m_ObjectHideFlags: 0
