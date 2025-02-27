@@ -17,6 +17,7 @@ MonoBehaviour:
   _requriedQuests: []
   _subquests:
   - {fileID: 11400000, guid: 8483fc18f2940ad448062c4ecc5e3b38, type: 2}
+  - {fileID: 11400000, guid: dbb73bc6d92177849801cb42cf43f51e, type: 2}
   _questStatus: 3
   _dialogueUponCompletion: {fileID: 11400000, guid: 971066994b261ff44ad40b77c0da0d6e, type: 2}
   _dialogueUponStart: {fileID: 11400000, guid: bdfbb126c04f6274e87418747dd03eb4, type: 2}

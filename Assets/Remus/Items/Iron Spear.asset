@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a7ae79099f6134d44ac069f716d7fe5d, type: 3}
-  m_Name: Iron Spear (temp)
+  m_Name: Iron Spear
   m_EditorClassIdentifier: 
   itemName: ID16
   _displayName: Ironite Spear
@@ -25,14 +25,22 @@ MonoBehaviour:
       quantity: 3
     - itemID: ID5
       quantity: 2
-  damage: 5
+  isHeld: 0
+  damage: 30
   reach: 8
   range: 2
   useCooldown: 0.4
   holdToUse: 0
   toolEffectorLayers:
     serializedVersion: 2
-    m_Bits: 33554432
+    m_Bits: 786432
   worldLayers:
     serializedVersion: 2
-    m_Bits: 238945151
+    m_Bits: 786432
+  isWeapon: 1
+  swing:
+    name: tool-swing
+    isLibrary: 0
+  hitSFX:
+    name: SpearSounds
+    isLibrary: 1

@@ -51,7 +51,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _DayNightSlider: 0
-    - _HorizonBlend: 29
+    - _HorizonBlend: 28.7
     - _NadirBlend: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -59,7 +59,7 @@ Material:
     - _StarIntensity: 121.5
     - _StarPower: 70.6
     - _SunSize: 0.2
-    - _ZenithBlend: 0.4
+    - _ZenithBlend: 0.1
     m_Colors:
     - _GroundColor: {r: 0.8490566, g: 0.5480094, b: 0.3003738, a: 0}
     - _HorizonColor: {r: 0.3882353, g: 0.3882353, b: 0.3882353, a: 0}
