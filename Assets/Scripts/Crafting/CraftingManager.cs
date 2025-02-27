@@ -21,7 +21,6 @@ public class CraftingManager : MonoBehaviour
 
     public static bool isCraftingUIOpened = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         _recipes = new List<CraftingRecipe>();
@@ -37,7 +36,6 @@ public class CraftingManager : MonoBehaviour
         RenderRecipes();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -70,12 +68,11 @@ public class CraftingManager : MonoBehaviour
         _currentRecipePanel.transform.Find("InfoPanel").transform.Find("InfoIcon").GetComponent<Image>().sprite = item.getItemIcon();
 
         Button craftButton = _currentRecipePanel.transform.Find("CraftPanel").transform.Find("CraftBtn").GetComponent<Button>();
-        craftButton.onClick.RemoveAllListeners(); // Prevent duplicate listeners
+        craftButton.onClick.RemoveAllListeners();
         craftButton.onClick.AddListener(() => Craft(item, recipe));
 
         Transform materialsContent = _currentRecipePanel.transform.Find("MaterialsPanel").Find("Viewport").Find("Content");
 
-        // **Clear the previous ingredients before adding new ones**
         foreach (Transform child in materialsContent)
         {
             Destroy(child.gameObject);
@@ -85,7 +82,6 @@ public class CraftingManager : MonoBehaviour
         {
             GameObject ingredientGO = Instantiate(_ingredientPrefab, materialsContent);
 
-            // Find the correct ingredient in the list
             BaseItem matchedSO = null;
             foreach (BaseItem things in _items)
             {
@@ -101,7 +97,6 @@ public class CraftingManager : MonoBehaviour
                 ingredientGO.transform.Find("Icon").GetComponent<Image>().sprite = matchedSO.getItemIcon();
                 ingredientGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = matchedSO.getDisplayName();
 
-                // Get the actual number of items from the inventory and hotbar
                 int ownedQuantity = _playerInventory.GetItemCount(ingredient.itemID);
                 ingredientGO.transform.Find("AmountNeeded").GetComponent<TextMeshProUGUI>().text =
                     $"{ownedQuantity} / {ingredient.quantity}";
@@ -119,11 +114,9 @@ public class CraftingManager : MonoBehaviour
         {
             int totalQuantity = 0;
 
-            // Get inventory and hotbar items
             List<BaseItem> inventoryItems = _playerInventory.GetInventory();
             BaseItem[] hotbarItems = _playerInventory.GetHotbar();
 
-            // Count inventory items
             foreach (BaseItem inventoryItem in inventoryItems)
             {
                 if (inventoryItem.getID() == ingredient.itemID)
@@ -132,7 +125,6 @@ public class CraftingManager : MonoBehaviour
                 }
             }
 
-            // Count hotbar items
             foreach (BaseItem hotbarItem in hotbarItems)
             {
                 if (hotbarItem != null && hotbarItem.getID() == ingredient.itemID)
@@ -143,7 +135,6 @@ public class CraftingManager : MonoBehaviour
 
             Debug.Log($"Checking ingredient: {ingredient.itemID} | Required: {ingredient.quantity} | Available: {totalQuantity}");
 
-            // If any required ingredient is missing, return false
             if (totalQuantity < ingredient.quantity)
             {
                 return false;
@@ -160,9 +151,9 @@ public class CraftingManager : MonoBehaviour
         {
             Debug.Log($"Crafting {item.getDisplayName()}...");
 
-            _playerInventory.AddItem(item); // Add crafted item to inventory
+            _playerInventory.AddItem(item);
             EventManager.Fire("OnCraftMisson", item);
-            // Get inventory and hotbar items
+
             List<BaseItem> inventoryItems = _playerInventory.GetInventory();
             BaseItem[] hotbarItems = _playerInventory.GetHotbar();
 
@@ -170,7 +161,6 @@ public class CraftingManager : MonoBehaviour
             {
                 int remainingToRemove = ingredient.quantity;
 
-                // Remove from HOTBAR first
                 for (int i = 0; i < hotbarItems.Length; i++)
                 {
                     if (hotbarItems[i] != null && hotbarItems[i].getID() == ingredient.itemID)
@@ -181,17 +171,15 @@ public class CraftingManager : MonoBehaviour
 
                         Debug.Log($"Removed {removeAmount} {ingredient.itemID} from HOTBAR. Remaining: {remainingToRemove}");
 
-                        // If item is completely used, clear the hotbar slot
                         if (hotbarItems[i]._quantity <= 0)
                         {
                             hotbarItems[i] = null;
                         }
 
-                        if (remainingToRemove <= 0) break; // Stop if we removed enough
+                        if (remainingToRemove <= 0) break;
                     }
                 }
 
-                // If still need to remove, remove from INVENTORY
                 for (int i = 0; i < inventoryItems.Count && remainingToRemove > 0; i++)
                 {
                     if (inventoryItems[i].getID() == ingredient.itemID)
@@ -202,24 +190,22 @@ public class CraftingManager : MonoBehaviour
 
                         Debug.Log($"Removed {removeAmount} {ingredient.itemID} from INVENTORY. Remaining: {remainingToRemove}");
 
-                        // If inventory item is completely used, remove it
                         if (inventoryItems[i]._quantity <= 0)
                         {
                             inventoryItems.RemoveAt(i);
-                            i--; // Adjust index after removing item
+                            i--;
                         }
 
-                        if (remainingToRemove <= 0) break; // Stop if we removed enough
+                        if (remainingToRemove <= 0) break;
                     }
                 }
             }
 
             Debug.Log("Crafting successful!");
 
-            // Update UI immediately
-            _playerInventory.RefreshInventoryUI(); // Ensure inventory updates after crafting
-            _playerInventory.RefreshHotbarUI();   // Ensure hotbar updates after crafting
-            ShowRecipe(item, recipe);            // Refresh crafting UI to update ingredient amounts
+            _playerInventory.RefreshInventoryUI(); 
+            _playerInventory.RefreshHotbarUI();   
+            ShowRecipe(item, recipe);            
 
         }
         else

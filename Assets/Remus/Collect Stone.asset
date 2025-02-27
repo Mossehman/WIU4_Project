@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c97bfa7d092ac024a8112499fe1a81bf, type: 3}
+  m_Name: Collect Stone
+  m_EditorClassIdentifier: 
+  _subquestID: Collect Stone
+  _subquestName: Collect Stone
+  _currentAmount: 0
+  _requiredAmount: 5
+  _isCompleted: 0
+  _targetItem: {fileID: 11400000, guid: 1d038fc1b056ff646bbf2350480597b1, type: 2}

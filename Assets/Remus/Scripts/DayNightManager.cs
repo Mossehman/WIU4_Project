@@ -2,10 +2,10 @@
 
 public class DayNightCycle : MonoBehaviour
 {
-    public Light sun; // Directional light for the sun
+    public Light sun;
     public float dayLengthInSeconds = 180f; // Full 24-hour cycle in real-time seconds
     public float startTime = 8f; // 8 AM as the starting time
-    public float currentTime; // Current time of day
+    public float currentTime;
 
     void Start()
     {

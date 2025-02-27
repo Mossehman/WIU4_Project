@@ -6,9 +6,9 @@ public class InteractionManager : MonoBehaviour
 {
     public Camera PlayerCamera;
     public float InteractionDistance = 3f;
-    public GameObject interactionText; // On-screen UI text
-    public GameObject scanPanelPrefab; // World-space UI panel
-    public Transform worldCanvas; // Parent for world UI
+    public GameObject interactionText;
+    public GameObject scanPanelPrefab;
+    public Transform worldCanvas;
     private IInteractable currentInteractable;
     private GameObject currentPanel = null;
     private Transform currentTarget = null;
@@ -17,7 +17,6 @@ public class InteractionManager : MonoBehaviour
     {
         CheckForInteractable();
 
-        // Ensure floating panel tracks player view
         if (currentPanel != null && currentTarget != null)
         {
             PositionPanelInFront(currentTarget);
@@ -84,7 +83,7 @@ public class InteractionManager : MonoBehaviour
 
         if (descText != null)
         {
-            descText.text = interactableObject.GetCustomDescription(); // Use dynamic descriptions
+            descText.text = interactableObject.GetCustomDescription();
         }
 
         if (iconImage != null)
@@ -107,11 +106,11 @@ public class InteractionManager : MonoBehaviour
     void PositionPanelInFront(Transform target)
     {
         Vector3 directionToPlayer = (PlayerCamera.transform.position - target.position).normalized;
-        Vector3 panelPosition = target.position + directionToPlayer * 1.5f; // Position slightly in front
+        Vector3 panelPosition = target.position + directionToPlayer * 1.5f;
 
         currentPanel.transform.position = panelPosition;
         currentPanel.transform.LookAt(PlayerCamera.transform);
-        currentPanel.transform.Rotate(0, 180, 0); // Flip for readability
+        currentPanel.transform.Rotate(0, 180, 0);
     }
 
     void ClearPanel()
