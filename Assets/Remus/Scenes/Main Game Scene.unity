@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1383555210}
-  m_IndirectSpecularColor: {r: 0.32657498, g: 0.2196277, b: 0.14108142, a: 1}
+  m_IndirectSpecularColor: {r: 0.34209988, g: 0.25101775, b: 0.17074753, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -26560,6 +26560,7 @@ MonoBehaviour:
   TerrainScannerPrefab: {fileID: 7812747987160554870, guid: 6881f1b4501e94041986475506da65ab, type: 3}
   vfxDuration: 10
   vfxSize: 200
+  sfxname: player-scan
   scanDistance: 10
   scannableLayer:
     serializedVersion: 2
@@ -26653,6 +26654,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e8389a5d3bedc324baa5a2cfea353272, type: 2}
   - {fileID: 11400000, guid: 52fee44efebf36442ba75e15539a6808, type: 2}
   - {fileID: 11400000, guid: bf71b88d5112cb04cbf0f8afee8c5fe6, type: 2}
+  - {fileID: 11400000, guid: 69c068537147b2f46abadd29aef705d7, type: 2}
   _inventoryItems: []
   _baseWeight: 0
   _baseMaxWeight: 10
@@ -28549,11 +28551,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1209490199}
   m_CullTransparentMesh: 1
---- !u!23 &1218519060 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 9164562876520813712, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
-  m_PrefabInstance: {fileID: 1646632063}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1228332907
 GameObject:
   m_ObjectHideFlags: 0
@@ -41747,18 +41744,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2607262164662340899, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2607262164662340899, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2607262164662340899, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2607262164662340899, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.33
       objectReference: {fileID: 0}
@@ -41798,6 +41783,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2801297930466988300, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
+      propertyPath: volume
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4973474597790770433, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1001476409}
+    - target: {fileID: 4973474597790770433, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
+      propertyPath: chargingBay
+      value: 
+      objectReference: {fileID: 187356261}
+    - target: {fileID: 4973474597790770433, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
+      propertyPath: thirdPersonCam
+      value: 
+      objectReference: {fileID: 554292540906907655}
+    - target: {fileID: 4973474597790770433, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 187356261}
     - target: {fileID: 5179368454190910841, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
       propertyPath: m_Name
       value: Orbie
@@ -41805,13 +41810,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5179368454190910841, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1885259469}
-    - targetCorrespondingSourceObject: {fileID: 5179368454190910841, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1885259468}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
 --- !u!1 &1652265007
 GameObject:
@@ -52544,60 +52543,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1867251605}
   m_CullTransparentMesh: 1
---- !u!1 &1885259467 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5179368454190910841, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
+--- !u!114 &1885259469 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4973474597790770433, guid: a006e69887877d04eb0cb33643bd408a, type: 3}
   m_PrefabInstance: {fileID: 1646632063}
   m_PrefabAsset: {fileID: 0}
---- !u!135 &1885259468
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885259467}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1885259469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885259467}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a51921a97a643cb48bacc009a20b6988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1001476409}
-  cameraTransform: {fileID: 187356261}
-  chargingBay: {fileID: 187356261}
-  orbRenderer: {fileID: 1218519060}
-  thirdPersonCam: {fileID: 554292540906907655}
-  baseOffset: {x: 1.5, y: 2.76, z: -3.29}
-  followSpeed: 1.04
-  rotationSpeed: 2
-  floatSpeed: 1
-  floatAmplitude: 0.5
-  cameraFollowWeight: 0.8
-  maxBattery: 100
-  batteryDrainRate: 0
-  chargeRate: 20
-  lowBatteryThreshold: 20
-  mediumBatteryThreshold: 50
 --- !u!4 &1885259470 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2607262164662340899, guid: a006e69887877d04eb0cb33643bd408a, type: 3}

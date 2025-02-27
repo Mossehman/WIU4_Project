@@ -23,6 +23,9 @@ public class SoundPlayer : MonoBehaviour
     
     public string sound;
     AudioSource audioSource;
+    public bool isLibrary = false;
+    [Range(0f, 1f)]
+    public float volume = 1f;
     public bool randomPitch = false;
     [ConditionalHide("randomPitch", true)]
     public float minPitch = 1f;
@@ -32,9 +35,9 @@ public class SoundPlayer : MonoBehaviour
     private void Update()
     {
         if (string.IsNullOrEmpty(sound)) return;
-        if (audioSource != null)
-            AudioManager.Instance.PlayRandomAudio(sound, ref audioSource, default, true, 1, randomPitch, minPitch, maxPitch);
+        if (isLibrary)
+            AudioManager.Instance.PlayRandomAudio(sound, ref audioSource, volume, true, 1, randomPitch, minPitch, maxPitch);
         else
-            AudioEventSystem.PlaySound(sound, default, default, transform.position, randomPitch, minPitch, maxPitch);
+            AudioManager.Instance.PlayNonSpamAudio(sound, ref audioSource, volume, true, 1, randomPitch, minPitch, maxPitch);
     }
 }

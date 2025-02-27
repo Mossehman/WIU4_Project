@@ -102,13 +102,14 @@ public class PlayerStats : MonoBehaviour
         UpdateStatUI(StatType.Stamina, _stamina, maxStamina, staminaBarFront, staminaBarBack, staminaText);
         UpdateStatUI(StatType.Oxygen, _oxygen, maxOxygen, oxygenBarFront, oxygenBarBack, oxygenText);
         UpdateStatUI(StatType.Water, _water, maxWater, waterBarFront, waterBarBack, waterText);
+
     }
 
     private void Die()
     {
         isDead = true;
         playerModel.SetActive(false);
-
+        AudioEventSystem.PlaySound("player-death");
         Destroy(Instantiate(ragdoll, transform.position, Quaternion.identity), 3f);
 
         ragdollCamera = ragdoll.GetComponentInChildren<CinemachineVirtualCamera>();
@@ -256,6 +257,7 @@ public class PlayerStats : MonoBehaviour
             case StatType.Health:
                 _health -= amount;
 
+                AudioEventSystem.PlaySound("player-hurt");
                 overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
 
                 break;

@@ -47,9 +47,9 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         public float MaxFlockDistance = 5.0f;
         public float ProductionCooldown = 30.0f;
         public Pathfinder pathfinder;
+        public Vector3Int lockrotation = new Vector3Int(1, 1, 1);
         private float ProductionDuration = 30.0f;
         private Vector3 gravity = new Vector3(0, -9.81f, 0);
-
 
         [Header("Loot Info")]
         public GameObject lootprefab;
@@ -259,6 +259,7 @@ namespace Assets.Scripts.AI.FiniteStateMachine
         {
             if (direction.sqrMagnitude > 0f)
             {
+                direction = new Vector3 (direction.x * lockrotation.x, direction.y * lockrotation.y, direction.z * lockrotation.z);
                 Quaternion targetRotation = Quaternion.LookRotation(direction, transform.up);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f); // Smooth rotation
             }

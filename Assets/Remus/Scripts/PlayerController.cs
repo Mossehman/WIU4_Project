@@ -1,4 +1,5 @@
 using Cinemachine;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
@@ -66,11 +67,11 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private OrbAI orbieAI;
     private Animator animator;
-
+    private AudioSource playerAudio;
     private void Awake()
     {
         animator = GetComponent<Animator>();
-
+        playerAudio = gameObject.AddComponent<AudioSource>();
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
 
@@ -204,6 +205,11 @@ public class PlayerController : MonoBehaviour
 
         if (grounded)
         {
+            if (moveDirection.sqrMagnitude > 0)
+            {
+                AudioManager.Instance.PlayRandomAudio("PlayerFootsteps", ref playerAudio, 0.25f, true, speed * 0.35f, true, 0.7f, 1.3f, true);
+                animator.SetFloat("SpeedMod", speed * 0.2f);
+            }
             if (velocity.y < 0)
                 velocity.y = -2f; // Ensures player stays grounded
 

@@ -30,11 +30,13 @@ public class ProximityDoor : MonoBehaviour
     {
         isOpen = true;
         animator.SetBool(animationBool, true);
+        AudioEventSystem.PlaySound("door-open", default, default, transform.position, true);
     }
 
     void Close()
     {
         isOpen = false;
         animator.SetBool(animationBool, false);
+        AudioEventSystem.PlaySound("door-close", default, default, transform.position, true);
     }
 }

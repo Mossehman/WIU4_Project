@@ -12,6 +12,9 @@ public class TerrainScanner : MonoBehaviour
     public float vfxDuration = 3f;
     public float vfxSize = 500f;
 
+    [Header("SFX Scanner")]
+    public string sfxname;
+
     [Header("Raycast Scanner")]
     public float scanDistance = 10f; // Max scan range
     public LayerMask scannableLayer; // Layer mask for scannable objects
@@ -35,6 +38,7 @@ public class TerrainScanner : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q) && isHoldingScanner)
         {
+            AudioEventSystem.PlaySound(sfxname, default, default, transform.position, true);
             SpawnTerrainScannerVFX();
             StartCoroutine(DelayedScan());
         }
