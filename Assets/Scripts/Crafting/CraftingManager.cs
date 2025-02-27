@@ -19,6 +19,8 @@ public class CraftingManager : MonoBehaviour
     [SerializeField] private GameObject _currentRecipePanel;
     [SerializeField] private GameObject _ingredientPrefab;
 
+    public static bool isCraftingUIOpened = false;
+
     // Start is called before the first frame update
     void Start()
     {

@@ -520,6 +520,8 @@ namespace Player.Inventory
 
         public void ToggleInventory()
         {
+            if (UIManager.IsCraftingOpen) return;
+
             if (_inventory.activeInHierarchy == false)
             {
                 Cursor.lockState = CursorLockMode.None;

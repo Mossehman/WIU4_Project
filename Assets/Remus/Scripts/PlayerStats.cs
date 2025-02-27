@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.TextCore.Text;
+using Cinemachine;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -38,16 +40,25 @@ public class PlayerStats : MonoBehaviour
     public Image overlay;
     public float overlayDuration = 0.5f;
     public float fadeSpeed = 2f;
-    private float _durationTimer;
+    private float overlayTimer;
 
-    [Header("Player Death & Respawn")]
-    public Transform respawnPoint;
-    public float respawnTime = 5f;
+    [Header("Respawn System")]
+    [SerializeField] private GameObject ragdoll;
+    [SerializeField] private GameObject playerModel;
+    [SerializeField] private Transform respawnPoint;
     private bool isDead = false;
 
-    private Rigidbody[] ragdollRigidbodies;
-    private Animator playerAnimator;
-    private PlayerController playerController;
+    [SerializeField] private CinemachineVirtualCamera playerCamera;
+    private CinemachineVirtualCamera ragdollCamera;
+
+    [SerializeField] private GameObject _backgroundPanel;
+    [SerializeField] private GameObject _vitalsPanel;
+    [SerializeField] private GameObject _infoPanel;
+    [SerializeField] private GameObject _mapPanel;
+    [SerializeField] private GameObject _hotbar;
+    [SerializeField] private GameObject _crosshair;
+    [SerializeField] private GameObject _inventoryIcon;
+    [SerializeField] private GameObject _inventoryText;
 
     void Awake()
     {
@@ -61,13 +72,6 @@ public class PlayerStats : MonoBehaviour
             Destroy(gameObject); // Destroy duplicate instances
             return;
         }
-
-        // Get references for ragdoll system
-        ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
-        playerAnimator = GetComponent<Animator>();
-        playerController = GetComponent<PlayerController>();
-
-        DisableRagdoll();
     }
 
     void Start()
@@ -80,7 +84,15 @@ public class PlayerStats : MonoBehaviour
 
     void Update()
     {
-        if (isDead) return;
+        if (isDead && Input.GetMouseButtonDown(0))
+        {
+            Respawn();
+        }
+
+        if (_health <= 0 && !isDead)
+        {
+            Die();
+        }
 
         _health = Mathf.Clamp(_health, 0, maxHealth);
         _stamina = Mathf.Clamp(_stamina, 0, maxStamina);
@@ -92,64 +104,85 @@ public class PlayerStats : MonoBehaviour
         UpdateStatUI(StatType.Oxygen, _oxygen, maxOxygen, oxygenBarFront, oxygenBarBack, oxygenText);
         UpdateStatUI(StatType.Water, _water, maxWater, waterBarFront, waterBarBack, waterText);
 
-        if (_health <= 0 && !isDead)
+        if (overlay.color.a > 0)
         {
-            HandleDeath();
+            if (_health < 30) return;
+            overlayTimer += Time.deltaTime;
+            if (overlayTimer > overlayDuration)
+            {
+                float tempAlpha = overlay.color.a;
+                tempAlpha -= Time.deltaTime * fadeSpeed;
+                overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, tempAlpha);
+            }
         }
     }
 
-    private void HandleDeath()
+    private void Die()
     {
         isDead = true;
-        EnableRagdoll();
-        Debug.Log("[PlayerStats] Player has died. Respawning in " + respawnTime + " seconds...");
+        playerModel.SetActive(false);
 
-        // Wait a few seconds, then respawn
-        StartCoroutine(RespawnPlayer());
+        Destroy(Instantiate(ragdoll, transform.position, Quaternion.identity), 3f);
+
+        ragdollCamera = ragdoll.GetComponentInChildren<CinemachineVirtualCamera>();
+
+        if (ragdollCamera != null)
+        {
+            ragdollCamera.Priority = 11;
+        }
+
+        playerCamera.Priority = 9;
+
+        _backgroundPanel.SetActive(false);
+        _vitalsPanel.SetActive(false);
+        _infoPanel.SetActive(false);
+        _mapPanel.SetActive(false);
+        _hotbar.SetActive(false);
+        _crosshair.SetActive(false);
+        _inventoryIcon.SetActive(false);
+        _inventoryText.SetActive(false);
+
+        BannerManager.Instance.ShowBanner("You Died");
+
+        if (TryGetComponent<PlayerController>(out var playerController))
+        {
+            playerController.enabled = false;
+        }
     }
 
-    private IEnumerator RespawnPlayer()
+    private void Respawn()
     {
-        yield return new WaitForSeconds(respawnTime);
-
-        DisableRagdoll();
-        ResetStats();
-        transform.position = respawnPoint.position;
         isDead = false;
-    }
+        playerModel.SetActive(true);
 
-    private void EnableRagdoll()
-    {
-        playerAnimator.enabled = false; // Disable normal movement animation
-        foreach (var rb in ragdollRigidbodies)
-        {
-            rb.isKinematic = false; // Enable ragdoll
-        }
-        if (playerController != null)
-        {
-            playerController.enabled = false; // Disable player controls
-        }
-    }
+        _backgroundPanel.SetActive(true);
+        _vitalsPanel.SetActive(true);
+        _infoPanel.SetActive(true);
+        _mapPanel.SetActive(true);
+        _hotbar.SetActive(true);
+        _crosshair.SetActive(true);
+        _inventoryIcon.SetActive(true);
+        _inventoryText.SetActive(true);
 
-    private void DisableRagdoll()
-    {
-        playerAnimator.enabled = true; // Re-enable normal animation
-        foreach (var rb in ragdollRigidbodies)
-        {
-            rb.isKinematic = true; // Disable ragdoll physics
-        }
-        if (playerController != null)
-        {
-            playerController.enabled = true; // Re-enable controls
-        }
-    }
-
-    private void ResetStats()
-    {
         _health = maxHealth;
         _stamina = maxStamina;
         _oxygen = maxOxygen;
         _water = maxWater;
+
+        transform.position = new Vector3(respawnPoint.position.x, respawnPoint.position.y + 2, respawnPoint.position.z);
+
+        playerCamera.Priority = 11;
+
+        if (ragdollCamera != null)
+        {
+            ragdollCamera.Priority = 5;
+        }
+
+
+        if (TryGetComponent<PlayerController>(out var playerController))
+        {
+            playerController.enabled = true;
+        }
     }
 
     private void UpdateStatUI(StatType type, float value, float maxValue, Image frontBar, Image backBar, TextMeshProUGUI text)
@@ -195,10 +228,22 @@ public class PlayerStats : MonoBehaviour
     {
         switch (type)
         {
-            case StatType.Health: _health -= amount; break;
-            case StatType.Stamina: _stamina -= amount; break;
-            case StatType.Oxygen: _oxygen -= amount; break;
-            case StatType.Water: _water -= amount; break;
+            case StatType.Health:
+                _health -= amount;
+
+                overlayTimer = 0f;
+                overlay.color = new Color(overlay.color.r, overlay.color.g, overlay.color.b, 1);
+
+                break;
+            case StatType.Stamina:
+                _stamina -= amount;
+                break;
+            case StatType.Oxygen:
+                _oxygen -= amount;
+                break;
+            case StatType.Water:
+                _water -= amount;
+                break;
         }
     }
 

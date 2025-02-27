@@ -73,7 +73,7 @@ public class CraftingStationInteraction : InteractionObject
 
     public override void Interact()
     {
-        if (craftingUI != null);
+        if (UIManager.IsInventoryOpen) return;
 
         if (craftingUI.activeSelf)
         {
