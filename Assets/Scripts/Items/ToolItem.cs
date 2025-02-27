@@ -19,6 +19,10 @@ public class ToolItem : BaseItem
 
     public bool isWeapon = true;
 
+    [Header("Sound")]
+    public string swing;
+    public string hitSFX;
+
     public override void OnItemHeld(GameObject holder) { 
         return; 
     }
@@ -54,6 +58,8 @@ public class ToolItem : BaseItem
                 animator.SetTrigger("Mine");
             }
         }
+
+        AudioEventSystem.PlaySound(swing, default, default, default, true);
         RaycastHit hit;
         if (Physics.Raycast(holder.transform.position, holder.transform.forward, out hit, reach, worldLayers))
         {   
@@ -64,7 +70,7 @@ public class ToolItem : BaseItem
                 var damageable = component as IDamageable;
                 if (damageable == null) continue;
 
-
+                AudioEventSystem.PlaySound(hitSFX, default, default, default, true);
 
                 damageable.Damage(damage);
                 ///TODO: Play a sfx for when the weapon is used, maybe make it do different damage depending on which layermask was hit

@@ -7,15 +7,14 @@ public class MusicPlayer : MonoBehaviour
     public SoundLibrary dayplaylist;
     public SoundLibrary nightplaylist;
     private SoundLibrary currentplaylist;
-    //private SoundLibrary previousplaylist;
     [Range(0f, 1f)]
     public float volume = 1f;
     public string currentMusicName;
     public string currentPlaylistName;
 
     private int currentMusic = -1;
-    private int previousMusic = -1;
-    private int previousMusic2 = -1;
+    private int[] previousMusicDay = new int[2];
+    private int[] previousMusicNight = new int[2];
     private AudioSource musicSource;
     private bool forceChange = false;
     void Start()
@@ -29,32 +28,33 @@ public class MusicPlayer : MonoBehaviour
         if (TimeManager.Instance == null) currentplaylist = dayplaylist;
         else if (TimeManager.Instance.IsWithinCurrentTimePeriod(TimeOfTheDay.Morning, TimeOfTheDay.Afternoon) && currentplaylist != dayplaylist)
         {
-            //previousplaylist = currentplaylist;
             currentplaylist = dayplaylist;
-            previousMusic = -1;
-            previousMusic2 = -1;
             currentPlaylistName = currentplaylist.libraryname; forceChange = true;
         }
         else if (TimeManager.Instance.IsWithinCurrentTimePeriod(TimeOfTheDay.Night, TimeOfTheDay.Midnight) && currentplaylist != nightplaylist)
         {
-            //previousplaylist = currentplaylist;
             currentplaylist = nightplaylist;
-            previousMusic = -1;
-            previousMusic2 = -1;
             currentPlaylistName = currentplaylist.libraryname; forceChange = true;
         }
         if (currentplaylist == null) return;
-        //if (currentplaylist != previousplaylist) forceChange = true;
         if (currentplaylist.sounds.Count > 0 && musicSource != null && AudioManager.Instance != null)
         {
             if (!musicSource.isPlaying || Input.GetKeyDown(KeyCode.Backslash) || forceChange) {
-
-                previousMusic2 = previousMusic;
-                previousMusic = currentMusic;
+                if (currentplaylist == dayplaylist)
+                {
+                    previousMusicDay[1] = previousMusicDay[0];
+                    previousMusicDay[0] = currentMusic;
+                }
+                else if (currentplaylist == nightplaylist)
+                {
+                    previousMusicNight[1] = previousMusicNight[0];
+                    previousMusicNight[0] = currentMusic;
+                }
                 while (true)
                 {
                     currentMusic = UnityEngine.Random.Range(0, currentplaylist.sounds.Count - 1);
-                    if (currentMusic == previousMusic2 || currentMusic == previousMusic) { continue; }
+                    if ((currentplaylist == dayplaylist && previousMusicDay[0] == currentMusic && previousMusicDay[1] == currentMusic) &&
+                        (currentplaylist == nightplaylist && previousMusicNight[0] == currentMusic && previousMusicNight[1] == currentMusic)) continue;
                     else break;
                 }
                 AudioEventSystem.PlayMusic(currentplaylist.sounds[currentMusic].clip, volume);

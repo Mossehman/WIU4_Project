@@ -31,6 +31,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSettings audioSettings;
     private AudioSource BackgroundAmbience;
     private AudioSource BackgroundMusic;
+    public AudioSource DedicatedSFX;
     private Queue<AudioSource> sfxQueue;
 
     private Coroutine musicTransitionCoroutine;
@@ -38,6 +39,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource GetMusicSource() => BackgroundMusic;
     public AudioSource GetAmbienceSource() => BackgroundAmbience;
+    public AudioSource GetSFXSource() => DedicatedSFX;
 
     private void Awake()
     {
@@ -48,7 +50,7 @@ public class AudioManager : MonoBehaviour
         InitializePool();
         BackgroundAmbience = gameObject.AddComponent<AudioSource>();
         BackgroundMusic = gameObject.AddComponent<AudioSource>();
-
+        BackgroundMusic = gameObject.AddComponent<AudioSource>();
         // Subscribe to AudioEventSystem
         AudioEventSystem.PlaySoundEvent += PlaySoundFromEvent;
         AudioEventSystem.PlayMusicEventByName += PlayMusicFromEvent;
@@ -142,7 +144,7 @@ public class AudioManager : MonoBehaviour
         if (musicTransitionCoroutine != null)
             StopCoroutine(musicTransitionCoroutine);
 
-        musicTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundMusic, clip, finalVolume, 2f));
+        musicTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundMusic, clip, finalVolume, 2f, false));
     }
     private void PlayMusicFromEvent(AudioClip musicClip, float? volume = null)
     {
@@ -154,7 +156,7 @@ public class AudioManager : MonoBehaviour
         if (musicTransitionCoroutine != null)
             StopCoroutine(musicTransitionCoroutine);
 
-        musicTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundMusic, musicClip, finalVolume, 2f));
+        musicTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundMusic, musicClip, finalVolume, 2f, false));
     }
     private void PlayAmbienceFromEvent(string ambienceName, float? volume = null)
     {
@@ -187,7 +189,7 @@ public class AudioManager : MonoBehaviour
         if (ambienceTransitionCoroutine != null)
             StopCoroutine(ambienceTransitionCoroutine);
 
-        ambienceTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundAmbience, clip, finalVolume, 2f));
+        ambienceTransitionCoroutine = StartCoroutine(FadeAudio(BackgroundAmbience, clip, finalVolume, 2f, true));
     }
 
     /// <summary>
@@ -389,7 +391,7 @@ public class AudioManager : MonoBehaviour
         source.Play();
     }
 
-    private IEnumerator FadeAudio(AudioSource audioSource, AudioClip newClip, float targetVolume, float duration)
+    private IEnumerator FadeAudio(AudioSource audioSource, AudioClip newClip, float targetVolume, float duration, bool loop)
     {
         if (audioSource.isPlaying)
         {
@@ -407,6 +409,7 @@ public class AudioManager : MonoBehaviour
 
         // Assign new clip and start playback
         audioSource.clip = newClip;
+        audioSource.loop = loop;
         audioSource.Play();
 
         // Fade in
