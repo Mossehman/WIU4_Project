@@ -193,6 +193,15 @@ public class AStarBounds : MonoBehaviour
         nodes.TryAdd(index, newNode); // add our pathfinding node to the list of existing nodes
     }
 
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            nodes.Clear();
+        }
+    }
+
     //private void OnDrawGizmos()
     //{
     //    if (nodes.ContainsKey(new Vector3Int(-3, 43, 0)))

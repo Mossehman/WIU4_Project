@@ -308,9 +308,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatypusHome
       objectReference: {fileID: 0}
-    - target: {fileID: 7293703694734386375, guid: 1c93f63595954404c9eb7fe545b01ada, type: 3}
+    - target: {fileID: 6427038083477476392, guid: 1c93f63595954404c9eb7fe545b01ada, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7293703694734386375, guid: 1c93f63595954404c9eb7fe545b01ada, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8986366678331652269, guid: 1c93f63595954404c9eb7fe545b01ada, type: 3}
       propertyPath: m_LocalPosition.x

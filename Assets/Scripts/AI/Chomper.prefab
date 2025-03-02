@@ -156,9 +156,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayName: Azure Viperis
-  description: Azure viperis is a tough, solitary scorpion-like creature. A natural
-    predator of the Quibbit, ,its attacks are steady and deliberate. It is advised
-    to stay away from it.
+  description: The Crush Claw has a jaw designed for crushing small prey like insects
+    and rodents. It releases a sweet scent to attract its prey. It is advised to
+    stay away from it.
   yOffset: 4
   sprite: {fileID: 21300000, guid: 50037af8f3e51994b83cdae49bc38b7f, type: 3}
 --- !u!1001 &3004233602822640378
